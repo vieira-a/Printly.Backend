@@ -20,4 +20,9 @@ describe('Model entity', () => {
     expect(() => Model.Create('', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
       .toThrow(new InvalidParamException('Nome do fabricante inválido ou não informado.'))
   })
+
+  it('should throw InvalidParamException if Manufacturer name is less than 3 characters', () => {
+    expect(() => Model.Create('Ky', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
+      .toThrow(new InvalidParamException('Nome do fabricante inválido ou não informado.'))
+  })
 });
