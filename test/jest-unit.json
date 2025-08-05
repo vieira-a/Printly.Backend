@@ -13,7 +13,9 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1"
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@printer/(.*)$": "<rootDir>/src/printer/$1",
+    "^@shared/(.*)$": "<rootDir>/src/shared/$1"
   },
   "coveragePathIgnorePatterns": [
     "/node_modules/",
