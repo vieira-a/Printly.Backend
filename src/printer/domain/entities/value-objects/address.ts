@@ -8,6 +8,8 @@ const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
 const MissingStateExceptionMessage = 'Estado não informado.';
 const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
+const MissingCEPExceptionMessage = 'CEP não informado.';
+const InvalidCEPExceptionMessage = 'CEP deve conter 8 digitos.';
 
 export class Address {
   private constructor(
@@ -45,7 +47,7 @@ export class Address {
     if (this.city.trim().length < 3) throw new InvalidParamException(InvalidCityExceptionMessage);
 
     if (!this.state) throw new MissingParamException(MissingStateExceptionMessage);
-    if (this.state.trim().length !== 2)
+    if (!/^[A-Z]{2}$/.test(this.state))
       throw new InvalidParamException(InvalidStateExceptionMessage);
   }
 }
