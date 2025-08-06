@@ -36,4 +36,10 @@ describe('Phone', () => {
       new InvalidParamException('Número de celular deve começar com 9.'),
     );
   });
+
+  it('should throw an InvalidParamException if fixed phone starts with 9', () => {
+    expect(() => Phone.create(71, 99999999)).toThrow(
+      new InvalidParamException('Número fixo não deve começar com 9.'),
+    );
+  });
 });
