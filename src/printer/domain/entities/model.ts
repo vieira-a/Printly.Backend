@@ -30,7 +30,7 @@ export class Model extends EntityBase {
     this.Validate();
   }
 
-  public static Create(
+  public static create(
     manufacturer: string,
     description: string,
     printOid: string,

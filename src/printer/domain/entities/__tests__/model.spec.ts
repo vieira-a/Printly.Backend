@@ -3,7 +3,7 @@ import { Model } from '../model';
 
 describe('Model entity', () => {
   it('should create a new Model with correct params', () => {
-    const newModel = Model.Create(
+    const newModel = Model.create(
       'Kyocera',
       'KM2040DN',
       '1.2.1.2.3.5.6.7.41.10',
@@ -22,72 +22,72 @@ describe('Model entity', () => {
 
   it('should throw MissingParamException if Manufacturer is not provided', () => {
     expect(() =>
-      Model.Create('', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create('', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new MissingParamException('Nome do fabricante não informado.'));
   });
 
   it('should throw MissingParamException if Manufacturer is null', () => {
     expect(() =>
-      Model.Create(null as any, 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create(null as any, 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new MissingParamException('Nome do fabricante não informado.'));
   });
 
   it('should throw InvalidParamException if Manufacturer name is less than 3 characters', () => {
     expect(() =>
-      Model.Create('Ky', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create('Ky', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new InvalidParamException('Nome do fabricante deve conter no mínimo 3 caracteres.'));
   });
 
   it('should throw MissingParamException if Description is not provided', () => {
     expect(() =>
-      Model.Create('Kyocera', '', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create('Kyocera', '', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new MissingParamException('Descrição do modelo não informado.'));
   });
 
   it('should throw MissingParamException if Description is null', () => {
     expect(() =>
-      Model.Create('Kyocera', null as any, '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create('Kyocera', null as any, '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new MissingParamException('Descrição do modelo não informado.'));
   });
 
   it('should throw InvalidParamException if Description is less than 3 characters', () => {
     expect(() =>
-      Model.Create('Kyocera', 'KM', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
+      Model.create('Kyocera', 'KM', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
     ).toThrow(new InvalidParamException('Descrição do modelo deve conter no mínimo 3 caracteres.'));
   });
 
   it('should throw MissingParamException if PrintOid is not provided', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
   it('should throw MissingParamException if PrintOid is null', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', null as any, '1.2.1.2.3.5.6.7.41.11')).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', null as any, '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
   it('should throw InvalidParamException if PrintOid is less than 10 characters', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', '1.2.3.4.5', '1.2.1.2.3.5.6.7.41.11')).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.3.4.5', '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new InvalidParamException('OID de contador deve conter no mínimo 10 caracteres.'),
     );
   });
 
   it('should throw MissingParamException if CopyOid is not provided', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
   it('should throw MissingParamException if CopyOid is null', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', null as any)).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', null as any)).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
   it('should throw InvalidParamException if CopyOid is less than 10 characters', () => {
-    expect(() => Model.Create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', '1.2.3.4.5')).toThrow(
+    expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', '1.2.3.4.5')).toThrow(
       new InvalidParamException('OID de contador deve conter no mínimo 10 caracteres.'),
     );
   });
