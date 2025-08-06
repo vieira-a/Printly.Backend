@@ -1,3 +1,4 @@
+import { MissingParamException } from '../../exceptions';
 import { Location } from '../location';
 import { Model } from '../model';
 import { Printer } from '../printer';
@@ -29,5 +30,11 @@ describe('Printer', () => {
     const newPrinter = Printer.create(newModel, 'XYZ12345', '192.168.0.200', newLocation);
 
     expect(newPrinter).toBeInstanceOf(Printer);
+  });
+
+  it('should throw a MissingParamException if model is not provided', () => {
+    expect(() => Printer.create(null as any, 'XYZ12345', '192.168.0.200', newLocation)).toThrow(
+      new MissingParamException('Modelo não informado.'),
+    );
   });
 });
