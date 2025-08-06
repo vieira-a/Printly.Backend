@@ -1,7 +1,7 @@
 import { InvalidParamException, MissingParamException } from '../../../exceptions';
 import { CEP } from '../cep';
 
-describe('CEP', () => {
+describe('CEP Value Object', () => {
   it('should throw MissingParamException if CEP is not provided', () => {
     expect(() => CEP.create(null as any)).toThrow(new MissingParamException('CEP não informado.'));
   });

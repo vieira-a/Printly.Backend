@@ -1,7 +1,7 @@
 import { IPV4 } from '../ipv4';
 import { InvalidParamException, MissingParamException } from '../../../exceptions';
 
-describe('IPV4', () => {
+describe('IPV4 Value Object', () => {
   it('should create a valid IPv4', () => {
     const ip = IPV4.create('192.168.0.1');
 

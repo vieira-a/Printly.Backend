@@ -26,7 +26,7 @@ const newAddress = Address.create(
 const newCellPhone = Phone.create(71, 999999999);
 const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location');
 
-describe('Printer', () => {
+describe('Printer Entity', () => {
   it('should create a new Printer with correct params', () => {
     const newPrinter = Printer.create(
       newModel,

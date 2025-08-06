@@ -2,7 +2,7 @@ import { InvalidParamException, MissingParamException } from '../../../exception
 import { Address } from '../address';
 import { CEP } from '../cep';
 
-describe('Address', () => {
+describe('Address Value Object', () => {
   it('should create a new Address with correct params', () => {
     const newAddress = Address.create(
       'Rua A',

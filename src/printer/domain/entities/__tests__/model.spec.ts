@@ -1,7 +1,7 @@
 import { InvalidParamException, MissingParamException } from '../../exceptions';
 import { Model } from '../model';
 
-describe('Model entity', () => {
+describe('Model Entity', () => {
   it('should create a new Model with correct params', () => {
     const newModel = Model.create(
       'Kyocera',

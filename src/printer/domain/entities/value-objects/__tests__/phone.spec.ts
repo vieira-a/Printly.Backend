@@ -1,7 +1,7 @@
 import { InvalidParamException } from '@printer/domain/exceptions';
 import { Phone } from '../phone';
 
-describe('Phone', () => {
+describe('Phone Value Object', () => {
   it('should create a new cell phone with correct params', () => {
     const newCellPhone = Phone.create(71, 999999999);
     expect(newCellPhone).toBeInstanceOf(Phone);

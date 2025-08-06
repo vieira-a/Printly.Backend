@@ -15,7 +15,7 @@ const newAddress = Address.create(
 
 const newCellPhone = Phone.create(71, 999999999);
 
-describe('Location', () => {
+describe('Location Entity', () => {
   it('should create a new location with correct params', () => {
     const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location');
     expect(newLocation).toBeInstanceOf(Location);
