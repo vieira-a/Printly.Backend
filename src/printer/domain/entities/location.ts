@@ -1,4 +1,4 @@
-import { MissingParamException } from '../exceptions';
+import { InvalidParamException, MissingParamException } from '../exceptions';
 import { EntityBase } from './entity-base';
 import type { Address } from './value-objects/address';
 import type { Phone } from './value-objects/phone';
@@ -6,6 +6,7 @@ import type { Phone } from './value-objects/phone';
 const MissingAddressExceptionMessage = 'Endereço não informado.';
 const MissingPhoneExceptionMessage = 'Telefone não informado.';
 const MissingContactExceptionMessage = 'Contato não informado.';
+const InvalidContactExceptionMessage = 'Contato deve ter no mínimo 3 caracteres.';
 
 export class Location extends EntityBase {
   readonly address: Address;
@@ -28,5 +29,7 @@ export class Location extends EntityBase {
     if (!this.address) throw new MissingParamException(MissingAddressExceptionMessage);
     if (!this.phone) throw new MissingParamException(MissingPhoneExceptionMessage);
     if (!this.contact) throw new MissingParamException(MissingContactExceptionMessage);
+    if (this.contact.trim().length < 3)
+      throw new InvalidParamException(InvalidContactExceptionMessage);
   }
 }

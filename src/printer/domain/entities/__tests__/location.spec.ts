@@ -48,4 +48,16 @@ describe('Location', () => {
       new MissingParamException('Contato não informado.'),
     );
   });
+
+  it('should throw MissingParamException if contact is empty', () => {
+    expect(() => Location.create(newAddress, newCellPhone, '')).toThrow(
+      new MissingParamException('Contato não informado.'),
+    );
+  });
+
+  it('should throw MissingParamException if contact has less than 3 characters', () => {
+    expect(() => Location.create(newAddress, newCellPhone, 'Co')).toThrow(
+      new MissingParamException('Contato deve ter no mínimo 3 caracteres.'),
+    );
+  });
 });
