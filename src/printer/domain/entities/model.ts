@@ -57,7 +57,7 @@ export class Model extends EntityBase {
 
     if (!this.copyOid) throw new MissingParamException(MissingOidExceptionMessage);
 
-    if (!this.copyOid || this.copyOid.trim().length < 10)
+    if (this.copyOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
   }
 }
