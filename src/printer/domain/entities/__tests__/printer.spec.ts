@@ -4,6 +4,7 @@ import { Model } from '../model';
 import { Printer } from '../printer';
 import { Address } from '../value-objects/address';
 import { CEP } from '../value-objects/cep';
+import { IPV4 } from '../value-objects/ipv4';
 import { Phone } from '../value-objects/phone';
 
 const newModel = Model.create(
@@ -27,32 +28,37 @@ const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location'
 
 describe('Printer', () => {
   it('should create a new Printer with correct params', () => {
-    const newPrinter = Printer.create(newModel, 'XYZ12345', '192.168.0.200', newLocation);
+    const newPrinter = Printer.create(
+      newModel,
+      'XYZ12345',
+      IPV4.create('192.168.0.200'),
+      newLocation,
+    );
 
     expect(newPrinter).toBeInstanceOf(Printer);
   });
 
   it('should throw a MissingParamException if model is not provided', () => {
-    expect(() => Printer.create(null as any, 'XYZ12345', '192.168.0.200', newLocation)).toThrow(
-      new MissingParamException('Modelo não informado.'),
-    );
+    expect(() =>
+      Printer.create(null as any, 'XYZ12345', IPV4.create('192.168.0.200'), newLocation),
+    ).toThrow(new MissingParamException('Modelo não informado.'));
   });
 
   it('should throw a MissingParamException if serial is not provided', () => {
-    expect(() => Printer.create(newModel, null as any, '192.168.0.200', newLocation)).toThrow(
-      new MissingParamException('Serial não informado.'),
-    );
+    expect(() =>
+      Printer.create(newModel, null as any, IPV4.create('192.168.0.200'), newLocation),
+    ).toThrow(new MissingParamException('Serial não informado.'));
   });
 
   it('should throw a MissingParamException if serial is empty', () => {
-    expect(() => Printer.create(newModel, '', '192.168.0.200', newLocation)).toThrow(
+    expect(() => Printer.create(newModel, '', IPV4.create('192.168.0.200'), newLocation)).toThrow(
       new InvalidParamException('Serial não informado.'),
     );
   });
 
   it('should throw a MissingParamException if serial has less than 6 characters', () => {
-    expect(() => Printer.create(newModel, 'XYZ99', '192.168.0.200', newLocation)).toThrow(
-      new InvalidParamException('Serial deve ter no mínimo 6 caracteres.'),
-    );
+    expect(() =>
+      Printer.create(newModel, 'XYZ99', IPV4.create('192.168.0.200'), newLocation),
+    ).toThrow(new InvalidParamException('Serial deve ter no mínimo 6 caracteres.'));
   });
 });
