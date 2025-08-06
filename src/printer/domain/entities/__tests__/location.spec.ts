@@ -4,18 +4,19 @@ import { Address } from '../value-objects/address';
 import { CEP } from '../value-objects/cep';
 import { Phone } from '../value-objects/phone';
 
+const newAddress = Address.create(
+  'Rua A',
+  'Bairro Tal',
+  'Cidade A',
+  'BA',
+  CEP.create('40000000'),
+  'Referência da Rua A',
+);
+
+const newCellPhone = Phone.create(71, 999999999);
+
 describe('Location', () => {
   it('should create a new location with correct params', () => {
-    const newAddress = Address.create(
-      'Rua A',
-      'Bairro Tal',
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const newCellPhone = Phone.create(71, 999999999);
     const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location');
     expect(newLocation).toBeInstanceOf(Location);
     expect(newLocation.address).toBeInstanceOf(Address);
@@ -33,6 +34,12 @@ describe('Location', () => {
 
     expect(() => Location.create(null as any, newCellPhone, 'Contact Location')).toThrow(
       new MissingParamException('Endereço não informado.'),
+    );
+  });
+
+  it('should throw MissingParamException if Phone is not provided', () => {
+    expect(() => Location.create(newAddress, null as any, 'Contact Location')).toThrow(
+      new MissingParamException('Telefone não informado.'),
     );
   });
 });
