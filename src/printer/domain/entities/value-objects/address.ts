@@ -1,3 +1,7 @@
+import { MissingParamException } from '../../exceptions';
+
+const MissingStreetExceptionMessage = 'Nome da rua não informado.';
+
 export class Address {
   private constructor(
     readonly street: string,
@@ -6,7 +10,9 @@ export class Address {
     readonly state: string,
     readonly cep: string,
     readonly reference?: string,
-  ) {}
+  ) {
+    this.validate();
+  }
 
   public static create(
     street: string,
@@ -17,5 +23,9 @@ export class Address {
     reference?: string,
   ): Address {
     return new Address(street, district, city, state, cep, reference);
+  }
+
+  private validate(): void {
+    if (!this.street) throw new MissingParamException(MissingStreetExceptionMessage);
   }
 }
