@@ -14,19 +14,19 @@ const MissingOidExceptionMessage = 'OID de contador não informado.';
 export class Model extends EntityBase {
   readonly Manufacturer: string;
   readonly Description: string;
-  readonly OidPrint: string;
+  readonly PrintOid: string;
   readonly Oidcopy: string;
 
   private constructor(
     manufacturer: string,
     description: string,
-    oidPrint: string,
+    printOid: string,
     oidcopy: string,
   ) {
     super();
     this.Manufacturer = manufacturer;
     this.Description = description;
-    this.OidPrint = oidPrint;
+    this.PrintOid = printOid;
     this.Oidcopy = oidcopy;
     this.Validate();
   }
@@ -34,10 +34,10 @@ export class Model extends EntityBase {
   public static Create(
     manufacturer: string,
     description: string,
-    oidPrint: string,
+    printOid: string,
     oidcopy: string,
   ): Model {
-    return new Model(manufacturer, description, oidPrint, oidcopy);
+    return new Model(manufacturer, description, printOid, oidcopy);
   }
 
   private Validate() {
@@ -51,9 +51,9 @@ export class Model extends EntityBase {
     if (this.Description.trim().length < 3)
       throw new InvalidParamException(InvalidDescriptionExceptionMessage);
 
-    if (!this.OidPrint) throw new MissingParamException(MissingOidExceptionMessage);
+    if (!this.PrintOid) throw new MissingParamException(MissingOidExceptionMessage);
 
-    if (this.OidPrint.trim().length < 10)
+    if (this.PrintOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
 
     if (!this.Oidcopy || this.Oidcopy.trim().length < 10)

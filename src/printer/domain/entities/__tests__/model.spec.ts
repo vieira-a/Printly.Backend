@@ -14,7 +14,7 @@ describe('Model entity', () => {
     expect(newModel.Id).toBeDefined();
     expect(newModel.Manufacturer).toBe('Kyocera');
     expect(newModel.Description).toBe('KM2040DN');
-    expect(newModel.OidPrint).toBe('1.2.1.2.3.5.6.7.41.10');
+    expect(newModel.PrintOid).toBe('1.2.1.2.3.5.6.7.41.10');
     expect(newModel.Oidcopy).toBe('1.2.1.2.3.5.6.7.41.11');
     expect(newModel.CreatedAt).toBeInstanceOf(Date);
     expect(newModel.UpdatedAt).toBeInstanceOf(Date);
@@ -56,19 +56,19 @@ describe('Model entity', () => {
     ).toThrow(new InvalidParamException('Descrição do modelo deve conter no mínimo 3 caracteres.'));
   });
 
-  it('should throw MissingParamException if Description is not provided', () => {
+  it('should throw MissingParamException if PrintOid is not provided', () => {
     expect(() => Model.Create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
-  it('should throw MissingParamException if Description is null', () => {
+  it('should throw MissingParamException if PrintOid is null', () => {
     expect(() => Model.Create('Kyocera', 'KM2040DN', null as any, '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new MissingParamException('OID de contador não informado.'),
     );
   });
 
-  it('should throw InvalidParamException if Description is less than 10 characters', () => {
+  it('should throw InvalidParamException if PrintOid is less than 10 characters', () => {
     expect(() => Model.Create('Kyocera', 'KM2040DN', '1.2.3.4.5', '1.2.1.2.3.5.6.7.41.11')).toThrow(
       new InvalidParamException('OID de contador deve conter no mínimo 10 caracteres.'),
     );
