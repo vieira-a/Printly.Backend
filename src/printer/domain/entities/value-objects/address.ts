@@ -6,6 +6,8 @@ const MissingDistrictExceptionMessage = 'Bairro não informado.';
 const InvalidDistrictExceptionMessage = 'Bairro deve conter no mínimo 3 caracteres.';
 const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
+const MissingStateExceptionMessage = 'Estado não informado.';
+const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
 
 export class Address {
   private constructor(
@@ -41,5 +43,9 @@ export class Address {
 
     if (!this.city) throw new MissingParamException(MissingCityExceptionMessage);
     if (this.city.trim().length < 3) throw new InvalidParamException(InvalidCityExceptionMessage);
+
+    if (!this.state) throw new MissingParamException(MissingStateExceptionMessage);
+    if (this.state.trim().length !== 2)
+      throw new InvalidParamException(InvalidStateExceptionMessage);
   }
 }
