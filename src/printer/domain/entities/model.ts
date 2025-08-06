@@ -4,8 +4,8 @@ import { InvalidParamException, MissingParamException } from '../exceptions';
 
 const InvalidManufacturerExceptionMessage = 'Nome do fabricante deve conter no mínimo 3 caracteres.';
 const MissingManufacturerExceptionMessage = 'Nome do fabricante não informado.';
-
-const InvalidDescriptionExceptionMessage = 'Descrição do modelo inválido ou não informado.';
+const InvalidDescriptionExceptionMessage = 'Descrição do modelo deve conter no mínimo 3 caracteres.';
+const MissingDescriptionExceptionMessage = 'Descrição do modelo não informado.';
 const InvalidOidExceptionMessage = 'OID de contador inválido ou não informado.';
 
 export class Model extends EntityBase {
@@ -34,8 +34,11 @@ export class Model extends EntityBase {
     if (this.Manufacturer.trim().length < 3)
       throw new InvalidParamException(InvalidManufacturerExceptionMessage);
 
-    if (!this.Description || this.Description.trim().length < 3)
-      throw new UnprocessableEntityException(InvalidDescriptionExceptionMessage);
+    if (!this.Description)
+      throw new MissingParamException(MissingDescriptionExceptionMessage);
+
+     if (this.Description.trim().length < 3)
+      throw new InvalidParamException(InvalidDescriptionExceptionMessage);
 
     if (!this.OidPrint || this.OidPrint.trim().length < 10)
       throw new UnprocessableEntityException(InvalidOidExceptionMessage);

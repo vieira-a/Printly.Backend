@@ -9,7 +9,6 @@ describe('Model entity', () => {
     expect(newModel.Id).toBeDefined();
     expect(newModel.Manufacturer).toBe('Kyocera');
     expect(newModel.Description).toBe('KM2040DN');
-
     expect(newModel.OidPrint).toBe('1.2.1.2.3.5.6.7.41.10');
     expect(newModel.Oidcopy).toBe('1.2.1.2.3.5.6.7.41.11');
     expect(newModel.CreatedAt).toBeInstanceOf(Date);
@@ -29,5 +28,20 @@ describe('Model entity', () => {
   it('should throw InvalidParamException if Manufacturer name is less than 3 characters', () => {
     expect(() => Model.Create('Ky', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
       .toThrow(new InvalidParamException('Nome do fabricante deve conter no mínimo 3 caracteres.'))
+  })
+
+  it('should throw MissingParamException if Description is not provided', () => {
+    expect(() => Model.Create('Kyocera', '', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
+      .toThrow(new MissingParamException('Descrição do modelo não informado.'))
+  })
+
+  it('should throw MissingParamException if Description is null', () => {
+    expect(() => Model.Create('Kyocera', null as any, '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
+      .toThrow(new MissingParamException('Descrição do modelo não informado.'))
+  })
+
+  it('should throw InvalidParamException if Description is less than 3 characters', () => {
+    expect(() => Model.Create('Kyocera', 'KM', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
+      .toThrow(new InvalidParamException('Descrição do modelo deve conter no mínimo 3 caracteres.'))
   })
 });
