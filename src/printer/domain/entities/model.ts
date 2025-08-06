@@ -15,19 +15,19 @@ export class Model extends EntityBase {
   readonly Manufacturer: string;
   readonly Description: string;
   readonly PrintOid: string;
-  readonly Oidcopy: string;
+  readonly CopyOid: string;
 
   private constructor(
     manufacturer: string,
     description: string,
     printOid: string,
-    oidcopy: string,
+    copyOid: string,
   ) {
     super();
     this.Manufacturer = manufacturer;
     this.Description = description;
     this.PrintOid = printOid;
-    this.Oidcopy = oidcopy;
+    this.CopyOid = copyOid;
     this.Validate();
   }
 
@@ -35,9 +35,9 @@ export class Model extends EntityBase {
     manufacturer: string,
     description: string,
     printOid: string,
-    oidcopy: string,
+    copyOid: string,
   ): Model {
-    return new Model(manufacturer, description, printOid, oidcopy);
+    return new Model(manufacturer, description, printOid, copyOid);
   }
 
   private Validate() {
@@ -56,7 +56,9 @@ export class Model extends EntityBase {
     if (this.PrintOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
 
-    if (!this.Oidcopy || this.Oidcopy.trim().length < 10)
-      throw new UnprocessableEntityException(InvalidOidExceptionMessage);
+    if (!this.CopyOid) throw new MissingParamException(InvalidOidExceptionMessage);
+
+    if (!this.CopyOid || this.CopyOid.trim().length < 10)
+      throw new InvalidParamException(InvalidOidExceptionMessage);
   }
 }
