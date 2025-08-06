@@ -15,12 +15,12 @@ describe('Model entity', () => {
     expect(newModel.UpdatedAt).toBeInstanceOf(Date);
   });
 
-  it('should throw InvalidParamException if Manufacturer is not provided', () => {
+  it('should throw MissingParamException if Manufacturer is not provided', () => {
     expect(() => Model.Create('', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
       .toThrow(new MissingParamException('Nome do fabricante não informado.'))
   })
 
-  it('should throw InvalidParamException if Manufacturer is null', () => {
+  it('should throw MissingParamException if Manufacturer is null', () => {
     expect(() => Model.Create(null as any, 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'))
       .toThrow(new MissingParamException('Nome do fabricante não informado.'))
   })
