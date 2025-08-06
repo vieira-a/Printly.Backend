@@ -58,4 +58,16 @@ describe('Address', () => {
       ),
     ).toThrow(new MissingParamException('Bairro não informado.'));
   });
+
+  it('should throw InvalidParamException if district has less than 3 characters', () => {
+    expect(() =>
+      Address.create('Rua A', 'Ba', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
+    ).toThrow(new InvalidParamException('Bairro deve conter no mínimo 3 caracteres.'));
+  });
+
+  it('should throw InvalidParamException if district is empty', () => {
+    expect(() =>
+      Address.create('Rua A', '', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
+    ).toThrow(new InvalidParamException('Bairro não informado.'));
+  });
 });
