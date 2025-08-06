@@ -1,3 +1,4 @@
+import { MissingParamException } from '../../exceptions';
 import { Location } from '../location';
 import { Address } from '../value-objects/address';
 import { CEP } from '../value-objects/cep';
@@ -25,5 +26,13 @@ describe('Location', () => {
     expect(newLocation.address.city).toBe('Cidade A');
     expect(newLocation.address.state).toBe('BA');
     expect(newLocation.address.cep.toString()).toBe('40000000');
+  });
+
+  it('should throw MissingParamException if Address is not provided', () => {
+    const newCellPhone = Phone.create(71, 999999999);
+
+    expect(() => Location.create(null as any, newCellPhone, 'Contact Location')).toThrow(
+      new MissingParamException('Endereço não informado.'),
+    );
   });
 });
