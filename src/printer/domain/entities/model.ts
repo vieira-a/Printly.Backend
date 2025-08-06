@@ -1,4 +1,3 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { EntityBase } from './entity-base';
 import { InvalidParamException, MissingParamException } from '../exceptions';
 
@@ -56,7 +55,7 @@ export class Model extends EntityBase {
     if (this.PrintOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
 
-    if (!this.CopyOid) throw new MissingParamException(InvalidOidExceptionMessage);
+    if (!this.CopyOid) throw new MissingParamException(MissingOidExceptionMessage);
 
     if (!this.CopyOid || this.CopyOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);

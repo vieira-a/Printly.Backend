@@ -82,7 +82,7 @@ describe('Model entity', () => {
 
   it('should throw MissingParamException if CopyOid is null', () => {
     expect(() => Model.Create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', null as any)).toThrow(
-      new MissingParamException('OID de contador deve conter no mínimo 10 caracteres.'),
+      new MissingParamException('OID de contador não informado.'),
     );
   });
 
