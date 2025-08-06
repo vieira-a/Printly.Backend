@@ -2,6 +2,7 @@ import { InvalidParamException } from '../../exceptions';
 
 const InvalidDDDExceptionMessage = 'DDD deve conter dois dígitos entre 11 e 99.';
 const InvalidPhoneExceptionMessage = 'Número de telefone deve conter 8 ou 9 digitos.';
+const InvalidCellPhoneExceptionMessage = 'Número de celular deve começar com 9.';
 
 export class Phone {
   private constructor(
@@ -26,5 +27,8 @@ export class Phone {
     const phoneString = this.phoneNumber.toString();
     if (!/^\d{8,9}$/.test(phoneString))
       throw new InvalidParamException(InvalidPhoneExceptionMessage);
+
+    if (phoneString.length === 9 && !phoneString.startsWith('9'))
+      throw new InvalidParamException(InvalidCellPhoneExceptionMessage);
   }
 }

@@ -30,4 +30,10 @@ describe('Phone', () => {
       new InvalidParamException('Número de telefone deve conter 8 ou 9 digitos.'),
     );
   });
+
+  it('should throw an InvalidParamException if cell phone does not starts with 9', () => {
+    expect(() => Phone.create(71, 899999999)).toThrow(
+      new InvalidParamException('Número de celular deve começar com 9.'),
+    );
+  });
 });
