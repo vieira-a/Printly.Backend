@@ -18,7 +18,7 @@ export class Model extends EntityBase {
     readonly copyOid: string,
   ) {
     super();
-    this.Validate();
+    this.validate();
   }
 
   public static create(
@@ -30,7 +30,7 @@ export class Model extends EntityBase {
     return new Model(manufacturer, description, printOid, copyOid);
   }
 
-  private Validate(): void {
+  private validate(): void {
     if (!this.manufacturer) throw new MissingParamException(MissingManufacturerExceptionMessage);
 
     if (this.manufacturer.trim().length < 3)
