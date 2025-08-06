@@ -1,4 +1,5 @@
 import { InvalidParamException, MissingParamException } from '../../exceptions';
+import type { CEP } from './cep';
 
 const MissingStreetExceptionMessage = 'Nome da rua não informado.';
 const InvalidStreetExceptionMessage = 'Nome da rua deve conter no mínimo 3 caracteres.';
@@ -8,8 +9,6 @@ const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
 const MissingStateExceptionMessage = 'Estado não informado.';
 const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
-const MissingCEPExceptionMessage = 'CEP não informado.';
-const InvalidCEPExceptionMessage = 'CEP deve conter 8 digitos.';
 
 export class Address {
   private constructor(
@@ -17,7 +16,7 @@ export class Address {
     readonly district: string,
     readonly city: string,
     readonly state: string,
-    readonly cep: string,
+    readonly cep: CEP,
     readonly reference?: string,
   ) {
     this.validate();
@@ -28,7 +27,7 @@ export class Address {
     district: string,
     city: string,
     state: string,
-    cep: string,
+    cep: CEP,
     reference?: string,
   ): Address {
     return new Address(street, district, city, state, cep, reference);
