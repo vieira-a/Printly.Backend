@@ -24,4 +24,10 @@ describe('Phone', () => {
       new InvalidParamException('Número de telefone deve conter 8 ou 9 digitos.'),
     );
   });
+
+  it('should throw an InvalidParamException if phone number has more than 9 digits', () => {
+    expect(() => Phone.create(71, 9999999999)).toThrow(
+      new InvalidParamException('Número de telefone deve conter 8 ou 9 digitos.'),
+    );
+  });
 });
