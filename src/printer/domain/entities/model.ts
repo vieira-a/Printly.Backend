@@ -11,22 +11,13 @@ const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 ca
 const MissingOidExceptionMessage = 'OID de contador não informado.';
 
 export class Model extends EntityBase {
-  readonly manufacturer: string;
-  readonly description: string;
-  readonly printOid: string;
-  readonly copyOid: string;
-
   private constructor(
-    manufacturer: string,
-    description: string,
-    printOid: string,
-    copyOid: string,
+    readonly manufacturer: string,
+    readonly description: string,
+    readonly printOid: string,
+    readonly copyOid: string,
   ) {
     super();
-    this.manufacturer = manufacturer;
-    this.description = description;
-    this.printOid = printOid;
-    this.copyOid = copyOid;
     this.Validate();
   }
 
@@ -39,7 +30,7 @@ export class Model extends EntityBase {
     return new Model(manufacturer, description, printOid, copyOid);
   }
 
-  private Validate() {
+  private Validate(): void {
     if (!this.manufacturer) throw new MissingParamException(MissingManufacturerExceptionMessage);
 
     if (this.manufacturer.trim().length < 3)
