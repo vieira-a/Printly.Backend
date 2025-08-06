@@ -39,4 +39,10 @@ describe('Address', () => {
       Address.create('Ru', 'Bairro Tal', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
     ).toThrow(new InvalidParamException('Nome da rua deve conter no mínimo 3 caracteres.'));
   });
+
+  it('should throw InvalidParamException if street is empty', () => {
+    expect(() =>
+      Address.create('', 'Bairro Tal', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
+    ).toThrow(new InvalidParamException('Nome da rua não informado.'));
+  });
 });
