@@ -45,4 +45,17 @@ describe('Address', () => {
       Address.create('', 'Bairro Tal', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
     ).toThrow(new InvalidParamException('Nome da rua não informado.'));
   });
+
+  it('should throw MissingParamException if district is not provided', () => {
+    expect(() =>
+      Address.create(
+        'Rua A',
+        null as any,
+        'Cidade A',
+        'Estado A',
+        '40000000',
+        'Referência da Rua A',
+      ),
+    ).toThrow(new MissingParamException('Bairro não informado.'));
+  });
 });
