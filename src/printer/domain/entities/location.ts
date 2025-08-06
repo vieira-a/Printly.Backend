@@ -5,6 +5,7 @@ import type { Phone } from './value-objects/phone';
 
 const MissingAddressExceptionMessage = 'Endereço não informado.';
 const MissingPhoneExceptionMessage = 'Telefone não informado.';
+const MissingContactExceptionMessage = 'Contato não informado.';
 
 export class Location extends EntityBase {
   readonly address: Address;
@@ -26,5 +27,6 @@ export class Location extends EntityBase {
   private validate(): void {
     if (!this.address) throw new MissingParamException(MissingAddressExceptionMessage);
     if (!this.phone) throw new MissingParamException(MissingPhoneExceptionMessage);
+    if (!this.contact) throw new MissingParamException(MissingContactExceptionMessage);
   }
 }

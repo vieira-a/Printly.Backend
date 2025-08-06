@@ -42,4 +42,10 @@ describe('Location', () => {
       new MissingParamException('Telefone não informado.'),
     );
   });
+
+  it('should throw MissingParamException if contact is not provided', () => {
+    expect(() => Location.create(newAddress, newCellPhone, null as any)).toThrow(
+      new MissingParamException('Contato não informado.'),
+    );
+  });
 });
