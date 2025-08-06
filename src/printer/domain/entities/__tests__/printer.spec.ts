@@ -1,4 +1,4 @@
-import { MissingParamException } from '../../exceptions';
+import { InvalidParamException, MissingParamException } from '../../exceptions';
 import { Location } from '../location';
 import { Model } from '../model';
 import { Printer } from '../printer';
@@ -35,6 +35,24 @@ describe('Printer', () => {
   it('should throw a MissingParamException if model is not provided', () => {
     expect(() => Printer.create(null as any, 'XYZ12345', '192.168.0.200', newLocation)).toThrow(
       new MissingParamException('Modelo não informado.'),
+    );
+  });
+
+  it('should throw a MissingParamException if serial is not provided', () => {
+    expect(() => Printer.create(newModel, null as any, '192.168.0.200', newLocation)).toThrow(
+      new MissingParamException('Serial não informado.'),
+    );
+  });
+
+  it('should throw a MissingParamException if serial is empty', () => {
+    expect(() => Printer.create(newModel, '', '192.168.0.200', newLocation)).toThrow(
+      new InvalidParamException('Serial não informado.'),
+    );
+  });
+
+  it('should throw a MissingParamException if serial has less than 6 characters', () => {
+    expect(() => Printer.create(newModel, 'XYZ99', '192.168.0.200', newLocation)).toThrow(
+      new InvalidParamException('Serial deve ter no mínimo 6 caracteres.'),
     );
   });
 });

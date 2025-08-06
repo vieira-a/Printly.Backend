@@ -1,9 +1,11 @@
-import { MissingParamException } from '../exceptions';
+import { InvalidParamException, MissingParamException } from '../exceptions';
 import { EntityBase } from './entity-base';
 import { Location } from './location';
 import { Model } from './model';
 
 const MissingModelExceptionMessage = 'Modelo não informado.';
+const MissingSerialExceptionMessage = 'Serial não informado.';
+const InvalidSerialExceptionMessage = 'Serial deve ter no mínimo 6 caracteres.';
 
 export class Printer extends EntityBase {
   private constructor(
@@ -22,5 +24,9 @@ export class Printer extends EntityBase {
 
   private validate(): void {
     if (!this.model) throw new MissingParamException(MissingModelExceptionMessage);
+
+    if (!this.serial) throw new MissingParamException(MissingSerialExceptionMessage);
+    if (this.serial.trim().length < 6)
+      throw new InvalidParamException(InvalidSerialExceptionMessage);
   }
 }
