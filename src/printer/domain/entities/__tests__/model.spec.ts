@@ -11,13 +11,13 @@ describe('Model entity', () => {
     );
 
     expect(newModel).toBeInstanceOf(Model);
-    expect(newModel.Id).toBeDefined();
-    expect(newModel.Manufacturer).toBe('Kyocera');
-    expect(newModel.Description).toBe('KM2040DN');
-    expect(newModel.PrintOid).toBe('1.2.1.2.3.5.6.7.41.10');
-    expect(newModel.CopyOid).toBe('1.2.1.2.3.5.6.7.41.11');
-    expect(newModel.CreatedAt).toBeInstanceOf(Date);
-    expect(newModel.UpdatedAt).toBeInstanceOf(Date);
+    expect(newModel.id).toBeDefined();
+    expect(newModel.manufacturer).toBe('Kyocera');
+    expect(newModel.description).toBe('KM2040DN');
+    expect(newModel.printOid).toBe('1.2.1.2.3.5.6.7.41.10');
+    expect(newModel.copyOid).toBe('1.2.1.2.3.5.6.7.41.11');
+    expect(newModel.createdAt).toBeInstanceOf(Date);
+    expect(newModel.updatedAt).toBeInstanceOf(Date);
   });
 
   it('should throw MissingParamException if Manufacturer is not provided', () => {

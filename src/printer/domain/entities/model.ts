@@ -11,10 +11,10 @@ const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 ca
 const MissingOidExceptionMessage = 'OID de contador não informado.';
 
 export class Model extends EntityBase {
-  readonly Manufacturer: string;
-  readonly Description: string;
-  readonly PrintOid: string;
-  readonly CopyOid: string;
+  readonly manufacturer: string;
+  readonly description: string;
+  readonly printOid: string;
+  readonly copyOid: string;
 
   private constructor(
     manufacturer: string,
@@ -23,10 +23,10 @@ export class Model extends EntityBase {
     copyOid: string,
   ) {
     super();
-    this.Manufacturer = manufacturer;
-    this.Description = description;
-    this.PrintOid = printOid;
-    this.CopyOid = copyOid;
+    this.manufacturer = manufacturer;
+    this.description = description;
+    this.printOid = printOid;
+    this.copyOid = copyOid;
     this.Validate();
   }
 
@@ -40,24 +40,24 @@ export class Model extends EntityBase {
   }
 
   private Validate() {
-    if (!this.Manufacturer) throw new MissingParamException(MissingManufacturerExceptionMessage);
+    if (!this.manufacturer) throw new MissingParamException(MissingManufacturerExceptionMessage);
 
-    if (this.Manufacturer.trim().length < 3)
+    if (this.manufacturer.trim().length < 3)
       throw new InvalidParamException(InvalidManufacturerExceptionMessage);
 
-    if (!this.Description) throw new MissingParamException(MissingDescriptionExceptionMessage);
+    if (!this.description) throw new MissingParamException(MissingDescriptionExceptionMessage);
 
-    if (this.Description.trim().length < 3)
+    if (this.description.trim().length < 3)
       throw new InvalidParamException(InvalidDescriptionExceptionMessage);
 
-    if (!this.PrintOid) throw new MissingParamException(MissingOidExceptionMessage);
+    if (!this.printOid) throw new MissingParamException(MissingOidExceptionMessage);
 
-    if (this.PrintOid.trim().length < 10)
+    if (this.printOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
 
-    if (!this.CopyOid) throw new MissingParamException(MissingOidExceptionMessage);
+    if (!this.copyOid) throw new MissingParamException(MissingOidExceptionMessage);
 
-    if (!this.CopyOid || this.CopyOid.trim().length < 10)
+    if (!this.copyOid || this.copyOid.trim().length < 10)
       throw new InvalidParamException(InvalidOidExceptionMessage);
   }
 }
