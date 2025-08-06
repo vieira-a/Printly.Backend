@@ -1,4 +1,4 @@
-import { MissingParamException } from '../../../exceptions';
+import { InvalidParamException, MissingParamException } from '../../../exceptions';
 import { Address } from '../address';
 
 describe('Address', () => {
@@ -21,7 +21,7 @@ describe('Address', () => {
     expect(newAddress.reference).toBe('Referência da Rua A');
   });
 
-  it('should throw MissingParamException if Manufacturer is not provided', () => {
+  it('should throw MissingParamException if street is not provided', () => {
     expect(() =>
       Address.create(
         null as any,
@@ -32,5 +32,11 @@ describe('Address', () => {
         'Referência da Rua A',
       ),
     ).toThrow(new MissingParamException('Nome da rua não informado.'));
+  });
+
+  it('should throw InvalidParamException if street has less than 3 characters', () => {
+    expect(() =>
+      Address.create('Ru', 'Bairro Tal', 'Cidade A', 'Estado A', '40000000', 'Referência da Rua A'),
+    ).toThrow(new InvalidParamException('Nome da rua deve conter no mínimo 3 caracteres.'));
   });
 });

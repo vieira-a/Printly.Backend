@@ -1,6 +1,7 @@
-import { MissingParamException } from '../../exceptions';
+import { InvalidParamException, MissingParamException } from '../../exceptions';
 
 const MissingStreetExceptionMessage = 'Nome da rua não informado.';
+const InvalidStreetExceptionMessage = 'Nome da rua deve conter no mínimo 3 caracteres.';
 
 export class Address {
   private constructor(
@@ -27,5 +28,7 @@ export class Address {
 
   private validate(): void {
     if (!this.street) throw new MissingParamException(MissingStreetExceptionMessage);
+    if (this.street.trim().length < 3)
+      throw new InvalidParamException(InvalidStreetExceptionMessage);
   }
 }
