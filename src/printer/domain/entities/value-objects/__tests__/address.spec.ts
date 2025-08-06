@@ -106,4 +106,16 @@ describe('Address', () => {
       Address.create('Rua A', 'Bairro A', 'Cidade A', '', '40000000', 'Referência da Rua A'),
     ).toThrow(new InvalidParamException('Estado não informado.'));
   });
+
+  it('should create a new Address without reference', () => {
+    const newAddressWithoutReference = Address.create(
+      'Rua A',
+      'Bairro Tal',
+      'Cidade A',
+      'BA',
+      '40000000',
+    );
+
+    expect(newAddressWithoutReference).toBeInstanceOf(Address);
+  });
 });
