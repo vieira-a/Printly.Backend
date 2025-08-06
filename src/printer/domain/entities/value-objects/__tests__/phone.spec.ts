@@ -18,4 +18,10 @@ describe('Phone', () => {
       new InvalidParamException('DDD deve conter dois dígitos entre 11 e 99.'),
     );
   });
+
+  it('should throw an InvalidParamException if phone number has less than 8 digits', () => {
+    expect(() => Phone.create(71, 9999999)).toThrow(
+      new InvalidParamException('Número de telefone deve conter 8 ou 9 digitos.'),
+    );
+  });
 });
