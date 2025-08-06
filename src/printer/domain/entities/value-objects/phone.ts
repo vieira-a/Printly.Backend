@@ -1,8 +1,14 @@
+import { InvalidParamException } from '../../exceptions';
+
+const InvalidDDDExceptionMessage = 'DDD deve conter dois dígitos entre 11 e 99.';
+
 export class Phone {
   private constructor(
     readonly areaCode: number,
     readonly phoneNumber: number,
-  ) {}
+  ) {
+    this.validate();
+  }
 
   public static create(areaCode: number, phoneNumber: number): Phone {
     return new Phone(areaCode, phoneNumber);
@@ -10,5 +16,10 @@ export class Phone {
 
   public toString(): string {
     return `${this.areaCode}${this.phoneNumber}`;
+  }
+
+  private validate(): void {
+    if (!Number.isInteger(this.areaCode) || this.areaCode < 11 || this.areaCode > 99)
+      throw new InvalidParamException(InvalidDDDExceptionMessage);
   }
 }
