@@ -35,4 +35,25 @@ export class ModelRepository implements IModelRepository {
       }
     }
   }
+
+  async findByManufacturerAndDescription(
+    manufacturer: string,
+    description: string,
+  ): Promise<boolean> {
+    try {
+      const model = await this.repository.findOne({
+        where: { manufacturer, description },
+      });
+
+      return model ? true : false;
+    } catch (error) {
+      if (error instanceof TypeORMError) {
+        this.logger.log(error.message);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
 }

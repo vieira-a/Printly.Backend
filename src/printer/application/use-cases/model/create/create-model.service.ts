@@ -11,6 +11,7 @@ import { ICreateModelUseCase } from './create-model.interface';
 import { CreateModelInput } from './input/create-model.input';
 import { ModelDomainValidationException } from '../../../../domain/exceptions';
 import { DatabaseModelException } from '@printer/infrastructure/exceptions/database-model.exception';
+import { ModelConflictException } from '@printer/application/exceptions/model-conflict.exception';
 
 @Injectable()
 export class CreateModelService implements ICreateModelUseCase {
@@ -24,6 +25,15 @@ export class CreateModelService implements ICreateModelUseCase {
     const { manufacturer, description, printOid, copyOid } = input;
     try {
       const newModel = Model.create(manufacturer, description, printOid, copyOid);
+
+      const modelAlreadyExists = await this.modelRepository.findByManufacturerAndDescription(
+        manufacturer,
+        description,
+      );
+
+      if (modelAlreadyExists) {
+        throw new ModelConflictException(manufacturer, description);
+      }
 
       await this.modelRepository.create(newModel);
     } catch (error) {
