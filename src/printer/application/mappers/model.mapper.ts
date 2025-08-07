@@ -1,5 +1,5 @@
 import type { Model } from '@printer/domain/entities';
-import type { ModelOutput } from '../create/output/model.output';
+import type { ModelOutput } from '../use-cases/model/create/output/model.output';
 
 export abstract class ModelMapper {
   public static toOutput(entity: Model): ModelOutput {

@@ -12,7 +12,7 @@ import { DatabaseModelException, ModelConflictException } from '@printer/applica
 import { ICreateModelUseCase } from './create-model.interface';
 import { CreateModelInput } from './input/create-model.input';
 import { ModelOutput } from './output/model.output';
-import { ModelMapper } from '../mappers/model.mapper';
+import { ModelMapper } from '@printer/application/mappers/model.mapper';
 
 @Injectable()
 export class CreateModelService implements ICreateModelUseCase {

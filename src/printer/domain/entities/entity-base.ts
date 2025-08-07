@@ -1,13 +1,29 @@
 import { randomUUID } from 'crypto';
 
 export abstract class EntityBase {
-  readonly id: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
+  private _id: string;
+  private _createdAt: Date;
+  private _updatedAt: Date;
+
+  get id() {
+    return this._id;
+  }
+
+  get createdAt() {
+    return this._createdAt;
+  }
+
+  get updatedAt() {
+    return this._updatedAt;
+  }
+
+  protected set updatedAt(value: Date) {
+    this._updatedAt = value;
+  }
 
   constructor(id?: string, createdAt?: Date, updatedAt?: Date) {
-    this.id = id ?? randomUUID();
-    this.createdAt = createdAt ?? new Date();
-    this.updatedAt = updatedAt ?? new Date();
+    this._id = id ?? randomUUID();
+    this._createdAt = createdAt ?? new Date();
+    this._updatedAt = updatedAt ?? new Date();
   }
 }
