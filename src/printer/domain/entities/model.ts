@@ -1,5 +1,5 @@
+import { ModelDomainValidationException } from '../exceptions';
 import { EntityBase } from './entity-base';
-import { InvalidParamException, MissingParamException } from '../exceptions';
 
 const InvalidManufacturerExceptionMessage =
   'Nome do fabricante deve conter no mínimo 3 caracteres.';
@@ -9,6 +9,7 @@ const InvalidDescriptionExceptionMessage =
 const MissingDescriptionExceptionMessage = 'Descrição do modelo não informado.';
 const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 caracteres.';
 const MissingOidExceptionMessage = 'OID de contador não informado.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Model extends EntityBase {
   private constructor(
@@ -31,24 +32,33 @@ export class Model extends EntityBase {
   }
 
   private validate(): void {
-    if (!this.manufacturer) throw new MissingParamException(MissingManufacturerExceptionMessage);
+    const errors: string[] = [];
 
-    if (this.manufacturer.trim().length < 3)
-      throw new InvalidParamException(InvalidManufacturerExceptionMessage);
+    if (!this.manufacturer) {
+      errors.push(MissingManufacturerExceptionMessage);
+    } else if (this.manufacturer.trim().length < 3) {
+      errors.push(InvalidManufacturerExceptionMessage);
+    }
 
-    if (!this.description) throw new MissingParamException(MissingDescriptionExceptionMessage);
+    if (!this.description) {
+      errors.push(MissingDescriptionExceptionMessage);
+    } else if (this.description.trim().length < 3) {
+      errors.push(InvalidDescriptionExceptionMessage);
+    }
 
-    if (this.description.trim().length < 3)
-      throw new InvalidParamException(InvalidDescriptionExceptionMessage);
+    if (!this.printOid) {
+      errors.push(MissingOidExceptionMessage);
+    } else if (this.printOid.trim().length < 10) {
+      errors.push(InvalidOidExceptionMessage);
+    }
 
-    if (!this.printOid) throw new MissingParamException(MissingOidExceptionMessage);
+    if (!this.copyOid) {
+      errors.push(MissingOidExceptionMessage);
+    } else if (this.copyOid.trim().length < 10) {
+      errors.push(InvalidOidExceptionMessage);
+    }
 
-    if (this.printOid.trim().length < 10)
-      throw new InvalidParamException(InvalidOidExceptionMessage);
-
-    if (!this.copyOid) throw new MissingParamException(MissingOidExceptionMessage);
-
-    if (this.copyOid.trim().length < 10)
-      throw new InvalidParamException(InvalidOidExceptionMessage);
+    if (errors.length > 0)
+      throw new ModelDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

@@ -1,5 +1,5 @@
-import { InvalidParamException, MissingParamException } from '../../exceptions';
 import { Model } from '../model';
+import { DomainValidationException } from '@shared/exceptions/domain-validation.exception';
 
 describe('Model Entity', () => {
   it('should create a new Model with correct params', () => {
@@ -20,75 +20,75 @@ describe('Model Entity', () => {
     expect(newModel.updatedAt).toBeInstanceOf(Date);
   });
 
-  it('should throw MissingParamException if Manufacturer is not provided', () => {
+  it('should throw DomainValidationException if Manufacturer is not provided', () => {
     expect(() =>
       Model.create('', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new MissingParamException('Nome do fabricante não informado.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw MissingParamException if Manufacturer is null', () => {
+  it('should throw DomainValidationException if Manufacturer is null', () => {
     expect(() =>
       Model.create(null as any, 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new MissingParamException('Nome do fabricante não informado.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw InvalidParamException if Manufacturer name is less than 3 characters', () => {
+  it('should throw DomainValidationException if Manufacturer name is less than 3 characters', () => {
     expect(() =>
       Model.create('Ky', 'KM2040DN', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new InvalidParamException('Nome do fabricante deve conter no mínimo 3 caracteres.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw MissingParamException if Description is not provided', () => {
+  it('should throw DomainValidationException if Description is not provided', () => {
     expect(() =>
       Model.create('Kyocera', '', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new MissingParamException('Descrição do modelo não informado.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw MissingParamException if Description is null', () => {
+  it('should throw DomainValidationException if Description is null', () => {
     expect(() =>
       Model.create('Kyocera', null as any, '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new MissingParamException('Descrição do modelo não informado.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw InvalidParamException if Description is less than 3 characters', () => {
+  it('should throw DomainValidationException if Description is less than 3 characters', () => {
     expect(() =>
       Model.create('Kyocera', 'KM', '1.2.1.2.3.5.6.7.41.10', '1.2.1.2.3.5.6.7.41.11'),
-    ).toThrow(new InvalidParamException('Descrição do modelo deve conter no mínimo 3 caracteres.'));
+    ).toThrow(DomainValidationException);
   });
 
-  it('should throw MissingParamException if PrintOid is not provided', () => {
+  it('should throw DomainValidationException if PrintOid is not provided', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
-      new MissingParamException('OID de contador não informado.'),
+      DomainValidationException,
     );
   });
 
-  it('should throw MissingParamException if PrintOid is null', () => {
+  it('should throw DomainValidationException if PrintOid is null', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', null as any, '1.2.1.2.3.5.6.7.41.11')).toThrow(
-      new MissingParamException('OID de contador não informado.'),
+      DomainValidationException,
     );
   });
 
-  it('should throw InvalidParamException if PrintOid is less than 10 characters', () => {
+  it('should throw DomainValidationException if PrintOid is less than 10 characters', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.3.4.5', '1.2.1.2.3.5.6.7.41.11')).toThrow(
-      new InvalidParamException('OID de contador deve conter no mínimo 10 caracteres.'),
+      DomainValidationException,
     );
   });
 
-  it('should throw MissingParamException if CopyOid is not provided', () => {
+  it('should throw DomainValidationException if CopyOid is not provided', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', '', '1.2.1.2.3.5.6.7.41.11')).toThrow(
-      new MissingParamException('OID de contador não informado.'),
+      DomainValidationException,
     );
   });
 
-  it('should throw MissingParamException if CopyOid is null', () => {
+  it('should throw DomainValidationException if CopyOid is null', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', null as any)).toThrow(
-      new MissingParamException('OID de contador não informado.'),
+      DomainValidationException,
     );
   });
 
-  it('should throw InvalidParamException if CopyOid is less than 10 characters', () => {
+  it('should throw DomainValidationException if CopyOid is less than 10 characters', () => {
     expect(() => Model.create('Kyocera', 'KM2040DN', '1.2.1.2.3.5.6.7.41.11', '1.2.3.4.5')).toThrow(
-      new InvalidParamException('OID de contador deve conter no mínimo 10 caracteres.'),
+      DomainValidationException,
     );
   });
 });
