@@ -3,6 +3,7 @@ import { UnprocessableEntityException } from '@nestjs/common';
 import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
 import { CreateModelService } from '../create-model.service';
 import { CreateModelInput } from '../input/create-model.input';
+import { ModelConflictException } from '@printer/application/exceptions/model-conflict.exception';
 
 describe('CreateModelService', () => {
   let service: CreateModelService;
@@ -11,6 +12,7 @@ describe('CreateModelService', () => {
   beforeEach(async () => {
     modelMockedRepository = {
       create: jest.fn(),
+      findByManufacturerAndDescription: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -49,6 +51,19 @@ describe('CreateModelService', () => {
     };
 
     await expect(service.execute(invalidInput)).rejects.toThrow(UnprocessableEntityException);
+    expect(modelMockedRepository.create).not.toHaveBeenCalled();
+  });
+
+  it('should throw ModelConflictException if model with manufacturer and description already exists', async () => {
+    const input: CreateModelInput = {
+      manufacturer: 'Kyocera',
+      description: 'M2040DN',
+      printOid: '1.2.3.4.5.6.7.8.9.10',
+      copyOid: '1.2.3.4.5.6.7.8.9.11',
+    };
+
+    jest.spyOn(modelMockedRepository, 'findByManufacturerAndDescription').mockResolvedValue(true);
+    await expect(service.execute(input)).rejects.toThrow(ModelConflictException);
     expect(modelMockedRepository.create).not.toHaveBeenCalled();
   });
 });
