@@ -5,7 +5,7 @@ import { Model } from '@printer/domain/entities';
 import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
 import { PrinterModel } from '../models/printer-model.model';
 import { InfrastructureException } from '@shared/exceptions/infrastructure.exception';
-import { DatabaseModelException } from '@printer/infrastructure/exceptions/database-model.exception';
+import { DatabaseModelException } from '@printer/application/exceptions/database-model.exception';
 
 const DatabaseModelExceptionMessage =
   'Houve um erro no banco de dados relacionado ao modelo de impressora.';

@@ -5,13 +5,12 @@ import {
   Logger,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Model } from '../../../../domain/entities';
-import { IModelRepository } from '../../../../domain/repositories/model-repository.interface';
+import { Model } from '@printer/domain/entities';
+import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
+import { ModelDomainValidationException } from '@printer/domain/exceptions';
+import { DatabaseModelException, ModelConflictException } from '@printer/application/exceptions';
 import { ICreateModelUseCase } from './create-model.interface';
 import { CreateModelInput } from './input/create-model.input';
-import { ModelDomainValidationException } from '../../../../domain/exceptions';
-import { DatabaseModelException } from '@printer/infrastructure/exceptions/database-model.exception';
-import { ModelConflictException } from '@printer/application/exceptions/model-conflict.exception';
 
 @Injectable()
 export class CreateModelService implements ICreateModelUseCase {
