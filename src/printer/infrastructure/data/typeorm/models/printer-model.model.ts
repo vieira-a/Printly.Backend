@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, Unique } from 'typeorm';
 import { BaseModel } from './base-model';
 
 @Entity({ name: 'models' })
+@Unique(['manufacturer', 'description'])
 export class PrinterModel extends BaseModel {
   @Column({ name: 'manufacturer', type: 'varchar', length: 30, nullable: false })
   manufacturer: string;

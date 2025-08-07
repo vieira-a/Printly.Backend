@@ -4,8 +4,12 @@ import { Repository, TypeORMError } from 'typeorm';
 import { Model } from '@printer/domain/entities';
 import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
 import { PrinterModel } from '../models/printer-model.model';
-import { TypeOrmException } from '@shared/infrastructure/data/typeorm/exceptions/typeorm.exception';
 import { InfrastructureException } from '@shared/exceptions/infrastructure.exception';
+import { DatabaseModelException } from '@printer/infrastructure/exceptions/database-model.exception';
+
+const DatabaseModelExceptionMessage =
+  'Houve um erro no banco de dados relacionado ao modelo de impressora.';
+const InfrastructureExceptionMessage = 'Houve um erro interno. Tente novamente mais tarde.';
 
 @Injectable()
 export class ModelRepository implements IModelRepository {
@@ -23,11 +27,11 @@ export class ModelRepository implements IModelRepository {
       await this.repository.save(newModel);
     } catch (error) {
       if (error instanceof TypeORMError) {
-        this.logger.error(error.message);
-        throw new TypeOrmException();
+        this.logger.log(error.message);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
       } else {
-        this.logger.error(error.message);
-        throw new InfrastructureException();
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
       }
     }
   }
