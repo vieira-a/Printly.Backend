@@ -1,4 +1,4 @@
-import { MissingParamException } from '../../exceptions';
+import { LocationDomainValidationException } from '../../exceptions';
 import { Location } from '../location';
 import { Address } from '../value-objects/address';
 import { CEP } from '../value-objects/cep';
@@ -33,31 +33,31 @@ describe('Location Entity', () => {
     const newCellPhone = Phone.create(71, 999999999);
 
     expect(() => Location.create(null as any, newCellPhone, 'Contact Location')).toThrow(
-      new MissingParamException('Endereço não informado.'),
+      LocationDomainValidationException,
     );
   });
 
   it('should throw MissingParamException if Phone is not provided', () => {
     expect(() => Location.create(newAddress, null as any, 'Contact Location')).toThrow(
-      new MissingParamException('Telefone não informado.'),
+      LocationDomainValidationException,
     );
   });
 
   it('should throw MissingParamException if contact is not provided', () => {
     expect(() => Location.create(newAddress, newCellPhone, null as any)).toThrow(
-      new MissingParamException('Contato não informado.'),
+      LocationDomainValidationException,
     );
   });
 
   it('should throw MissingParamException if contact is empty', () => {
     expect(() => Location.create(newAddress, newCellPhone, '')).toThrow(
-      new MissingParamException('Contato não informado.'),
+      LocationDomainValidationException,
     );
   });
 
   it('should throw MissingParamException if contact has less than 3 characters', () => {
     expect(() => Location.create(newAddress, newCellPhone, 'Co')).toThrow(
-      new MissingParamException('Contato deve ter no mínimo 3 caracteres.'),
+      LocationDomainValidationException,
     );
   });
 });
