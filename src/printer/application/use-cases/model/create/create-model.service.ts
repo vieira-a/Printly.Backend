@@ -25,7 +25,7 @@ export class CreateModelService implements ICreateModelUseCase {
     try {
       const newModel = Model.create(manufacturer, description, printOid, copyOid);
 
-      const modelAlreadyExists = await this.modelRepository.findByManufacturerAndDescription(
+      const modelAlreadyExists = await this.modelRepository.existsByManufacturerAndDesciption(
         manufacturer,
         description,
       );

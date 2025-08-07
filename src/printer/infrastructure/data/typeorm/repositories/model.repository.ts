@@ -36,12 +36,12 @@ export class ModelRepository implements IModelRepository {
     }
   }
 
-  async findByManufacturerAndDescription(
+  async existsByManufacturerAndDesciption(
     manufacturer: string,
     description: string,
   ): Promise<boolean> {
     try {
-      const model = await this.repository.findOne({
+      const model = await this.repository.findOneOrFail({
         where: { manufacturer, description },
       });
 
