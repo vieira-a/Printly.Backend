@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateModelService } from '../create-model.service';
+import { UnprocessableEntityException } from '@nestjs/common';
 import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
-import type { CreateModelInput } from '../input/create-model.input';
+import { CreateModelService } from '../create-model.service';
+import { CreateModelInput } from '../input/create-model.input';
 
 describe('CreateModelService', () => {
   let service: CreateModelService;
@@ -37,5 +38,17 @@ describe('CreateModelService', () => {
     expect(modelMockedRepository.create).toHaveBeenCalled();
     const createdModel = modelMockedRepository.create.mock.calls[0][0];
     expect(createdModel.manufacturer).toBe('Kyocera');
+  });
+
+  it('should throw ModelDomainValidationException if model creation fails', async () => {
+    const invalidInput: CreateModelInput = {
+      manufacturer: '',
+      description: '',
+      printOid: '',
+      copyOid: '',
+    };
+
+    await expect(service.execute(invalidInput)).rejects.toThrow(UnprocessableEntityException);
+    expect(modelMockedRepository.create).not.toHaveBeenCalled();
   });
 });
