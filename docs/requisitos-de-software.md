@@ -1,34 +1,6 @@
-# Printly – Sistema de Gerenciamento de Contagens de Impressões
+# Requisitos Funcionais (RF)
 
-## Visão Geral
-
-**Printly** é um sistema para gerenciamento de impressoras em rede, coleta automatizada de contagens via SNMP e geração de relatórios gerenciais. A proposta segue os princípios de **MVP** e **Lean Startup**, com foco na entrega de valor rápido e iterativo.
-
----
-
-## Tecnologias Utilizadas
-
-- **Backend:** Nest.js
-- **Frontend:** React.js
-- **Banco de Dados:** PostgreSQL ou MongoDB
-- **Deploy Local:** Docker + Docker Compose
-- **Protocolo:** SNMP para obtenção de dados das impressoras
-
----
-
-## Objetivos do MVP
-
-- Cadastro e gerenciamento de impressoras
-- Coleta automatizada via SNMP
-- Inserção manual de contagens
-- Relatórios gerenciais com filtros
-- Operação local via Docker
-
----
-
-## Requisitos Funcionais (RF)
-
-### Impressoras
+## Impressoras
 
 - **RF01**: Cadastrar impressoras com marca, modelo, IP, localização, responsável e observações.
   - Uma impressora não deve ser cadastrada sem um modelo, número de série, IP, localização e responsáveis
@@ -40,24 +12,24 @@
 
 - **RF03**: Editar e excluir impressoras.
 
-### Coleta Automática via SNMP
+## Coleta Automática via SNMP
 
 - **RF04**: Coletar dados de contagem via SNMP automaticamente.
 - **RF05**: Configurar periodicidade da coleta (diária por padrão).
 - **RF06**: Registrar falhas na coleta sem impactar a operação.
 
-### Coleta Manual
+## Coleta Manual
 
 - **RF07**: Permitir inserção manual de contagem com data e observações.
 
-### Relatórios
+## Relatórios
 
 - **RF08**: Relatório gerencial com contagem atual por impressora e filtros por localização, responsável, marca, modelo e período.
 - **RF09**: Relatório comparativo entre períodos com variação percentual de consumo.
 
 ---
 
-## Requisitos Não Funcionais (RNF)
+# Requisitos Não Funcionais (RNF)
 
 - **RNF01**: Sistema containerizado com Docker.
 - **RNF02**: Coleta via SNMP assíncrona e resiliente.
