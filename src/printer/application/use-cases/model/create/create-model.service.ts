@@ -11,7 +11,7 @@ import { ModelDomainValidationException } from '@printer/domain/exceptions';
 import { DatabaseModelException, ModelConflictException } from '@printer/application/exceptions';
 import { ICreateModelUseCase } from './create-model.interface';
 import { CreateModelInput } from './input/create-model.input';
-import { ModelOutput } from './output/model.output';
+import { CreateModelOutput } from './output/create-model.output';
 import { ModelMapper } from '@printer/application/mappers/model.mapper';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class CreateModelService implements ICreateModelUseCase {
     @Inject('IModelRepository')
     private readonly modelRepository: IModelRepository,
   ) {}
-  async execute(input: CreateModelInput): Promise<ModelOutput> {
+  async execute(input: CreateModelInput): Promise<CreateModelOutput> {
     const { manufacturer, description, printOid, copyOid } = input;
     try {
       const newModel = Model.create(manufacturer, description, printOid, copyOid);

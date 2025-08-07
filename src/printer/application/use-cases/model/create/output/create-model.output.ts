@@ -1,4 +1,4 @@
-export class ModelOutput {
+export class CreateModelOutput {
   id: string;
   manufacturer: string;
   description: string;

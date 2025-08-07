@@ -1,6 +1,6 @@
 import { CreateModelInput } from './input/create-model.input';
-import { ModelOutput } from './output/model.output';
+import { CreateModelOutput } from './output/create-model.output';
 
 export interface ICreateModelUseCase {
-  execute(input: CreateModelInput): Promise<ModelOutput>;
+  execute(input: CreateModelInput): Promise<CreateModelOutput>;
 }
