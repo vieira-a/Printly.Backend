@@ -14,6 +14,8 @@ describe('CreateModelService', () => {
     modelMockedRepository = {
       create: jest.fn(),
       existsByManufacturerAndDesciption: jest.fn(),
+      findById: jest.fn(),
+      update: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
