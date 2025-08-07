@@ -5,6 +5,7 @@ import { ModelController } from './api/rest/controllers/model.controller';
 import { CreateModelService } from './application/use-cases/model/create/create-model.service';
 import { ModelRepository } from './infrastructure/data/typeorm/repositories/model.repository';
 import { PrinterModel } from './infrastructure/data/typeorm/models/printer-model.model';
+import { UpdateModelService } from './application/use-cases/model/update/update-model.service';
 
 @Module({
   imports: [
@@ -14,7 +15,11 @@ import { PrinterModel } from './infrastructure/data/typeorm/models/printer-model
     }),
     TypeOrmModule.forFeature([PrinterModel]),
   ],
-  providers: [CreateModelService, { provide: 'IModelRepository', useClass: ModelRepository }],
+  providers: [
+    CreateModelService,
+    UpdateModelService,
+    { provide: 'IModelRepository', useClass: ModelRepository },
+  ],
   controllers: [ModelController],
 })
 export class PrinterModule {}

@@ -13,4 +13,16 @@ export abstract class ModelDataMapper {
       model.updatedAt,
     );
   }
+
+  public static toModel(domain: Model): PrinterModel {
+    return PrinterModel.restore(
+      domain.id,
+      domain.manufacturer,
+      domain.description,
+      domain.printOid,
+      domain.copyOid,
+      domain.createdAt,
+      domain.updatedAt,
+    );
+  }
 }

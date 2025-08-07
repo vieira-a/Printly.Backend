@@ -21,19 +21,42 @@ interface ModelProps {
   updatedAt?: Date;
 }
 
+interface UpdateProps {
+  manufacturer?: string;
+  description?: string;
+  printOid?: string;
+  copyOid?: string;
+}
+
 export class Model extends EntityBase {
-  readonly manufacturer: string;
-  readonly description: string;
-  readonly printOid: string;
-  readonly copyOid: string;
+  private _manufacturer: string;
+  private _description: string;
+  private _printOid: string;
+  private _copyOid: string;
 
   private constructor(props: ModelProps) {
     super(props.id, props.createdAt, props.updatedAt);
-    this.manufacturer = props.manufacturer;
-    this.description = props.description;
-    this.printOid = props.printOid;
-    this.copyOid = props.copyOid;
+    this._manufacturer = props.manufacturer;
+    this._description = props.description;
+    this._printOid = props.printOid;
+    this._copyOid = props.copyOid;
     this.validate();
+  }
+
+  get manufacturer() {
+    return this._manufacturer;
+  }
+
+  get description() {
+    return this._description;
+  }
+
+  get printOid() {
+    return this._printOid;
+  }
+
+  get copyOid() {
+    return this._copyOid;
   }
 
   public static create(
@@ -55,6 +78,29 @@ export class Model extends EntityBase {
     updatedAt: Date,
   ): Model {
     return new Model({ id, manufacturer, description, printOid, copyOid, createdAt, updatedAt });
+  }
+
+  public update(props: UpdateProps): void {
+    const updatedManufacturer = props.manufacturer ?? this.manufacturer;
+    const updatedDescription = props.description ?? this.description;
+    const updatedPrintOid = props.printOid ?? this.printOid;
+    const updatedCopyOid = props.copyOid ?? this.copyOid;
+
+    new Model({
+      id: this.id,
+      manufacturer: updatedManufacturer,
+      description: updatedDescription,
+      printOid: updatedPrintOid,
+      copyOid: updatedCopyOid,
+      createdAt: this.createdAt,
+      updatedAt: new Date(),
+    });
+
+    this._manufacturer = updatedManufacturer;
+    this._description = updatedDescription;
+    this._printOid = updatedPrintOid;
+    this._copyOid = updatedCopyOid;
+    this.updatedAt = new Date();
   }
 
   private validate(): void {
