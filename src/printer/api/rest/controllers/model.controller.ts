@@ -19,7 +19,7 @@ export class ModelController {
   @Post()
   async create(@Body() input: CreateModelInput) {
     try {
-      await this.createModelService.execute(input);
+      return await this.createModelService.execute(input);
     } catch (error) {
       if (error instanceof ModelConflictException) {
         throw new ConflictException(error.message);

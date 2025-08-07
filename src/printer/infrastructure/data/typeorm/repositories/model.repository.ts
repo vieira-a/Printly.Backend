@@ -6,6 +6,7 @@ import { IModelRepository } from '@printer/domain/repositories/model-repository.
 import { PrinterModel } from '../models/printer-model.model';
 import { InfrastructureException } from '@shared/exceptions/infrastructure.exception';
 import { DatabaseModelException } from '@printer/application/exceptions/database-model.exception';
+import { ModelDataMapper } from '../../mappers/model-data.mapper';
 
 const DatabaseModelExceptionMessage =
   'Houve um erro no banco de dados relacionado ao modelo de impressora.';
@@ -19,12 +20,13 @@ export class ModelRepository implements IModelRepository {
     @InjectRepository(PrinterModel)
     private readonly repository: Repository<PrinterModel>,
   ) {}
-  async create(input: Model): Promise<void> {
+  async create(input: Model): Promise<Model> {
     try {
       const { manufacturer, description, printOid, copyOid } = input;
       const newModel = PrinterModel.create(manufacturer, description, printOid, copyOid);
 
-      await this.repository.save(newModel);
+      const result = await this.repository.save(newModel);
+      return ModelDataMapper.toDomain(result);
     } catch (error) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
@@ -41,7 +43,7 @@ export class ModelRepository implements IModelRepository {
     description: string,
   ): Promise<boolean> {
     try {
-      const model = await this.repository.findOneOrFail({
+      const model = await this.repository.findOne({
         where: { manufacturer, description },
       });
 

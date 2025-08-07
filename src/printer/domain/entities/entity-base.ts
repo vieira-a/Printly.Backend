@@ -1,13 +1,13 @@
-import { randomUUID, UUID } from 'crypto';
+import { randomUUID } from 'crypto';
 
 export abstract class EntityBase {
-  readonly id: UUID;
+  readonly id: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  constructor() {
-    this.id = randomUUID();
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+  constructor(id?: string, createdAt?: Date, updatedAt?: Date) {
+    this.id = id ?? randomUUID();
+    this.createdAt = createdAt ?? new Date();
+    this.updatedAt = updatedAt ?? new Date();
   }
 }

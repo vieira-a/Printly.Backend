@@ -11,6 +11,8 @@ import { ModelDomainValidationException } from '@printer/domain/exceptions';
 import { DatabaseModelException, ModelConflictException } from '@printer/application/exceptions';
 import { ICreateModelUseCase } from './create-model.interface';
 import { CreateModelInput } from './input/create-model.input';
+import { ModelOutput } from './output/model.output';
+import { ModelMapper } from '../mappers/model.mapper';
 
 @Injectable()
 export class CreateModelService implements ICreateModelUseCase {
@@ -20,7 +22,7 @@ export class CreateModelService implements ICreateModelUseCase {
     @Inject('IModelRepository')
     private readonly modelRepository: IModelRepository,
   ) {}
-  async execute(input: CreateModelInput): Promise<void> {
+  async execute(input: CreateModelInput): Promise<ModelOutput> {
     const { manufacturer, description, printOid, copyOid } = input;
     try {
       const newModel = Model.create(manufacturer, description, printOid, copyOid);
@@ -34,7 +36,8 @@ export class CreateModelService implements ICreateModelUseCase {
         throw new ModelConflictException(manufacturer, description);
       }
 
-      await this.modelRepository.create(newModel);
+      const result = await this.modelRepository.create(newModel);
+      return ModelMapper.toOutput(result);
     } catch (error) {
       this.logger.log(error.message);
       if (error instanceof ModelDomainValidationException) {

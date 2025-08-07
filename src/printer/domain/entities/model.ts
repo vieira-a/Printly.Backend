@@ -11,14 +11,28 @@ const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 ca
 const MissingOidExceptionMessage = 'OID de contador não informado.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
+interface ModelProps {
+  manufacturer: string;
+  description: string;
+  printOid: string;
+  copyOid: string;
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export class Model extends EntityBase {
-  private constructor(
-    readonly manufacturer: string,
-    readonly description: string,
-    readonly printOid: string,
-    readonly copyOid: string,
-  ) {
-    super();
+  readonly manufacturer: string;
+  readonly description: string;
+  readonly printOid: string;
+  readonly copyOid: string;
+
+  private constructor(props: ModelProps) {
+    super(props.id, props.createdAt, props.updatedAt);
+    this.manufacturer = props.manufacturer;
+    this.description = props.description;
+    this.printOid = props.printOid;
+    this.copyOid = props.copyOid;
     this.validate();
   }
 
@@ -28,7 +42,19 @@ export class Model extends EntityBase {
     printOid: string,
     copyOid: string,
   ): Model {
-    return new Model(manufacturer, description, printOid, copyOid);
+    return new Model({ manufacturer, description, printOid, copyOid });
+  }
+
+  public static restore(
+    id: string,
+    manufacturer: string,
+    description: string,
+    printOid: string,
+    copyOid: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ): Model {
+    return new Model({ id, manufacturer, description, printOid, copyOid, createdAt, updatedAt });
   }
 
   private validate(): void {

@@ -4,6 +4,7 @@ import { IModelRepository } from '@printer/domain/repositories/model-repository.
 import { CreateModelService } from '../create-model.service';
 import { CreateModelInput } from '../input/create-model.input';
 import { ModelConflictException } from '@printer/application/exceptions/model-conflict.exception';
+import { Model } from '@printer/domain/entities';
 
 describe('CreateModelService', () => {
   let service: CreateModelService;
@@ -12,7 +13,7 @@ describe('CreateModelService', () => {
   beforeEach(async () => {
     modelMockedRepository = {
       create: jest.fn(),
-      findByManufacturerAndDescription: jest.fn(),
+      existsByManufacturerAndDesciption: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -36,10 +37,27 @@ describe('CreateModelService', () => {
       copyOid: '1.2.3.4.5.6.7.8.9.11',
     };
 
+    try {
+      const createdModel = Model.restore(
+        '9aef4b3c-40e8-4604-98c4-f8f7e424571e',
+        'Kyocera',
+        'M2040DN',
+        '1.2.3.4.5.6.7.8.9.10',
+        '1.2.3.4.5.6.7.8.9.11',
+        new Date(),
+        new Date(),
+      );
+
+      modelMockedRepository.create.mockResolvedValue(createdModel);
+    } catch (error) {
+      console.log(error);
+    }
+
     await service.execute(input);
+
     expect(modelMockedRepository.create).toHaveBeenCalled();
-    const createdModel = modelMockedRepository.create.mock.calls[0][0];
-    expect(createdModel.manufacturer).toBe('Kyocera');
+    const calledModel = modelMockedRepository.create.mock.calls[0][0];
+    expect(calledModel.manufacturer).toBe('Kyocera');
   });
 
   it('should throw ModelDomainValidationException if model creation fails', async () => {
@@ -62,7 +80,7 @@ describe('CreateModelService', () => {
       copyOid: '1.2.3.4.5.6.7.8.9.11',
     };
 
-    jest.spyOn(modelMockedRepository, 'findByManufacturerAndDescription').mockResolvedValue(true);
+    jest.spyOn(modelMockedRepository, 'existsByManufacturerAndDesciption').mockResolvedValue(true);
     await expect(service.execute(input)).rejects.toThrow(ModelConflictException);
     expect(modelMockedRepository.create).not.toHaveBeenCalled();
   });
