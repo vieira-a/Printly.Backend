@@ -1,18 +1,13 @@
-import { PhoneDomainValidationException } from '../../exceptions';
-
 const InvalidDDDExceptionMessage = 'DDD deve conter dois dígitos entre 11 e 99.';
 const InvalidPhoneExceptionMessage = 'Número de telefone deve conter 8 ou 9 digitos.';
 const InvalidCellPhoneExceptionMessage = 'Número de celular com 9 dígitos deve começar com 9.';
 const InvalidFixedPhoneExceptionMessage = 'Número fixo com 8 dígitos não deve começar com 9.';
-const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Phone {
   private constructor(
     readonly areaCode: number,
     readonly phoneNumber: number,
-  ) {
-    this.validate();
-  }
+  ) {}
 
   public static create(areaCode: number, phoneNumber: number): Phone {
     return new Phone(areaCode, phoneNumber);
@@ -22,7 +17,7 @@ export class Phone {
     return `${this.areaCode}${this.phoneNumber}`;
   }
 
-  private validate(): void {
+  validate(): string[] {
     const errors: string[] = [];
 
     if (!Number.isInteger(this.areaCode) || this.areaCode < 11 || this.areaCode > 99)
@@ -39,7 +34,6 @@ export class Phone {
       errors.push(InvalidFixedPhoneExceptionMessage);
     }
 
-    if (errors.length > 0)
-      throw new PhoneDomainValidationException(ValidationExceptionMessage, errors);
+    return errors;
   }
 }

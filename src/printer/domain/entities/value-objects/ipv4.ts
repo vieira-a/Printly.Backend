@@ -1,25 +1,12 @@
-import { IPv4DomainValidationException } from '@printer/domain/exceptions/ipv4-domain-validation.exception';
-
 const MissingIPv4ExceptionMessage = 'IP não informado.';
 const InvalidIPv4ExceptionMessage = 'IP inválido. Formato esperado: xxx.xxx.xxx.xxx';
-const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class IPV4 {
   private constructor(private readonly value: string) {}
 
   static create(raw: string): IPV4 {
-    const errors: string[] = [];
-
-    if (!raw) errors.push(MissingIPv4ExceptionMessage);
-
-    const trimmed = raw?.trim();
-
-    if (!IPV4.isValidIPv4(trimmed)) errors.push(InvalidIPv4ExceptionMessage);
-
-    if (errors.length > 0)
-      throw new IPv4DomainValidationException(ValidationExceptionMessage, errors);
-
-    return new IPV4(trimmed);
+    const cleaned = raw?.trim() ?? '';
+    return new IPV4(cleaned);
   }
 
   private static isValidIPv4(ip: string): boolean {
@@ -43,5 +30,15 @@ export class IPV4 {
 
   public getOctets(): number[] {
     return this.value.split('.').map((octet) => Number(octet));
+  }
+
+  public validate(): string[] {
+    const errors: string[] = [];
+
+    if (!this.value) errors.push(MissingIPv4ExceptionMessage);
+
+    if (!IPV4.isValidIPv4(this.value)) errors.push(InvalidIPv4ExceptionMessage);
+
+    return errors;
   }
 }

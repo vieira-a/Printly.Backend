@@ -1,4 +1,3 @@
-import { AddressDomainValidationException } from '../../exceptions';
 import { CEP } from './cep';
 
 const MissingStreetExceptionMessage = 'Nome da rua não informado.';
@@ -9,7 +8,6 @@ const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
 const MissingStateExceptionMessage = 'Estado não informado.';
 const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
-const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Address {
   private constructor(
@@ -19,9 +17,7 @@ export class Address {
     readonly state: string,
     readonly cep: CEP,
     readonly reference?: string,
-  ) {
-    this.validate();
-  }
+  ) {}
 
   public static create(
     street: string,
@@ -34,7 +30,7 @@ export class Address {
     return new Address(street, district, city, state, cep, reference);
   }
 
-  private validate(): void {
+  validate(): string[] {
     const errors: string[] = [];
 
     if (!this.street) {
@@ -53,7 +49,8 @@ export class Address {
       errors.push(MissingStateExceptionMessage);
     } else if (!/^[A-Z]{2}$/.test(this.state)) errors.push(InvalidStateExceptionMessage);
 
-    if (errors.length > 0)
-      throw new AddressDomainValidationException(ValidationExceptionMessage, errors);
+    errors.push(...this.cep?.validate());
+
+    return errors;
   }
 }

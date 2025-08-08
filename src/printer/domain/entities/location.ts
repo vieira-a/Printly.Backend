@@ -62,7 +62,10 @@ export class Location extends EntityBase {
     const errors: string[] = [];
 
     if (!this.address) errors.push(MissingAddressExceptionMessage);
+    else errors.push(...this.address.validate());
+
     if (!this.phone) errors.push(MissingPhoneExceptionMessage);
+    else errors.push(...this.phone.validate());
 
     if (!this.contact) {
       errors.push(MissingContactExceptionMessage);
