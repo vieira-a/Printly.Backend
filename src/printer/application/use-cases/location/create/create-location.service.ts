@@ -8,7 +8,7 @@ import {
 import { ICreateLocationUseCase } from './create-location.interface';
 import { CreateLocationInput } from './input/create-location.input';
 import { CreateLocationOutput } from './output/create-location.output';
-import type { ILocationRepository } from '@printer/domain/repositories/location-repository.interface';
+import { ILocationRepository } from '@printer/domain/data/repositories';
 import { LocationDomainValidationException } from '@printer/domain/exceptions';
 import { DatabaseModelException } from '@printer/application/exceptions';
 import { Location } from '@printer/domain/entities';

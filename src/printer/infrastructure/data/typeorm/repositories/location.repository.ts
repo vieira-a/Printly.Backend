@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILocationRepository } from '@printer/domain/repositories/location-repository.interface';
+import { ILocationRepository } from '@printer/domain/data/repositories';
 import { LocationModel } from '../models/location.model';
 import { TypeORMError, type Repository } from 'typeorm';
 import { DatabaseModelException } from '@printer/application/exceptions';

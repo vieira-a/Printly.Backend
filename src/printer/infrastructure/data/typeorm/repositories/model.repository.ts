@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, TypeORMError } from 'typeorm';
 import { Model } from '@printer/domain/entities';
-import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
+import { IModelRepository } from '@printer/domain/data/repositories';
 import { DatabaseModelException } from '@printer/application/exceptions/database-model.exception';
 import { InfrastructureException } from '@shared/exceptions/infrastructure.exception';
 import { PrinterModel } from '../models/printer-model.model';

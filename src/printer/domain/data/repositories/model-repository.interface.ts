@@ -1,4 +1,4 @@
-import type { Model } from '../entities';
+import type { Model } from '@printer/domain/entities';
 
 export interface IModelRepository {
   create(input: Model): Promise<Model>;

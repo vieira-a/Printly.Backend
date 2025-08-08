@@ -6,7 +6,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Model } from '@printer/domain/entities';
-import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
+import { IModelRepository } from '@printer/domain/data/repositories';
 import { ModelDomainValidationException } from '@printer/domain/exceptions';
 import { DatabaseModelException, ModelConflictException } from '@printer/application/exceptions';
 import { ICreateModelUseCase } from './create-model.interface';

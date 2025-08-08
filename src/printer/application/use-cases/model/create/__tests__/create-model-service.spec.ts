@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnprocessableEntityException } from '@nestjs/common';
-import { IModelRepository } from '@printer/domain/repositories/model-repository.interface';
+import { IModelRepository } from '@printer/domain/data/repositories';
 import { CreateModelService } from '../create-model.service';
 import { CreateModelInput } from '../input/create-model.input';
 import { ModelConflictException } from '@printer/application/exceptions/model-conflict.exception';

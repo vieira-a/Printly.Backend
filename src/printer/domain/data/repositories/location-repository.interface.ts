@@ -1,4 +1,4 @@
-import type { Location } from '../entities';
+import { Location } from '@printer/domain/entities';
 
 export interface ILocationRepository {
   create(input: Location): Promise<Location>;
