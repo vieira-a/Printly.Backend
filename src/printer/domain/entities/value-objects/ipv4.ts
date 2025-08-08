@@ -1,19 +1,23 @@
-import { InvalidParamException, MissingParamException } from '../../exceptions';
+import { IPv4DomainValidationException } from '@printer/domain/exceptions/ipv4-domain-validation.exception';
 
 const MissingIPv4ExceptionMessage = 'IP não informado.';
 const InvalidIPv4ExceptionMessage = 'IP inválido. Formato esperado: xxx.xxx.xxx.xxx';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class IPV4 {
   private constructor(private readonly value: string) {}
 
   static create(raw: string): IPV4 {
-    if (!raw) throw new MissingParamException(MissingIPv4ExceptionMessage);
+    const errors: string[] = [];
 
-    const trimmed = raw.trim();
+    if (!raw) errors.push(MissingIPv4ExceptionMessage);
 
-    if (!IPV4.isValidIPv4(trimmed)) {
-      throw new InvalidParamException(InvalidIPv4ExceptionMessage);
-    }
+    const trimmed = raw?.trim();
+
+    if (!IPV4.isValidIPv4(trimmed)) errors.push(InvalidIPv4ExceptionMessage);
+
+    if (errors.length > 0)
+      throw new IPv4DomainValidationException(ValidationExceptionMessage, errors);
 
     return new IPV4(trimmed);
   }

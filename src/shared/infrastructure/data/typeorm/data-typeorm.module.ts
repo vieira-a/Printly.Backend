@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PrinterModel } from '@printer/infrastructure/data/typeorm/models/printer-model.model';
+import { PrinterModel, LocationModel } from '@printer/infrastructure/data/typeorm/models';
 
 const nodeEnv = process.env.NODE_ENV;
 
@@ -17,7 +17,7 @@ const nodeEnv = process.env.NODE_ENV;
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [PrinterModel],
+        entities: [PrinterModel, LocationModel],
         synchronize: nodeEnv === 'development' ? true : false,
       }),
     }),

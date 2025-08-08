@@ -1,9 +1,10 @@
-import { InvalidParamException } from '../../exceptions';
+import { PhoneDomainValidationException } from '../../exceptions';
 
 const InvalidDDDExceptionMessage = 'DDD deve conter dois dígitos entre 11 e 99.';
 const InvalidPhoneExceptionMessage = 'Número de telefone deve conter 8 ou 9 digitos.';
-const InvalidCellPhoneExceptionMessage = 'Número de celular deve começar com 9.';
-const InvalidFixedPhoneExceptionMessage = 'Número fixo não deve começar com 9.';
+const InvalidCellPhoneExceptionMessage = 'Número de celular com 9 dígitos deve começar com 9.';
+const InvalidFixedPhoneExceptionMessage = 'Número fixo com 8 dígitos não deve começar com 9.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Phone {
   private constructor(
@@ -22,18 +23,23 @@ export class Phone {
   }
 
   private validate(): void {
+    const errors: string[] = [];
+
     if (!Number.isInteger(this.areaCode) || this.areaCode < 11 || this.areaCode > 99)
-      throw new InvalidParamException(InvalidDDDExceptionMessage);
+      errors.push(InvalidDDDExceptionMessage);
 
     const phoneString = this.phoneNumber.toString();
-    if (!/^\d{8,9}$/.test(phoneString))
-      throw new InvalidParamException(InvalidPhoneExceptionMessage);
+
+    if (!/^\d{8,9}$/.test(phoneString)) errors.push(InvalidPhoneExceptionMessage);
 
     if (phoneString.length === 9 && !phoneString.startsWith('9'))
-      throw new InvalidParamException(InvalidCellPhoneExceptionMessage);
+      errors.push(InvalidCellPhoneExceptionMessage);
 
     if (phoneString.length === 8 && phoneString.startsWith('9')) {
-      throw new InvalidParamException(InvalidFixedPhoneExceptionMessage);
+      errors.push(InvalidFixedPhoneExceptionMessage);
     }
+
+    if (errors.length > 0)
+      throw new PhoneDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

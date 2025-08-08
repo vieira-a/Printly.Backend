@@ -1,19 +1,23 @@
-import { InvalidParamException, MissingParamException } from '../../exceptions';
+import { CepDomainValidationException } from '../../exceptions';
 
 const MissingCEPExceptionMessage = 'CEP não informado.';
 const InvalidCEPExceptionMessage = 'CEP deve conter 8 digitos.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class CEP {
   private constructor(readonly value: string) {}
 
   static create(raw: string): CEP {
-    if (!raw) throw new MissingParamException(MissingCEPExceptionMessage);
+    const errors: string[] = [];
 
-    const cleaned = raw.replace(/\D/g, '');
+    if (!raw) errors.push(MissingCEPExceptionMessage);
 
-    if (!/^\d{8}$/.test(cleaned)) {
-      throw new InvalidParamException(InvalidCEPExceptionMessage);
-    }
+    const cleaned = raw?.replace(/\D/g, '');
+
+    if (!/^\d{8}$/.test(cleaned)) errors.push(InvalidCEPExceptionMessage);
+
+    if (errors.length > 0)
+      throw new CepDomainValidationException(ValidationExceptionMessage, errors);
 
     return new CEP(cleaned);
   }

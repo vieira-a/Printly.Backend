@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ModelController } from './api/rest/controllers/model.controller';
+import { ModelController } from './api/rest/controllers/model/model.controller';
 import { CreateModelService } from './application/use-cases/model/create/create-model.service';
 import { ModelRepository } from './infrastructure/data/typeorm/repositories/model.repository';
-import { PrinterModel } from './infrastructure/data/typeorm/models/printer-model.model';
+import { PrinterModel, LocationModel } from './infrastructure/data/typeorm/models';
 import { UpdateModelService } from './application/use-cases/model/update/update-model.service';
+import { LocationController } from './api/rest/controllers/location/location.controller';
+import { CreateLocationService } from './application/use-cases/location/create/create-location.service';
+import { LocationRepository } from './infrastructure/data/typeorm/repositories/location.repository';
 
 @Module({
   imports: [
@@ -13,13 +16,15 @@ import { UpdateModelService } from './application/use-cases/model/update/update-
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    TypeOrmModule.forFeature([PrinterModel]),
+    TypeOrmModule.forFeature([PrinterModel, LocationModel]),
   ],
   providers: [
     CreateModelService,
     UpdateModelService,
     { provide: 'IModelRepository', useClass: ModelRepository },
+    CreateLocationService,
+    { provide: 'ILocationRepository', useClass: LocationRepository },
   ],
-  controllers: [ModelController],
+  controllers: [ModelController, LocationController],
 })
 export class PrinterModule {}

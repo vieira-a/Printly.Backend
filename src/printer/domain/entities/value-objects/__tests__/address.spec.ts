@@ -1,4 +1,8 @@
-import { InvalidParamException, MissingParamException } from '../../../exceptions';
+import {
+  AddressDomainValidationException,
+  InvalidParamException,
+  MissingParamException,
+} from '../../../exceptions';
 import { Address } from '../address';
 import { CEP } from '../cep';
 
@@ -32,7 +36,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new MissingParamException('Nome da rua não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if street has less than 3 characters', () => {
@@ -45,7 +49,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Nome da rua deve conter no mínimo 3 caracteres.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if street is empty', () => {
@@ -58,7 +62,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Nome da rua não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw MissingParamException if district is not provided', () => {
@@ -71,7 +75,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new MissingParamException('Bairro não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if district has less than 3 characters', () => {
@@ -84,13 +88,13 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Bairro deve conter no mínimo 3 caracteres.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if district is empty', () => {
     expect(() =>
       Address.create('Rua A', '', 'Cidade A', 'BA', CEP.create('40000000'), 'Referência da Rua A'),
-    ).toThrow(new InvalidParamException('Bairro não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw MissingParamException if city is not provided', () => {
@@ -103,7 +107,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new MissingParamException('Cidade não informada.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if city has less than 3 characters', () => {
@@ -116,13 +120,13 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Cidade deve conter no mínimo 3 caracteres.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if city is empty', () => {
     expect(() =>
       Address.create('Rua A', 'Bairro A', '', 'BA', CEP.create('40000000'), 'Referência da Rua A'),
-    ).toThrow(new InvalidParamException('Cidade não informada.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw MissingParamException if state is not provided', () => {
@@ -135,7 +139,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new MissingParamException('Estado não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if state has less than 2 characters or more than 3 characters', () => {
@@ -148,7 +152,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Estado deve conter 2 caracteres.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if state is empty', () => {
@@ -161,7 +165,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Estado não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should throw InvalidParamException if state is empty', () => {
@@ -174,7 +178,7 @@ describe('Address Value Object', () => {
         CEP.create('40000000'),
         'Referência da Rua A',
       ),
-    ).toThrow(new InvalidParamException('Estado não informado.'));
+    ).toThrow(AddressDomainValidationException);
   });
 
   it('should create a new Address without reference', () => {

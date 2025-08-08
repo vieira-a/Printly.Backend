@@ -1,5 +1,5 @@
-import { InvalidParamException, MissingParamException } from '../../exceptions';
-import type { CEP } from './cep';
+import { AddressDomainValidationException } from '../../exceptions';
+import { CEP } from './cep';
 
 const MissingStreetExceptionMessage = 'Nome da rua não informado.';
 const InvalidStreetExceptionMessage = 'Nome da rua deve conter no mínimo 3 caracteres.';
@@ -9,6 +9,7 @@ const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
 const MissingStateExceptionMessage = 'Estado não informado.';
 const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Address {
   private constructor(
@@ -34,19 +35,25 @@ export class Address {
   }
 
   private validate(): void {
-    if (!this.street) throw new MissingParamException(MissingStreetExceptionMessage);
-    if (this.street.trim().length < 3)
-      throw new InvalidParamException(InvalidStreetExceptionMessage);
+    const errors: string[] = [];
 
-    if (!this.district) throw new MissingParamException(MissingDistrictExceptionMessage);
-    if (this.district.trim().length < 3)
-      throw new InvalidParamException(InvalidDistrictExceptionMessage);
+    if (!this.street) {
+      errors.push(MissingStreetExceptionMessage);
+    } else if (this.street.trim().length < 3) errors.push(InvalidStreetExceptionMessage);
 
-    if (!this.city) throw new MissingParamException(MissingCityExceptionMessage);
-    if (this.city.trim().length < 3) throw new InvalidParamException(InvalidCityExceptionMessage);
+    if (!this.district) {
+      errors.push(MissingDistrictExceptionMessage);
+    } else if (this.district.trim().length < 3) errors.push(InvalidDistrictExceptionMessage);
 
-    if (!this.state) throw new MissingParamException(MissingStateExceptionMessage);
-    if (!/^[A-Z]{2}$/.test(this.state))
-      throw new InvalidParamException(InvalidStateExceptionMessage);
+    if (!this.city) {
+      errors.push(MissingCityExceptionMessage);
+    } else if (this.city.trim().length < 3) errors.push(InvalidCityExceptionMessage);
+
+    if (!this.state) {
+      errors.push(MissingStateExceptionMessage);
+    } else if (!/^[A-Z]{2}$/.test(this.state)) errors.push(InvalidStateExceptionMessage);
+
+    if (errors.length > 0)
+      throw new AddressDomainValidationException(ValidationExceptionMessage, errors);
   }
 }
