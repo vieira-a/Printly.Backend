@@ -10,6 +10,7 @@ import { LocationController } from './api/rest/controllers/location/location.con
 import { CreateLocationService } from './application/use-cases/location/create/create-location.service';
 import { LocationRepository } from './infrastructure/data/typeorm/repositories/location.repository';
 import { UpdateLocationService } from './application/use-cases/location/update/update-location.service';
+import { UpdateLocationDetails } from './domain/services/update-location-details.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UpdateLocationService } from './application/use-cases/location/update/u
     CreateLocationService,
     UpdateLocationService,
     { provide: 'ILocationRepository', useClass: LocationRepository },
+    UpdateLocationDetails,
   ],
   controllers: [ModelController, LocationController],
 })

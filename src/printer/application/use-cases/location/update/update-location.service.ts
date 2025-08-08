@@ -11,11 +11,9 @@ import { UpdateLocationOutput } from './output/update-location.output';
 import { ILocationRepository } from '@printer/domain/data/repositories';
 import { LocationNotFoundException } from '@printer/application/exceptions/location-not-found.exception';
 import { LocationMapper } from '@printer/application/mappers/location.mapper';
-import { Address } from '@printer/domain/entities/value-objects/address';
-import { CEP } from '@printer/domain/entities/value-objects/cep';
-import { Phone } from '@printer/domain/entities/value-objects/phone';
 import { LocationDomainValidationException } from '@printer/domain/exceptions';
 import { DatabaseModelException } from '@printer/application/exceptions';
+import { UpdateLocationDetails } from '@printer/domain/services/update-location-details.service';
 
 @Injectable()
 export class UpdateLocationService implements IUpdateLocationUseCase {
@@ -24,37 +22,15 @@ export class UpdateLocationService implements IUpdateLocationUseCase {
   constructor(
     @Inject('ILocationRepository')
     private readonly locationRepository: ILocationRepository,
+    private readonly updateLocationDetails: UpdateLocationDetails,
   ) {}
   async execute(id: string, input: UpdateLocationInput): Promise<UpdateLocationOutput> {
     try {
       const location = await this.locationRepository.findById(id);
       if (!location) throw new LocationNotFoundException(id);
 
-      if (input.address) {
-        const address = Address.create(
-          input.address.street || location.address.street,
-          input.address.district || location.address.district,
-          input.address.city || location.address.city,
-          input.address.state || location.address.state,
-          CEP.create(input.address.cep || location.address.cep.value),
-          input.address.reference || location.address.reference,
-        );
-        location.updateAddress(address);
-      }
-
-      if (input.phone) {
-        const phone = Phone.create(
-          input.phone.areaCode || location.phone.areaCode,
-          input.phone.phoneNumber || location.phone.phoneNumber,
-        );
-        location.updatePhone(phone);
-      }
-
-      if (input.contact !== undefined) {
-        location.updateContact(input.contact);
-      }
-
-      const updatedLocation = await this.locationRepository.update(location);
+      const updatedRestoredLocation = this.updateLocationDetails.update(location, input);
+      const updatedLocation = await this.locationRepository.update(updatedRestoredLocation);
 
       return LocationMapper.toOutput(updatedLocation);
     } catch (error) {
