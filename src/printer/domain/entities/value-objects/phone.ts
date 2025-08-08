@@ -9,8 +9,11 @@ export class Phone {
     readonly phoneNumber: number,
   ) {}
 
-  public static create(areaCode: number, phoneNumber: number): Phone {
-    return new Phone(areaCode, phoneNumber);
+  public static create(areaCode: number | string, phoneNumber: number | string): Phone {
+    const normalizedAreaCode = typeof areaCode === 'string' ? parseInt(areaCode, 10) : areaCode;
+    const normalizedPhoneNumber =
+      typeof phoneNumber === 'string' ? parseInt(phoneNumber, 10) : phoneNumber;
+    return new Phone(normalizedAreaCode, normalizedPhoneNumber);
   }
 
   public toString(): string {

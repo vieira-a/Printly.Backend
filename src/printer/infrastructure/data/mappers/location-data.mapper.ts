@@ -15,10 +15,12 @@ export abstract class LocationDataMapper {
       model.reference,
     );
 
+    const phone = Phone.create(model.areaCode, model.phoneNumber);
+
     return Location.restore(
       model.id,
       address,
-      Phone.create(model.areaCode, model.phoneNumber),
+      phone,
       model.contact,
       model.createdAt,
       model.updatedAt,

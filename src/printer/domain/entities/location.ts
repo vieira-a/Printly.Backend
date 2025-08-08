@@ -10,12 +10,18 @@ const InvalidContactExceptionMessage = 'Contato deve ter no mínimo 3 caracteres
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 interface LocationProps {
-  address: Address;
-  phone: Phone;
-  contact: string;
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  address: Address;
+  phone: Phone;
+  contact: string;
+}
+
+interface LocationUpdateProps {
+  address?: Address;
+  phone?: Phone;
+  contact?: string;
 }
 
 export class Location extends EntityBase {
@@ -43,6 +49,18 @@ export class Location extends EntityBase {
     return this._contact;
   }
 
+  updateAddress(address: Address) {
+    this._address = address;
+  }
+
+  updatePhone(phone: Phone) {
+    this._phone = phone;
+  }
+
+  updateContact(contact: string) {
+    this._contact = contact;
+  }
+
   public static create(address: Address, phone: Phone, contact: string): Location {
     return new Location({ address, phone, contact });
   }
@@ -56,6 +74,17 @@ export class Location extends EntityBase {
     updatedAt: Date,
   ): Location {
     return new Location({ id, address, phone, contact, createdAt, updatedAt });
+  }
+
+  public update(props?: LocationUpdateProps): Location {
+    return new Location({
+      id: this.id,
+      address: props?.address ?? this.address,
+      phone: props?.phone ?? this.phone,
+      contact: props?.contact ?? this.contact,
+      createdAt: this.createdAt,
+      updatedAt: new Date(),
+    });
   }
 
   private validate(): void {
