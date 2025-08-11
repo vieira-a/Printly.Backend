@@ -16,7 +16,7 @@ interface PrinterProps {
 
 @Entity({ name: 'printers' })
 export class PrinterModel extends BaseModel {
-  @Column({ name: 'sn', type: 'varchar', length: 30 })
+  @Column({ name: 'sn', type: 'varchar', length: 30, unique: true })
   sn: string;
 
   @Column({ name: 'ipv4', type: 'varchar', length: 16 })
