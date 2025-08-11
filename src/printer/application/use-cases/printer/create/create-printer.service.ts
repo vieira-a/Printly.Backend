@@ -15,6 +15,7 @@ import {
   ModelNotFoundException,
   LocationNotFoundException,
   DatabaseModelException,
+  PrinterConflictException,
 } from '@printer/application/exceptions';
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
 
@@ -34,6 +35,10 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
     const { serialNumber, ipv4, modelId, locationId, installedAt } = input;
 
     try {
+      const printerExists = await this.printerRepository.existsBySerialNumber(serialNumber);
+
+      if (printerExists) throw new PrinterConflictException(serialNumber);
+
       const model = await this.modelRepository.findById(modelId);
 
       if (!model) throw new ModelNotFoundException(modelId);
