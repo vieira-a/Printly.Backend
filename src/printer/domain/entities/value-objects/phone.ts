@@ -5,8 +5,8 @@ const InvalidFixedPhoneExceptionMessage = 'Número fixo com 8 dígitos não deve
 
 export class Phone {
   private constructor(
-    readonly areaCode: number,
-    readonly phoneNumber: number,
+    private readonly _areaCode: number,
+    private readonly _phoneNumber: number,
   ) {}
 
   public static create(areaCode: number | string, phoneNumber: number | string): Phone {
@@ -16,17 +16,25 @@ export class Phone {
     return new Phone(normalizedAreaCode, normalizedPhoneNumber);
   }
 
+  get areaCode(): number {
+    return this._areaCode;
+  }
+
+  get phoneNumber(): number {
+    return this._phoneNumber;
+  }
+
   public toString(): string {
-    return `${this.areaCode}${this.phoneNumber}`;
+    return `${this._areaCode}${this._phoneNumber}`;
   }
 
   validate(): string[] {
     const errors: string[] = [];
 
-    if (!Number.isInteger(this.areaCode) || this.areaCode < 11 || this.areaCode > 99)
+    if (!Number.isInteger(this._areaCode) || this._areaCode < 11 || this._areaCode > 99)
       errors.push(InvalidDDDExceptionMessage);
 
-    const phoneString = this.phoneNumber.toString();
+    const phoneString = this._phoneNumber.toString();
 
     if (!/^\d{8,9}$/.test(phoneString)) errors.push(InvalidPhoneExceptionMessage);
 

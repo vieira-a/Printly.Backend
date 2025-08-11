@@ -1,8 +1,8 @@
 import { Model } from '@printer/domain/entities';
-import { PrinterModel } from '../typeorm/models/printer-model.model';
+import { ModelPrinter } from '../typeorm/models';
 
 export abstract class ModelDataMapper {
-  public static toDomain(model: PrinterModel): Model {
+  public static toDomain(model: ModelPrinter): Model {
     return Model.restore(
       model.id,
       model.manufacturer,
@@ -14,8 +14,8 @@ export abstract class ModelDataMapper {
     );
   }
 
-  public static toModel(domain: Model): PrinterModel {
-    return PrinterModel.restore(
+  public static toModel(domain: Model): ModelPrinter {
+    return ModelPrinter.restore(
       domain.id,
       domain.manufacturer,
       domain.description,

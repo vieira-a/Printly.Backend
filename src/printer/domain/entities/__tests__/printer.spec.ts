@@ -1,4 +1,4 @@
-import { InvalidParamException, MissingParamException } from '../../exceptions';
+import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
 import { Location } from '../location';
 import { Model } from '../model';
 import { Printer } from '../printer';
@@ -33,6 +33,7 @@ describe('Printer Entity', () => {
       'XYZ12345',
       IPV4.create('192.168.0.200'),
       newLocation,
+      new Date(),
     );
 
     expect(newPrinter).toBeInstanceOf(Printer);
@@ -40,25 +41,31 @@ describe('Printer Entity', () => {
 
   it('should throw a MissingParamException if model is not provided', () => {
     expect(() =>
-      Printer.create(null as any, 'XYZ12345', IPV4.create('192.168.0.200'), newLocation),
-    ).toThrow(new MissingParamException('Modelo não informado.'));
+      Printer.create(
+        null as any,
+        'XYZ12345',
+        IPV4.create('192.168.0.200'),
+        newLocation,
+        new Date(),
+      ),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial is not provided', () => {
     expect(() =>
-      Printer.create(newModel, null as any, IPV4.create('192.168.0.200'), newLocation),
-    ).toThrow(new MissingParamException('Serial não informado.'));
+      Printer.create(newModel, null as any, IPV4.create('192.168.0.200'), newLocation, new Date()),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial is empty', () => {
-    expect(() => Printer.create(newModel, '', IPV4.create('192.168.0.200'), newLocation)).toThrow(
-      new InvalidParamException('Serial não informado.'),
-    );
+    expect(() =>
+      Printer.create(newModel, '', IPV4.create('192.168.0.200'), newLocation, new Date()),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial has less than 6 characters', () => {
     expect(() =>
-      Printer.create(newModel, 'XYZ99', IPV4.create('192.168.0.200'), newLocation),
-    ).toThrow(new InvalidParamException('Serial deve ter no mínimo 6 caracteres.'));
+      Printer.create(newModel, 'XYZ99', IPV4.create('192.168.0.200'), newLocation, new Date()),
+    ).toThrow(PrinterDomainValidationException);
   });
 });

@@ -17,7 +17,7 @@ describe('Address Value Object', () => {
     expect(newAddress.district).toBe('Bairro Tal');
     expect(newAddress.city).toBe('Cidade A');
     expect(newAddress.state).toBe('BA');
-    expect(newAddress.cep.toString()).toBe('40000000');
+    expect(newAddress.cep.value).toBe('40000000');
     expect(newAddress.reference).toBe('Referência da Rua A');
   });
 

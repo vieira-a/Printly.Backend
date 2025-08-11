@@ -13,7 +13,7 @@ interface ModelProps {
 
 @Entity({ name: 'models' })
 @Unique(['manufacturer', 'description'])
-export class PrinterModel extends BaseModel {
+export class ModelPrinter extends BaseModel {
   @Column({ name: 'manufacturer', type: 'varchar', length: 30, nullable: false })
   manufacturer: string;
 
@@ -41,8 +41,8 @@ export class PrinterModel extends BaseModel {
     description: string,
     printOid: string,
     copyOid: string,
-  ): PrinterModel {
-    return new PrinterModel({ manufacturer, description, printOid, copyOid });
+  ): ModelPrinter {
+    return new ModelPrinter({ manufacturer, description, printOid, copyOid });
   }
 
   public static restore(
@@ -54,7 +54,7 @@ export class PrinterModel extends BaseModel {
     createdAt: Date,
     updatedAt: Date,
   ) {
-    return new PrinterModel({
+    return new ModelPrinter({
       id,
       manufacturer,
       description,

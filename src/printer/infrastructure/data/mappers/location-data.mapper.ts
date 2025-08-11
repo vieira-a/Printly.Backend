@@ -34,7 +34,7 @@ export abstract class LocationDataMapper {
       domain.address.district,
       domain.address.city,
       domain.address.state,
-      domain.address.cep.toString(),
+      domain.address.cep.value,
       domain.address.reference,
       domain.phone.areaCode,
       domain.phone.phoneNumber,

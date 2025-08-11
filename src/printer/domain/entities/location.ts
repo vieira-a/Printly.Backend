@@ -79,9 +79,9 @@ export class Location extends EntityBase {
   public update(props?: LocationUpdateProps): Location {
     return new Location({
       id: this.id,
-      address: props?.address ?? this.address,
-      phone: props?.phone ?? this.phone,
-      contact: props?.contact ?? this.contact,
+      address: props?.address ?? this._address,
+      phone: props?.phone ?? this._phone,
+      contact: props?.contact ?? this._contact,
       createdAt: this.createdAt,
       updatedAt: new Date(),
     });
@@ -90,15 +90,15 @@ export class Location extends EntityBase {
   private validate(): void {
     const errors: string[] = [];
 
-    if (!this.address) errors.push(MissingAddressExceptionMessage);
+    if (!this._address) errors.push(MissingAddressExceptionMessage);
     else errors.push(...this.address.validate());
 
-    if (!this.phone) errors.push(MissingPhoneExceptionMessage);
+    if (!this._phone) errors.push(MissingPhoneExceptionMessage);
     else errors.push(...this.phone.validate());
 
-    if (!this.contact) {
+    if (!this._contact) {
       errors.push(MissingContactExceptionMessage);
-    } else if (this.contact.trim().length < 3) errors.push(InvalidContactExceptionMessage);
+    } else if (this._contact.trim().length < 3) errors.push(InvalidContactExceptionMessage);
 
     if (errors.length > 0)
       throw new LocationDomainValidationException(ValidationExceptionMessage, errors);

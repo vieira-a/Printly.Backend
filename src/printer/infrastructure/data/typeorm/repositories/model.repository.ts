@@ -5,7 +5,7 @@ import { Model } from '@printer/domain/entities';
 import { IModelRepository } from '@printer/domain/data/repositories';
 import { DatabaseModelException } from '@printer/application/exceptions/database-model.exception';
 import { InfrastructureException } from '@shared/exceptions/infrastructure.exception';
-import { PrinterModel } from '../models/printer-model.model';
+import { ModelPrinter } from '../models/model-printer';
 import { ModelDataMapper } from '../../mappers/model-data.mapper';
 
 const DatabaseModelExceptionMessage =
@@ -17,13 +17,17 @@ export class ModelRepository implements IModelRepository {
   private readonly logger = new Logger(ModelRepository.name);
 
   constructor(
-    @InjectRepository(PrinterModel)
-    private readonly repository: Repository<PrinterModel>,
+    @InjectRepository(ModelPrinter)
+    private readonly repository: Repository<ModelPrinter>,
   ) {}
   async create(input: Model): Promise<Model> {
     try {
-      const { manufacturer, description, printOid, copyOid } = input;
-      const newModel = PrinterModel.create(manufacturer, description, printOid, copyOid);
+      const newModel = ModelPrinter.create(
+        input.manufacturer,
+        input.description,
+        input.printOid,
+        input.copyOid,
+      );
 
       const result = await this.repository.save(newModel);
       return ModelDataMapper.toDomain(result);
@@ -78,6 +82,15 @@ export class ModelRepository implements IModelRepository {
       await this.repository.update(modelToUpdate.id, { ...modelToUpdate });
 
       const updatedModel = await this.findById(modelToUpdate.id);
+      const modelPrinter = ModelPrinter.restore(
+        updatedModel?.id!,
+        updatedModel?.manufacturer!,
+        updatedModel?.description!,
+        updatedModel?.printOid!,
+        updatedModel?.copyOid!,
+        updatedModel?.createdAt!,
+        updatedModel?.updatedAt!,
+      );
 
       return ModelDataMapper.toDomain(updatedModel!);
     } catch (error) {

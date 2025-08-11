@@ -26,7 +26,7 @@ describe('Location Entity', () => {
     expect(newLocation.address.district).toBe('Bairro Tal');
     expect(newLocation.address.city).toBe('Cidade A');
     expect(newLocation.address.state).toBe('BA');
-    expect(newLocation.address.cep.toString()).toBe('40000000');
+    expect(newLocation.address.cep.value).toBe('40000000');
   });
 
   it('should throw MissingParamException if Address is not provided', () => {

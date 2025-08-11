@@ -17,7 +17,7 @@ export abstract class EntityBase {
     return this._updatedAt;
   }
 
-  protected set updatedAt(value: Date) {
+  setUpdatedAt(value: Date) {
     this._updatedAt = value;
   }
 

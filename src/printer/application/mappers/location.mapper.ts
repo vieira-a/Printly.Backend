@@ -9,7 +9,7 @@ export abstract class LocationMapper {
         district: entity.address.district,
         city: entity.address.city,
         state: entity.address.state,
-        cep: entity.address.cep.toString(),
+        cep: entity.address.cep.value,
         reference: entity.address.reference,
       },
       phone: entity.phone.toString(),

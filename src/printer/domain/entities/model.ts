@@ -81,10 +81,10 @@ export class Model extends EntityBase {
   }
 
   public update(props: UpdateProps): void {
-    const updatedManufacturer = props.manufacturer ?? this.manufacturer;
-    const updatedDescription = props.description ?? this.description;
-    const updatedPrintOid = props.printOid ?? this.printOid;
-    const updatedCopyOid = props.copyOid ?? this.copyOid;
+    const updatedManufacturer = props.manufacturer ?? this._manufacturer;
+    const updatedDescription = props.description ?? this._description;
+    const updatedPrintOid = props.printOid ?? this._printOid;
+    const updatedCopyOid = props.copyOid ?? this._copyOid;
 
     new Model({
       id: this.id,
@@ -100,7 +100,7 @@ export class Model extends EntityBase {
     this._description = updatedDescription;
     this._printOid = updatedPrintOid;
     this._copyOid = updatedCopyOid;
-    this.updatedAt = new Date();
+    this.setUpdatedAt(new Date());
   }
 
   private validate(): void {
