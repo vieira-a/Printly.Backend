@@ -130,4 +130,25 @@ describe('Printer Entity', () => {
       PrinterDomainValidationException,
     );
   });
+
+  it('should throw CountingDomainValidationException if printerId is not provider', () => {
+    const currentPrinter = Printer.create(
+      newModel,
+      'XYZ12345',
+      IPV4.create('192.168.0.200'),
+      newLocation,
+      new Date(),
+      1000,
+      1000,
+    );
+
+    const totalPrint = 9999;
+    const totalCopy = 9999;
+    const countingDate = new Date();
+
+    currentPrinter.registerCounting(totalPrint, totalCopy, countingDate);
+    expect(() => Counting.create(null as any, totalPrint, totalCopy, countingDate)).toThrow(
+      CountingDomainValidationException,
+    );
+  });
 });

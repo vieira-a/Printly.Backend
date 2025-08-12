@@ -3,8 +3,6 @@ import { CreateCountingProps } from '../types/counting.props';
 import { EntityBase } from './entity-base';
 
 const MissingPrinterExceptionMessage = 'Impressora não informada.';
-const NegativePrintExceptionMessage = 'Quantidade de impressões não pode ser negativa.';
-const NegativeCopyExceptionMessage = 'Quantidade de impressões não pode ser negativa.';
 const MissingCollectDateExceptionMessage = 'Data da coleta não informada.';
 
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
@@ -46,7 +44,6 @@ export class Counting extends EntityBase {
     totalCopy: number,
     collectedAt: Date,
   ) {
-    console.log('Counting.create > ', totalCopy);
     return new Counting({ printerId, totalPrint, totalCopy, collectedAt });
   }
 
@@ -54,8 +51,6 @@ export class Counting extends EntityBase {
     const errors: string[] = [];
 
     if (!this._printerId) errors.push(MissingPrinterExceptionMessage);
-    if (this._totalPrint < 0) errors.push(NegativePrintExceptionMessage);
-    if (this._totalCopy < 0) errors.push(NegativeCopyExceptionMessage);
     if (!this._collectedAt) errors.push(MissingCollectDateExceptionMessage);
 
     if (errors.length > 0)
