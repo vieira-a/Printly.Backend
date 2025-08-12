@@ -5,4 +5,5 @@ export interface IPrinterRepository {
   existsBySerialNumber(serial: string): Promise<boolean>;
   findById(id: string): Promise<Printer | null>;
   update(input: Printer): Promise<Printer>;
+  updateCounting(input: Printer): Promise<Printer>;
 }

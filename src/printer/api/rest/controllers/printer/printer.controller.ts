@@ -8,7 +8,6 @@ import {
   Param,
   Post,
   Put,
-  Post,
 } from '@nestjs/common';
 import {
   LocationNotFoundException,
@@ -19,6 +18,7 @@ import {
 import { CreatePrinterService } from '@printer/application/use-cases/printer/create/create-printer.service';
 import { CreatePrinterInput } from '@printer/application/use-cases/printer/create/input/create-printer.input';
 import { UpdatePrinterInput } from '@printer/application/use-cases/printer/update/input/update-printer.input';
+import { RegisterCountingService } from '@printer/application/use-cases/printer/update/register-counting.service';
 import { UpdatePrinterService } from '@printer/application/use-cases/printer/update/update-printer.service';
 
 @Controller('printers')
@@ -26,6 +26,7 @@ export class PrinterController {
   constructor(
     private readonly createPrinterService: CreatePrinterService,
     private readonly updatePrinterService: UpdatePrinterService,
+    private readonly registerCountingService: RegisterCountingService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -46,6 +47,23 @@ export class PrinterController {
   async update(@Param('id') id: string, @Body() input: UpdatePrinterInput) {
     try {
       return await this.updatePrinterService.execute(id, input);
+    } catch (error) {
+      if (error instanceof PrinterNotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put(':id/counting')
+  async updateCounting(
+    @Param('id') id: string,
+    @Body() input: { totalPrint: number; totalCopy: number },
+  ) {
+    try {
+      const { totalPrint, totalCopy } = input;
+      return await this.registerCountingService.execute(id, totalPrint, totalCopy);
     } catch (error) {
       if (error instanceof PrinterNotFoundException) {
         throw new NotFoundException(error.message);

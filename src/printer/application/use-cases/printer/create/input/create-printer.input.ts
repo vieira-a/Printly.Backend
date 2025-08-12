@@ -4,4 +4,6 @@ export class CreatePrinterInput {
   modelId: string;
   locationId: string;
   installedAt: Date;
+  totalPrint: number;
+  totalCopy: number;
 }

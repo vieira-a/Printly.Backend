@@ -10,6 +10,8 @@ export type CreatePrinterProps = {
   ipv4: IPV4;
   location: Location;
   installedAt: Date;
+  totalPrint: number;
+  totalCopy: number;
 };
 
 export type UpdatePrinterProps = {

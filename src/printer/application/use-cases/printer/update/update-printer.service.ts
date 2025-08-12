@@ -34,6 +34,8 @@ export class UpdatePrinterService implements IUpdatePrinterUseCase {
         printer.ipv4,
         printer.location,
         printer.installedAt,
+        printer.totalPrint,
+        printer.totalCopy,
         printer.createdAt,
         printer.updatedAt,
       );
