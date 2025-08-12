@@ -1,5 +1,5 @@
-import type { Address } from '../entities/value-objects/address';
-import type { Phone } from '../entities/value-objects/phone';
+import { Address } from '../entities/value-objects/address';
+import { Phone } from '../entities/value-objects/phone';
 
 export type CreateLocationProps = {
   id?: string;
