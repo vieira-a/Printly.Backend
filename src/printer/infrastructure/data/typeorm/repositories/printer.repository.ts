@@ -47,10 +47,53 @@ export class PrinterRepository implements IPrinterRepository {
       }
     }
   }
+
   async existsBySerialNumber(serial: string): Promise<boolean> {
     try {
       const printer = await this.repository.findOneBy({ sn: serial });
       return printer ? true : false;
+    } catch (error) {
+      if (error instanceof TypeORMError) {
+        this.logger.log(error.message);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
+
+  async findById(id: string): Promise<Printer | null> {
+    try {
+      const printer = await this.repository.findOne({
+        where: { id },
+        relations: ['model', 'location'],
+      });
+      return printer ? PrinterDataMapper.toDomain(printer) : null;
+    } catch (error) {
+      if (error instanceof TypeORMError) {
+        this.logger.log(error.message);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
+
+  async update(input: Printer): Promise<Printer> {
+    try {
+      await this.repository.update(input.id, {
+        sn: input.serial,
+        ipv4: input.ipv4.toString(),
+      });
+
+      const updatedPrinter = await this.repository.findOne({
+        where: { id: input.id },
+        relations: ['model', 'location'],
+      });
+
+      return PrinterDataMapper.toDomain(updatedPrinter!);
     } catch (error) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);

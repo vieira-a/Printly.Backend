@@ -1,4 +1,5 @@
 import { ModelDomainValidationException } from '../exceptions';
+import { CreateModelProps, UpdateModelProps } from '../types/model.props';
 import { EntityBase } from './entity-base';
 
 const InvalidManufacturerExceptionMessage =
@@ -11,30 +12,13 @@ const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 ca
 const MissingOidExceptionMessage = 'OID de contador não informado.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
-interface ModelProps {
-  manufacturer: string;
-  description: string;
-  printOid: string;
-  copyOid: string;
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-interface UpdateProps {
-  manufacturer?: string;
-  description?: string;
-  printOid?: string;
-  copyOid?: string;
-}
-
 export class Model extends EntityBase {
   private _manufacturer: string;
   private _description: string;
   private _printOid: string;
   private _copyOid: string;
 
-  private constructor(props: ModelProps) {
+  private constructor(props: CreateModelProps) {
     super(props.id, props.createdAt, props.updatedAt);
     this._manufacturer = props.manufacturer;
     this._description = props.description;
@@ -80,7 +64,7 @@ export class Model extends EntityBase {
     return new Model({ id, manufacturer, description, printOid, copyOid, createdAt, updatedAt });
   }
 
-  public update(props: UpdateProps): void {
+  public update(props: UpdateModelProps): void {
     const updatedManufacturer = props.manufacturer ?? this._manufacturer;
     const updatedDescription = props.description ?? this._description;
     const updatedPrintOid = props.printOid ?? this._printOid;

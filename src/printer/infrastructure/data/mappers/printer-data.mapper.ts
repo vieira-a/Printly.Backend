@@ -44,4 +44,14 @@ export class PrinterDataMapper {
       model.updatedAt,
     );
   }
+
+  public static toModel(entity: Printer): PrinterModel {
+    return PrinterModel.create(
+      entity.serial,
+      entity.ipv4.toString(),
+      entity.model.id,
+      entity.location.id,
+      entity.installedAt,
+    );
+  }
 }

@@ -14,6 +14,7 @@ import { UpdateLocationDetails } from './domain/services/update-location-details
 import { PrinterController } from './api/rest/controllers/printer/printer.controller';
 import { CreatePrinterService } from './application/use-cases/printer/create/create-printer.service';
 import { PrinterRepository } from './infrastructure/data/typeorm/repositories/printer.repository';
+import { UpdatePrinterService } from './application/use-cases/printer/update/update-printer.service';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PrinterRepository } from './infrastructure/data/typeorm/repositories/pr
     { provide: 'ILocationRepository', useClass: LocationRepository },
     UpdateLocationDetails,
     CreatePrinterService,
+    UpdatePrinterService,
     {
       provide: 'IPrinterRepository',
       useClass: PrinterRepository,
