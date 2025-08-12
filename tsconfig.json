@@ -17,9 +17,17 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
     "paths": {
-      "@printer/*": ["src/printer/*"],
-      "@shared/*": ["src/shared/*"]
+      "@printer/*": [
+        "src/printer/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ]
     }
   }
 }
