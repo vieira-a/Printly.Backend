@@ -28,6 +28,16 @@ const newAddress = Address.create(
 const newCellPhone = Phone.create(71, 999999999);
 const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location');
 
+const newValidPrinter = Printer.create(
+  newModel,
+  'XYZ12345',
+  IPV4.create('192.168.0.200'),
+  newLocation,
+  new Date(),
+  1000,
+  1000,
+);
+
 describe('Printer Entity', () => {
   it('should create a new Printer with correct params', () => {
     const newPrinter = Printer.create(
@@ -100,53 +110,23 @@ describe('Printer Entity', () => {
   });
 
   it('should throw PrinterDomainValidationException if new total print is less than current total print', () => {
-    const currentPrinter = Printer.create(
-      newModel,
-      'XYZ12345',
-      IPV4.create('192.168.0.200'),
-      newLocation,
-      new Date(),
-      1000,
-      1000,
-    );
-
-    expect(() => currentPrinter.registerCounting(999, 9999, new Date())).toThrow(
+    expect(() => newValidPrinter.registerCounting(999, 9999, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
   it('should throw PrinterDomainValidationException if new total copy is less than current total copy', () => {
-    const currentPrinter = Printer.create(
-      newModel,
-      'XYZ12345',
-      IPV4.create('192.168.0.200'),
-      newLocation,
-      new Date(),
-      1000,
-      1000,
-    );
-
-    expect(() => currentPrinter.registerCounting(9999, 999, new Date())).toThrow(
+    expect(() => newValidPrinter.registerCounting(9999, 999, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
   it('should throw CountingDomainValidationException if printerId is not provider', () => {
-    const currentPrinter = Printer.create(
-      newModel,
-      'XYZ12345',
-      IPV4.create('192.168.0.200'),
-      newLocation,
-      new Date(),
-      1000,
-      1000,
-    );
-
     const totalPrint = 9999;
     const totalCopy = 9999;
     const countingDate = new Date();
 
-    currentPrinter.registerCounting(totalPrint, totalCopy, countingDate);
+    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate);
     expect(() => Counting.create(null as any, totalPrint, totalCopy, countingDate)).toThrow(
       CountingDomainValidationException,
     );
