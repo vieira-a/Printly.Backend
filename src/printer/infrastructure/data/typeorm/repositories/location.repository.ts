@@ -57,18 +57,11 @@ export class LocationRepository implements ILocationRepository {
   async update(input: Location): Promise<Location> {
     try {
       const locationToUpdate = LocationDataMapper.toModel(input);
-      await this.repository.update(locationToUpdate.id, { ...locationToUpdate });
+      const updatedLocation = await this.repository.update(locationToUpdate.id, {
+        ...locationToUpdate,
+      });
 
-      const updatedLocation = await this.findById(locationToUpdate.id);
-
-      return Location.restore(
-        updatedLocation?.id!,
-        updatedLocation?.address!,
-        updatedLocation?.phone!,
-        updatedLocation?.contact!,
-        updatedLocation?.createdAt!,
-        updatedLocation?.updatedAt!,
-      );
+      return updatedLocation.raw;
     } catch (error) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);

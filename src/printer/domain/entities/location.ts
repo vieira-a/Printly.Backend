@@ -1,4 +1,5 @@
 import { LocationDomainValidationException } from '../exceptions';
+import { CreateLocationProps, UpdateLocationProps } from '../types/location.props';
 import { EntityBase } from './entity-base';
 import { Address } from './value-objects/address';
 import { Phone } from './value-objects/phone';
@@ -9,27 +10,12 @@ const MissingContactExceptionMessage = 'Contato não informado.';
 const InvalidContactExceptionMessage = 'Contato deve ter no mínimo 3 caracteres.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
-interface LocationProps {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  address: Address;
-  phone: Phone;
-  contact: string;
-}
-
-interface LocationUpdateProps {
-  address?: Address;
-  phone?: Phone;
-  contact?: string;
-}
-
 export class Location extends EntityBase {
   private _address: Address;
   private _phone: Phone;
   private _contact: string;
 
-  private constructor(props: LocationProps) {
+  private constructor(props: CreateLocationProps) {
     super(props.id, props.createdAt, props.updatedAt);
     this._address = props.address;
     this._phone = props.phone;
@@ -76,7 +62,7 @@ export class Location extends EntityBase {
     return new Location({ id, address, phone, contact, createdAt, updatedAt });
   }
 
-  public update(props?: LocationUpdateProps): Location {
+  public update(props?: UpdateLocationProps): Location {
     return new Location({
       id: this.id,
       address: props?.address ?? this._address,

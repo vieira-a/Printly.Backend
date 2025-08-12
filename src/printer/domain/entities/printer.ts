@@ -1,4 +1,5 @@
 import { PrinterDomainValidationException } from '../exceptions/printer-domain-validation.exception';
+import { CreatePrinterProps, UpdatePrinterProps } from '../types/printer.props';
 import { EntityBase } from './entity-base';
 import { Location } from './location';
 import { Model } from './model';
@@ -9,17 +10,6 @@ const MissingSerialExceptionMessage = 'Serial não informado.';
 const InvalidSerialExceptionMessage = 'Serial deve ter no mínimo 6 caracteres.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
-interface PrinterProps {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  model: Model;
-  serial: string;
-  ipv4: IPV4;
-  location: Location;
-  installedAt: Date;
-}
-
 export class Printer extends EntityBase {
   private _model: Model;
   private _serial: string;
@@ -27,12 +17,12 @@ export class Printer extends EntityBase {
   private _location: Location;
   private _installedAt: Date;
 
-  private constructor(props: PrinterProps) {
+  private constructor(props: CreatePrinterProps) {
     super(props.id, props.createdAt, props.updatedAt);
-    ((this._model = props.model),
-      (this._serial = props.serial),
-      (this._ipv4 = props.ipv4),
-      (this._location = props.location));
+    this._model = props.model;
+    this._serial = props.serial;
+    this._ipv4 = props.ipv4;
+    this._location = props.location;
     this._installedAt = props.installedAt;
     this.validate();
   }
@@ -65,8 +55,9 @@ export class Printer extends EntityBase {
     this._ipv4 = ipv4;
   }
 
-  updateLocation(location: Location) {
+  updateLocation(location: Location, installedAt: Date) {
     this._location = location;
+    this._installedAt = installedAt;
   }
 
   public static create(
@@ -90,6 +81,18 @@ export class Printer extends EntityBase {
     updatedAt: Date,
   ) {
     return new Printer({ id, serial, model, ipv4, location, installedAt, createdAt, updatedAt });
+  }
+
+  public update(props: UpdatePrinterProps) {
+    return new Printer({
+      id: this.id,
+      model: this._model,
+      serial: props.serial ?? this._serial,
+      ipv4: IPV4.create(props.ipv4!) ?? this._ipv4,
+      location: this._location,
+      installedAt: this._installedAt,
+      updatedAt: new Date(),
+    });
   }
 
   private validate(): void {
