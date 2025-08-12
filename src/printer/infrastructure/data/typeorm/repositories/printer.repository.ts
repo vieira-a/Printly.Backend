@@ -47,7 +47,7 @@ export class PrinterRepository implements IPrinterRepository {
       }
     }
   }
-
+  
   async existsBySerialNumber(serial: string): Promise<boolean> {
     try {
       const printer = await this.repository.findOneBy({ sn: serial });

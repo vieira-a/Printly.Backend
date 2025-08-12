@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Post,
 } from '@nestjs/common';
 import {
   LocationNotFoundException,
