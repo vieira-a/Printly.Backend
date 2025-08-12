@@ -131,4 +131,15 @@ describe('Printer Entity', () => {
       CountingDomainValidationException,
     );
   });
+
+  it('should throw CountingDomainValidationException if printerId is not provider', () => {
+    const totalPrint = 9999;
+    const totalCopy = 9999;
+    const countingDate = new Date();
+
+    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate);
+    expect(() =>
+      Counting.create('0b8565bb-f5c7-4510-9f43-f6067a9d9924', totalPrint, totalCopy, null as any),
+    ).toThrow(CountingDomainValidationException);
+  });
 });
