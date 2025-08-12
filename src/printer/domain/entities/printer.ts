@@ -9,6 +9,11 @@ import { IPV4 } from './value-objects/ipv4';
 const MissingModelExceptionMessage = 'Modelo não informado.';
 const MissingSerialExceptionMessage = 'Serial não informado.';
 const InvalidSerialExceptionMessage = 'Serial deve ter no mínimo 6 caracteres.';
+const InvalidTotalPrintExceptionMessage =
+  'O total de impressões deve ser igual ou maior que a quantidade atual.';
+const InvalidCopyPrintExceptionMessage =
+  'O total de cópias deve ser igual ou maior que a quantidade atual.';
+
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Printer extends EntityBase {
@@ -126,9 +131,18 @@ export class Printer extends EntityBase {
   }
 
   public registerCounting(totalPrint: number, totalCopy: number, collectedAt: Date) {
-    const counting = Counting.create(this.id, totalPrint, totalCopy, new Date());
+    const errors: string[] = [];
+
+    if (totalPrint < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
+    if (totalCopy < this._totalCopy) errors.push(InvalidCopyPrintExceptionMessage);
+
+    if (errors.length > 0)
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);
+
+    const counting = Counting.create(this.id, totalPrint, totalCopy, collectedAt);
     this._totalPrint = totalPrint;
     this._totalCopy = totalCopy;
+
     return counting;
   }
 

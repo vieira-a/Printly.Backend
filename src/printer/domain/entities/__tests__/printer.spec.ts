@@ -6,6 +6,8 @@ import { Address } from '../value-objects/address';
 import { CEP } from '../value-objects/cep';
 import { IPV4 } from '../value-objects/ipv4';
 import { Phone } from '../value-objects/phone';
+import { Counting } from '../counting';
+import { CountingDomainValidationException } from '@printer/domain/exceptions';
 
 const newModel = Model.create(
   'Kyocera',
@@ -34,6 +36,8 @@ describe('Printer Entity', () => {
       IPV4.create('192.168.0.200'),
       newLocation,
       new Date(),
+      1000,
+      1000,
     );
 
     expect(newPrinter).toBeInstanceOf(Printer);
@@ -47,25 +51,83 @@ describe('Printer Entity', () => {
         IPV4.create('192.168.0.200'),
         newLocation,
         new Date(),
+        1000,
+        1000,
       ),
     ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial is not provided', () => {
     expect(() =>
-      Printer.create(newModel, null as any, IPV4.create('192.168.0.200'), newLocation, new Date()),
+      Printer.create(
+        newModel,
+        null as any,
+        IPV4.create('192.168.0.200'),
+        newLocation,
+        new Date(),
+        1000,
+        1000,
+      ),
     ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial is empty', () => {
     expect(() =>
-      Printer.create(newModel, '', IPV4.create('192.168.0.200'), newLocation, new Date()),
+      Printer.create(
+        newModel,
+        '',
+        IPV4.create('192.168.0.200'),
+        newLocation,
+        new Date(),
+        1000,
+        1000,
+      ),
     ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a MissingParamException if serial has less than 6 characters', () => {
     expect(() =>
-      Printer.create(newModel, 'XYZ99', IPV4.create('192.168.0.200'), newLocation, new Date()),
+      Printer.create(
+        newModel,
+        'XYZ99',
+        IPV4.create('192.168.0.200'),
+        newLocation,
+        new Date(),
+        1000,
+        1000,
+      ),
     ).toThrow(PrinterDomainValidationException);
+  });
+
+  it('should throw PrinterDomainValidationException if new total print is less than current total print', () => {
+    const currentPrinter = Printer.create(
+      newModel,
+      'XYZ12345',
+      IPV4.create('192.168.0.200'),
+      newLocation,
+      new Date(),
+      1000,
+      1000,
+    );
+
+    expect(() => currentPrinter.registerCounting(999, 9999, new Date())).toThrow(
+      PrinterDomainValidationException,
+    );
+  });
+
+  it('should throw PrinterDomainValidationException if new total copy is less than current total copy', () => {
+    const currentPrinter = Printer.create(
+      newModel,
+      'XYZ12345',
+      IPV4.create('192.168.0.200'),
+      newLocation,
+      new Date(),
+      1000,
+      1000,
+    );
+
+    expect(() => currentPrinter.registerCounting(9999, 999, new Date())).toThrow(
+      PrinterDomainValidationException,
+    );
   });
 });
