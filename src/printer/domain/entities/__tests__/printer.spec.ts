@@ -115,6 +115,12 @@ describe('Printer Entity', () => {
     );
   });
 
+  it('should throw PrinterDomainValidationException if new total copy is not provided', () => {
+    expect(() => newValidPrinter.registerCounting(9999, null as any, new Date())).toThrow(
+      PrinterDomainValidationException,
+    );
+  });
+
   it('should throw PrinterDomainValidationException if new total print is less than current total print', () => {
     expect(() => newValidPrinter.registerCounting(999, 9999, new Date())).toThrow(
       PrinterDomainValidationException,
