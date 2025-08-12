@@ -53,7 +53,7 @@ describe('Printer Entity', () => {
     expect(newPrinter).toBeInstanceOf(Printer);
   });
 
-  it('should throw a MissingParamException if model is not provided', () => {
+  it('should throw a PrinterDomainValidationException if model is not provided', () => {
     expect(() =>
       Printer.create(
         null as any,
@@ -67,7 +67,7 @@ describe('Printer Entity', () => {
     ).toThrow(PrinterDomainValidationException);
   });
 
-  it('should throw a MissingParamException if serial is not provided', () => {
+  it('should throw a PrinterDomainValidationException if serial is not provided', () => {
     expect(() =>
       Printer.create(
         newModel,
@@ -81,7 +81,7 @@ describe('Printer Entity', () => {
     ).toThrow(PrinterDomainValidationException);
   });
 
-  it('should throw a MissingParamException if serial is empty', () => {
+  it('should throw a PrinterDomainValidationException if serial is empty', () => {
     expect(() =>
       Printer.create(
         newModel,
@@ -95,7 +95,7 @@ describe('Printer Entity', () => {
     ).toThrow(PrinterDomainValidationException);
   });
 
-  it('should throw a MissingParamException if serial has less than 6 characters', () => {
+  it('should throw a PrinterDomainValidationException if serial has less than 6 characters', () => {
     expect(() =>
       Printer.create(
         newModel,
@@ -109,31 +109,31 @@ describe('Printer Entity', () => {
     ).toThrow(PrinterDomainValidationException);
   });
 
-  it('should throw PrinterDomainValidationException if new total print is not provided', () => {
+  it('should throw a PrinterDomainValidationException if new total print is not provided', () => {
     expect(() => newValidPrinter.registerCounting(null as any, 9999, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
-  it('should throw PrinterDomainValidationException if new total copy is not provided', () => {
+  it('should throw a PrinterDomainValidationException if new total copy is not provided', () => {
     expect(() => newValidPrinter.registerCounting(9999, null as any, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
-  it('should throw PrinterDomainValidationException if new total print is less than current total print', () => {
+  it('should throw a PrinterDomainValidationException if new total print is less than current total print', () => {
     expect(() => newValidPrinter.registerCounting(999, 9999, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
-  it('should throw PrinterDomainValidationException if new total copy is less than current total copy', () => {
+  it('should throw a PrinterDomainValidationException if new total copy is less than current total copy', () => {
     expect(() => newValidPrinter.registerCounting(9999, 999, new Date())).toThrow(
       PrinterDomainValidationException,
     );
   });
 
-  it('should throw CountingDomainValidationException if printerId is not provider', () => {
+  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
     const totalPrint = 9999;
     const totalCopy = 9999;
     const countingDate = new Date();
@@ -144,7 +144,7 @@ describe('Printer Entity', () => {
     );
   });
 
-  it('should throw CountingDomainValidationException if printerId is not provider', () => {
+  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
     const totalPrint = 9999;
     const totalCopy = 9999;
     const countingDate = new Date();
