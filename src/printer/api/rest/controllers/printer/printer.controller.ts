@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  RequestTimeoutException,
 } from '@nestjs/common';
 import {
   LocationNotFoundException,
@@ -18,8 +19,10 @@ import {
 import { CreatePrinterService } from '@printer/application/use-cases/printer/create/create-printer.service';
 import { CreatePrinterInput } from '@printer/application/use-cases/printer/create/input/create-printer.input';
 import { UpdatePrinterInput } from '@printer/application/use-cases/printer/update/input/update-printer.input';
-import { RegisterCountingService } from '@printer/application/use-cases/printer/update/register-counting.service';
+import { RegisterCountingService } from '@printer/application/use-cases/counting/manual-counting/create/register-counting.service';
 import { UpdatePrinterService } from '@printer/application/use-cases/printer/update/update-printer.service';
+import { CreateAutoCountingService } from '@printer/application/use-cases/counting/auto-counting/create/create-auto-counting.service';
+import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
 
 @Controller('printers')
 export class PrinterController {
@@ -27,6 +30,7 @@ export class PrinterController {
     private readonly createPrinterService: CreatePrinterService,
     private readonly updatePrinterService: UpdatePrinterService,
     private readonly registerCountingService: RegisterCountingService,
+    private readonly createAutoCountingService: CreateAutoCountingService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -67,6 +71,21 @@ export class PrinterController {
     } catch (error) {
       if (error instanceof PrinterNotFoundException) {
         throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put(':id/counting/auto')
+  async autoCounting(@Param('id') id: string) {
+    try {
+      return await this.createAutoCountingService.execute(id);
+    } catch (error) {
+      if (error instanceof PrinterNotFoundException) {
+        throw new NotFoundException(error.message);
+      } else if (error instanceof RequestPrinterTimeoutException) {
+        throw new RequestTimeoutException({ message: error.message, ipv4: error.ipv4 });
       }
       throw error;
     }

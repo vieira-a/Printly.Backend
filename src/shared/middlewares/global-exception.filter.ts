@@ -34,7 +34,6 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
           exception instanceof Error ? exception : '',
         );
 
-    console.log(exception);
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

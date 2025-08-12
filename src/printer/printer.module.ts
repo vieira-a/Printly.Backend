@@ -20,8 +20,10 @@ import { PrinterController } from './api/rest/controllers/printer/printer.contro
 import { CreatePrinterService } from './application/use-cases/printer/create/create-printer.service';
 import { PrinterRepository } from './infrastructure/data/typeorm/repositories/printer.repository';
 import { UpdatePrinterService } from './application/use-cases/printer/update/update-printer.service';
-import { RegisterCountingService } from './application/use-cases/printer/update/register-counting.service';
+import { RegisterCountingService } from './application/use-cases/counting/manual-counting/create/register-counting.service';
 import { CountingRepository } from './infrastructure/data/typeorm/repositories/counting.repository';
+import { CreateAutoCountingService } from './application/use-cases/counting/auto-counting/create/create-auto-counting.service';
+import { SnmpAutoCountingService } from './infrastructure/snmp/snmp-auto-counting.service';
 
 @Module({
   imports: [
@@ -49,6 +51,11 @@ import { CountingRepository } from './infrastructure/data/typeorm/repositories/c
     {
       provide: 'ICountingRepository',
       useClass: CountingRepository,
+    },
+    CreateAutoCountingService,
+    {
+      provide: 'IAutoCounting',
+      useClass: SnmpAutoCountingService,
     },
   ],
   controllers: [ModelController, LocationController, PrinterController],

@@ -3,7 +3,7 @@ import { IRegisterCounting } from './register-counting.interface';
 import { IPrinterRepository, ICountingRepository } from '@printer/domain/data/repositories';
 import { PrinterNotFoundException } from '@printer/application/exceptions';
 import { PrinterMapper } from '@printer/application/mappers/printer.mapper';
-import { UpdatePrinterOutput } from './output/update-printer.output';
+import { UpdatePrinterOutput } from '../../../printer/update/output/update-printer.output';
 
 @Injectable()
 export class RegisterCountingService implements IRegisterCounting {
