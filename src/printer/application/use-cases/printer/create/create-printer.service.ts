@@ -32,7 +32,7 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
     private readonly locationRepository: ILocationRepository,
   ) {}
   async execute(input: CreatePrinterInput): Promise<any> {
-    const { serialNumber, ipv4, modelId, locationId, installedAt } = input;
+    const { serialNumber, ipv4, modelId, locationId, installedAt, totalPrint, totalCopy } = input;
 
     try {
       const printerExists = await this.printerRepository.existsBySerialNumber(serialNumber);
@@ -63,6 +63,8 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
         IPV4.create(ipv4),
         location,
         installedAt,
+        totalPrint,
+        totalCopy,
       );
 
       return await this.printerRepository.create(newPrinter);

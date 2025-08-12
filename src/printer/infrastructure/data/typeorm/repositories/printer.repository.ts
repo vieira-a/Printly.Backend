@@ -47,7 +47,7 @@ export class PrinterRepository implements IPrinterRepository {
       }
     }
   }
-  
+
   async existsBySerialNumber(serial: string): Promise<boolean> {
     try {
       const printer = await this.repository.findOneBy({ sn: serial });
@@ -86,6 +86,30 @@ export class PrinterRepository implements IPrinterRepository {
       await this.repository.update(input.id, {
         sn: input.serial,
         ipv4: input.ipv4.toString(),
+      });
+
+      const updatedPrinter = await this.repository.findOne({
+        where: { id: input.id },
+        relations: ['model', 'location'],
+      });
+
+      return PrinterDataMapper.toDomain(updatedPrinter!);
+    } catch (error) {
+      if (error instanceof TypeORMError) {
+        this.logger.log(error.message);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
+
+  async updateCounting(input: Printer): Promise<Printer> {
+    try {
+      await this.repository.update(input.id, {
+        totalPrint: input.totalPrint,
+        totalCopy: input.totalCopy,
       });
 
       const updatedPrinter = await this.repository.findOne({

@@ -40,6 +40,8 @@ export class PrinterDataMapper {
       IPV4.create(model.ipv4),
       restoredLocation,
       model.installedAt,
+      model.totalPrint,
+      model.totalCopy,
       model.createdAt,
       model.updatedAt,
     );

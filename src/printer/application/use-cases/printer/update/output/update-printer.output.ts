@@ -8,4 +8,6 @@ export abstract class UpdatePrinterOutput {
   state: string;
   contact: string;
   phone: string;
+  totalPrint: number;
+  totalCopy: number;
 }

@@ -39,6 +39,12 @@ export class PrinterModel extends BaseModel {
   @Column({ name: 'installed_at' })
   installedAt: Date;
 
+  @Column({ name: 'total_print', default: 0 })
+  totalPrint: number;
+
+  @Column({ name: 'total_copy', default: 0 })
+  totalCopy: number;
+
   constructor(props?: PrinterProps) {
     super(props?.id, props?.createdAt, props?.updatedAt);
     if (props) {

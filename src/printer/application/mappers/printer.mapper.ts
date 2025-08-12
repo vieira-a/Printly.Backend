@@ -13,6 +13,8 @@ export abstract class PrinterMapper {
       state: entity.location.address.state,
       contact: entity.location.contact,
       phone: entity.location.phone.toString(),
+      totalPrint: entity.totalPrint,
+      totalCopy: entity.totalCopy,
     };
   }
 }
