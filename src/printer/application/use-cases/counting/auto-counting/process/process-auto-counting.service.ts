@@ -14,7 +14,7 @@ export class ProcessAutoCountingService implements IProcessAutoCountingUseCase {
     private readonly createAutoCountingService: CreateAutoCountingService,
   ) {}
 
-  @Cron('*/1 * * * *')
+  //@Cron('*/1 * * * *')
   async execute(): Promise<void> {
     this.logger.log('Obtendo dados das impressoras');
     const printers = await this.printerRepository.findAll();

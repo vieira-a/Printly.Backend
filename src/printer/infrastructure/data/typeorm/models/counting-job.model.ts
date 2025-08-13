@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseModel } from './base-model';
 import { PrinterModel } from './printer.model';
 import { CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { CountingModel } from './counting.model';
 
 type CreateCountingJobProps = {
   printerId: string;
@@ -10,6 +11,7 @@ type CreateCountingJobProps = {
   attempt: number;
   lastAttempt: Date;
   maxAttempts: number;
+  countingId?: string;
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -24,6 +26,13 @@ export class CountingJobModel extends BaseModel {
   @ManyToOne(() => PrinterModel, { eager: false })
   @JoinColumn({ name: 'printer_id' })
   printer: PrinterModel;
+
+  @Column({ name: 'counting_id', nullable: true })
+  countingId?: string;
+
+  @OneToOne(() => CountingModel)
+  @JoinColumn({ name: 'counting_id' })
+  counting?: CountingModel;
 
   @Column({ name: 'ipv4' })
   ipv4: string;
@@ -52,6 +61,7 @@ export class CountingJobModel extends BaseModel {
       this.attempt = props.attempt;
       this.lastAttempt = props.lastAttempt;
       this.maxAttempts = props.maxAttempts;
+      this.countingId = props.countingId;
       this.errorMessage = props.errorMessage ?? undefined;
     }
   }
@@ -63,6 +73,7 @@ export class CountingJobModel extends BaseModel {
     attempt: number,
     lastAttempt: Date,
     maxAttempts: number,
+    countingId?: string,
     errorMessage?: string,
   ): CountingJobModel {
     return new CountingJobModel({
@@ -72,6 +83,7 @@ export class CountingJobModel extends BaseModel {
       attempt,
       lastAttempt,
       maxAttempts,
+      countingId,
       errorMessage,
     });
   }

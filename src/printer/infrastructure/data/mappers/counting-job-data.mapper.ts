@@ -10,6 +10,7 @@ export abstract class CountingJobDataMapper {
       entity.attempt,
       entity.lastAttempt,
       entity.maxAttempts,
+      entity.countingId,
       entity.errorMessage,
     );
   }

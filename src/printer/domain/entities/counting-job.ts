@@ -14,6 +14,7 @@ export type CreateCountingJobProps = {
   attempt: number;
   lastAttempt: Date;
   maxAttempts: number;
+  countingId?: string;
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -27,6 +28,7 @@ export class CountingJob extends EntityBase {
   private _attempt: number;
   private _lastAttempt: Date;
   private _maxAttempts: number;
+  private _countingId?: string;
   private _errorMessage?: string;
 
   constructor(props: CreateCountingJobProps) {
@@ -37,6 +39,7 @@ export class CountingJob extends EntityBase {
     this._attempt = props.attempt;
     this._lastAttempt = props.lastAttempt;
     this._maxAttempts = props.maxAttempts;
+    this._countingId = props.countingId;
     this._errorMessage = props.errorMessage;
   }
 
@@ -68,10 +71,15 @@ export class CountingJob extends EntityBase {
     return this._maxAttempts;
   }
 
+  get countingId(): string | undefined {
+    return this._countingId;
+  }
+
   public static create(
     printerId: string,
     ipv4: IPV4,
     status: CountingJobStatus,
+    countingId?: string,
     errorMessage?: string,
   ): CountingJob {
     return new CountingJob({
@@ -81,6 +89,7 @@ export class CountingJob extends EntityBase {
       attempt: 1,
       lastAttempt: new Date(),
       maxAttempts: 5,
+      countingId,
       errorMessage: errorMessage,
     });
   }

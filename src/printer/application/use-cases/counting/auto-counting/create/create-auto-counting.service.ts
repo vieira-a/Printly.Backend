@@ -8,7 +8,7 @@ import {
 import { ICreateAutoCountingUseCase } from './create-auto-counting.interface';
 import { IAutoCounting } from '@printer/domain/interfaces/auto-counting.interface';
 import { ICountingRepository, IPrinterRepository } from '@printer/domain/data/repositories';
-import { DatabaseModelException, PrinterNotFoundException } from '@printer/application/exceptions';
+import { DatabaseModelException } from '@printer/application/exceptions';
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
 import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
@@ -49,7 +49,7 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
           new Date(),
         );
 
-        await this.countingRepository.create(counting);
+        const savedCounting = await this.countingRepository.create(counting);
 
         await this.printerRepository.updateCounting(printer);
 
@@ -57,6 +57,7 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
           printerId: printer.id,
           ipv4: printer.ipv4.toString(),
           status: CountingJobStatus.SUCCESS,
+          countingId: savedCounting.id,
         });
       } else {
         await this.createCountingJob({
@@ -88,6 +89,7 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
         input.printerId,
         IPV4.create(input.ipv4),
         input.status,
+        input.countingId,
         input.errorMessage,
       );
       await this.countingJobRepository.create(countingJob);
