@@ -1,5 +1,6 @@
-import { CountingJob, CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { CountingJob } from '@printer/domain/entities/counting-job';
 import { CountingJobModel } from '../typeorm/models';
+import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 export abstract class CountingJobDataMapper {
   public static toModel(entity: CountingJob): CountingJobModel {

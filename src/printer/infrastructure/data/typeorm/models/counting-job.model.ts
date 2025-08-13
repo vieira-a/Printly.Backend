@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseModel } from './base-model';
 import { PrinterModel } from './printer.model';
-import { CountingJobStatus } from '@printer/domain/entities/counting-job';
 import { CountingModel } from './counting.model';
+import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 type CreateCountingJobProps = {
   printerId: string;

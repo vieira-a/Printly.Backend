@@ -1,11 +1,6 @@
+import { CountingJobStatus } from '../enums/counting-job-status.enum';
 import { EntityBase } from './entity-base';
 import { IPV4 } from './value-objects/ipv4';
-
-export enum CountingJobStatus {
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  FAILED = 'failed',
-}
 
 export type CreateCountingJobProps = {
   printerId: string;

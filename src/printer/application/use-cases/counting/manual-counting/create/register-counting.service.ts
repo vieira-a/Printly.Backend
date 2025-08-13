@@ -5,9 +5,10 @@ import { DatabaseModelException, PrinterNotFoundException } from '@printer/appli
 import { PrinterMapper } from '@printer/application/mappers/printer.mapper';
 import { UpdatePrinterOutput } from '../../../printer/update/output/update-printer.output';
 import { CreateCountingJobInput } from '../../auto-counting/create/input/create-counting-job.input';
-import { CountingJob, CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { CountingJob } from '@printer/domain/entities/counting-job';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
+import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 @Injectable()
 export class RegisterCountingService implements IRegisterCounting {

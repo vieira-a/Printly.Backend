@@ -15,9 +15,10 @@ import { RequestPrinterTimeoutException } from '@shared/exceptions/request-print
 import { RequestTimedOutError } from '@shared/exceptions/request-timeout.exception';
 import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
 import { CreateCountingJobInput } from '@printer/application/use-cases/counting/auto-counting/create/input/create-counting-job.input';
-import { CountingJob, CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { CountingJob } from '@printer/domain/entities/counting-job';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { Printer } from '@printer/domain/entities';
+import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 @Injectable()
 export class CreateAutoCountingService implements ICreateAutoCountingUseCase {

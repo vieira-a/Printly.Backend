@@ -1,4 +1,4 @@
-import { CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 export abstract class CreateCountingJobInput {
   printerId: string;
