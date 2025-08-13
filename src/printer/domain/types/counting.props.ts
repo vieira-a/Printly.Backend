@@ -1,3 +1,5 @@
+import { CountingType } from '../enums/counting-type.enum';
+
 export type CreateCountingProps = {
   id?: string;
   createdAt?: Date;
@@ -6,4 +8,5 @@ export type CreateCountingProps = {
   totalPrint: number;
   totalCopy: number;
   collectedAt: Date;
+  type: CountingType;
 };

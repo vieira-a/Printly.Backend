@@ -19,6 +19,7 @@ import { CountingJob } from '@printer/domain/entities/counting-job';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { Printer } from '@printer/domain/entities';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
+import { CountingType } from '@printer/domain/enums/counting-type.enum';
 
 @Injectable()
 export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
@@ -48,6 +49,7 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
           Number(totalPrintResult.count),
           Number(totalCopyResult.count),
           new Date(),
+          CountingType.AUTO,
         );
 
         const savedCounting = await this.countingRepository.create(counting);

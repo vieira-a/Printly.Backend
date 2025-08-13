@@ -25,6 +25,7 @@ export class CountingRepository implements ICountingRepository {
         counting.totalPrint,
         counting.totalCopy,
         counting.collectedAt,
+        counting.type,
       );
       return await this.repository.save(countingModel);
     } catch (error) {

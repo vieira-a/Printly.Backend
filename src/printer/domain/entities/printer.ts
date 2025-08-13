@@ -1,3 +1,4 @@
+import type { CountingType } from '../enums/counting-type.enum';
 import { PrinterDomainValidationException } from '../exceptions/printer-domain-validation.exception';
 import { CreatePrinterProps, UpdatePrinterProps } from '../types/printer.props';
 import { Counting } from './counting';
@@ -130,7 +131,12 @@ export class Printer extends EntityBase {
     });
   }
 
-  public registerCounting(totalPrint: number, totalCopy: number, collectedAt: Date) {
+  public registerCounting(
+    totalPrint: number,
+    totalCopy: number,
+    collectedAt: Date,
+    type: CountingType,
+  ) {
     const errors: string[] = [];
 
     if (totalPrint < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
@@ -139,7 +145,7 @@ export class Printer extends EntityBase {
     if (errors.length > 0)
       throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);
 
-    const counting = Counting.create(this.id, totalPrint, totalCopy, collectedAt);
+    const counting = Counting.create(this.id, totalPrint, totalCopy, collectedAt, type);
     this._totalPrint = totalPrint;
     this._totalCopy = totalCopy;
 

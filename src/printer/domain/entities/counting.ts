@@ -1,3 +1,4 @@
+import type { CountingType } from '../enums/counting-type.enum';
 import { CountingDomainValidationException } from '../exceptions';
 import { CreateCountingProps } from '../types/counting.props';
 import { EntityBase } from './entity-base';
@@ -12,6 +13,7 @@ export class Counting extends EntityBase {
   private _totalPrint: number;
   private _totalCopy: number;
   private _collectedAt: Date;
+  private _type: CountingType;
 
   private constructor(props: CreateCountingProps) {
     super(props.id, props.createdAt, props.updatedAt);
@@ -19,6 +21,7 @@ export class Counting extends EntityBase {
     this._totalPrint = props.totalPrint;
     this._totalCopy = props.totalCopy;
     this._collectedAt = props.collectedAt;
+    this._type = props.type;
     this.validate();
   }
 
@@ -38,13 +41,18 @@ export class Counting extends EntityBase {
     return this._collectedAt;
   }
 
+  get type(): CountingType {
+    return this._type;
+  }
+
   public static create(
     printerId: string,
     totalPrint: number,
     totalCopy: number,
     collectedAt: Date,
+    type: CountingType,
   ) {
-    return new Counting({ printerId, totalPrint, totalCopy, collectedAt });
+    return new Counting({ printerId, totalPrint, totalCopy, collectedAt, type });
   }
 
   private validate(): void {

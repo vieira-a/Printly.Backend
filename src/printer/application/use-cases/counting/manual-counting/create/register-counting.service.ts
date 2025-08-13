@@ -9,6 +9,7 @@ import { CountingJob } from '@printer/domain/entities/counting-job';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
+import { CountingType } from '@printer/domain/enums/counting-type.enum';
 
 @Injectable()
 export class RegisterCountingService implements IRegisterCounting {
@@ -26,7 +27,12 @@ export class RegisterCountingService implements IRegisterCounting {
     const printer = await this.printerRepository.findById(id);
 
     if (!printer) throw new PrinterNotFoundException(id);
-    const counting = printer.registerCounting(totalPrint, totalCopy, new Date());
+    const counting = printer.registerCounting(
+      totalPrint,
+      totalCopy,
+      new Date(),
+      CountingType.MANUAL,
+    );
 
     const savedCounting = await this.countingRepository.create(counting);
     const updatedPrinter = await this.printerRepository.updateCounting(printer);
