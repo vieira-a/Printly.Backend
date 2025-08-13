@@ -3,25 +3,29 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ModelController } from './api/rest/controllers/model/model.controller';
 import { CreateModelService } from './application/use-cases/model/create/create-model.service';
-import { ModelRepository } from './infrastructure/data/typeorm/repositories/model.repository';
 import {
   ModelPrinter,
   LocationModel,
   PrinterModel,
   CountingModel,
+  CountingJobModel,
 } from './infrastructure/data/typeorm/models';
 import { UpdateModelService } from './application/use-cases/model/update/update-model.service';
 import { LocationController } from './api/rest/controllers/location/location.controller';
 import { CreateLocationService } from './application/use-cases/location/create/create-location.service';
-import { LocationRepository } from './infrastructure/data/typeorm/repositories/location.repository';
+import {
+  LocationRepository,
+  ModelRepository,
+  PrinterRepository,
+  CountingRepository,
+  CountingJobRepository,
+} from './infrastructure/data/typeorm/repositories';
 import { UpdateLocationService } from './application/use-cases/location/update/update-location.service';
 import { UpdateLocationDetails } from './domain/services/update-location-details.service';
 import { PrinterController } from './api/rest/controllers/printer/printer.controller';
 import { CreatePrinterService } from './application/use-cases/printer/create/create-printer.service';
-import { PrinterRepository } from './infrastructure/data/typeorm/repositories/printer.repository';
 import { UpdatePrinterService } from './application/use-cases/printer/update/update-printer.service';
 import { RegisterCountingService } from './application/use-cases/counting/manual-counting/create/register-counting.service';
-import { CountingRepository } from './infrastructure/data/typeorm/repositories/counting.repository';
 import { CreateAutoCountingService } from './application/use-cases/counting/auto-counting/create/create-auto-counting.service';
 import { SnmpAutoCountingService } from './infrastructure/snmp/snmp-auto-counting.service';
 
@@ -31,7 +35,13 @@ import { SnmpAutoCountingService } from './infrastructure/snmp/snmp-auto-countin
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    TypeOrmModule.forFeature([ModelPrinter, LocationModel, PrinterModel, CountingModel]),
+    TypeOrmModule.forFeature([
+      ModelPrinter,
+      LocationModel,
+      PrinterModel,
+      CountingModel,
+      CountingJobModel,
+    ]),
   ],
   providers: [
     CreateModelService,
@@ -56,6 +66,10 @@ import { SnmpAutoCountingService } from './infrastructure/snmp/snmp-auto-countin
     {
       provide: 'IAutoCounting',
       useClass: SnmpAutoCountingService,
+    },
+    {
+      provide: 'ICountingJobRepository',
+      useClass: CountingJobRepository,
     },
   ],
   controllers: [ModelController, LocationController, PrinterController],

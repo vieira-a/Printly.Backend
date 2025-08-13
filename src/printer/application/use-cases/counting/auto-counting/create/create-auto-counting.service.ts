@@ -13,6 +13,10 @@ import { PrinterDomainValidationException } from '@printer/domain/exceptions/pri
 import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
 import { RequestTimedOutError } from '@shared/exceptions/request-timeout.exception';
+import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
+import { CreateCountingJobInput } from '@printer/application/use-cases/counting/auto-counting/create/input/create-counting-job.input';
+import { CountingJob, CountingJobStatus } from '@printer/domain/entities/counting-job';
+import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 
 @Injectable()
 export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
@@ -25,6 +29,8 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
     private readonly printerRepository: IPrinterRepository,
     @Inject('ICountingRepository')
     private readonly countingRepository: ICountingRepository,
+    @Inject('ICountingJobRepository')
+    private readonly countingJobRepository: ICountingJobRepository,
   ) {}
   async execute(id: string): Promise<void> {
     try {
@@ -36,12 +42,33 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
       const printerOidPrint = printer.model.printOid;
       const printerOidCopy = printer.model.copyOid;
 
-      const totalPrint = await this.autoCounting.collect(printerIpv4, printerOidPrint);
-      const totalCopy = await this.autoCounting.collect(printerIpv4, printerOidCopy);
+      const totalPrintResult = await this.autoCounting.collect(printerIpv4, printerOidPrint);
+      const totalCopyResult = await this.autoCounting.collect(printerIpv4, printerOidCopy);
 
-      const counting = printer.registerCounting(Number(totalPrint), Number(totalCopy), new Date());
-      await this.countingRepository.create(counting);
-      await this.printerRepository.updateCounting(printer);
+      if (totalPrintResult.success && totalPrintResult.success) {
+        const counting = printer.registerCounting(
+          Number(totalPrintResult.count),
+          Number(totalCopyResult.count),
+          new Date(),
+        );
+
+        await this.countingRepository.create(counting);
+
+        await this.printerRepository.updateCounting(printer);
+
+        await this.createCountingJob({
+          printerId: printer.id,
+          ipv4: printer.ipv4.toString(),
+          status: CountingJobStatus.SUCCESS,
+        });
+      } else {
+        await this.createCountingJob({
+          printerId: printer.id,
+          ipv4: printer.ipv4.toString(),
+          status: CountingJobStatus.FAILED,
+          errorMessage: totalPrintResult.error,
+        });
+      }
     } catch (error) {
       this.logger.log(error.message);
       if (
@@ -52,6 +79,24 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
       } else if (error instanceof RequestTimedOutError) {
         throw new RequestPrinterTimeoutException(error.message, error.ipv4);
       } else if (error instanceof DatabaseModelException) {
+        throw new InternalServerErrorException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  private async createCountingJob(input: CreateCountingJobInput): Promise<void> {
+    try {
+      const countingJob = CountingJob.create(
+        input.printerId,
+        IPV4.create(input.ipv4),
+        input.status,
+        input.errorMessage,
+      );
+      await this.countingJobRepository.create(countingJob);
+    } catch (error) {
+      this.logger.log(error.message);
+      if (error instanceof DatabaseModelException) {
         throw new InternalServerErrorException(error.message);
       }
       throw error;
