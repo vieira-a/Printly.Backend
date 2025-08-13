@@ -1,3 +1,5 @@
+import { Printer } from '@printer/domain/entities';
+
 export interface ICreateAutoCountingUseCase {
-  execute(id: string): Promise<void>;
+  execute(printer: Partial<Printer>): Promise<void>;
 }

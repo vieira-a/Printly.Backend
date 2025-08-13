@@ -8,6 +8,8 @@ export abstract class FindPrinterOutput {
   state: string;
   contact: string;
   phone: string;
+  printOid: string;
+  copyOid: string;
   totalPrint: number;
   totalCopy: number;
 }

@@ -14,6 +14,8 @@ export abstract class PrinterMapper {
       state: entity.location.address.state,
       contact: entity.location.contact,
       phone: entity.location.phone.toString(),
+      printOid: entity.model.printOid,
+      copyOid: entity.model.copyOid,
       totalPrint: entity.totalPrint,
       totalCopy: entity.totalCopy,
     };

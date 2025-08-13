@@ -17,6 +17,7 @@ import { ICountingJobRepository } from '@printer/domain/data/repositories/counti
 import { CreateCountingJobInput } from '@printer/application/use-cases/counting/auto-counting/create/input/create-counting-job.input';
 import { CountingJob, CountingJobStatus } from '@printer/domain/entities/counting-job';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
+import { Printer } from '@printer/domain/entities';
 
 @Injectable()
 export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
@@ -32,18 +33,14 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
     @Inject('ICountingJobRepository')
     private readonly countingJobRepository: ICountingJobRepository,
   ) {}
-  async execute(id: string): Promise<void> {
+  async execute(printer: Printer): Promise<void> {
     try {
-      const printer = await this.printerRepository.findById(id);
+      const ipv4 = printer.ipv4.toString();
+      const printOid = printer.model.printOid;
+      const copyOid = printer.model.copyOid;
 
-      if (!printer) throw new PrinterNotFoundException(id);
-
-      const printerIpv4 = printer.ipv4.toString();
-      const printerOidPrint = printer.model.printOid;
-      const printerOidCopy = printer.model.copyOid;
-
-      const totalPrintResult = await this.autoCounting.collect(printerIpv4, printerOidPrint);
-      const totalCopyResult = await this.autoCounting.collect(printerIpv4, printerOidCopy);
+      const totalPrintResult = await this.autoCounting.collect(ipv4, printOid);
+      const totalCopyResult = await this.autoCounting.collect(ipv4, copyOid);
 
       if (totalPrintResult.success && totalPrintResult.success) {
         const counting = printer.registerCounting(

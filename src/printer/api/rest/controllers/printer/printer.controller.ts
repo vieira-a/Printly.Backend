@@ -80,21 +80,6 @@ export class PrinterController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Put(':id/counting/auto')
-  async autoCounting(@Param('id') id: string) {
-    try {
-      return await this.createAutoCountingService.execute(id);
-    } catch (error) {
-      if (error instanceof PrinterNotFoundException) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof RequestPrinterTimeoutException) {
-        throw new RequestTimeoutException({ message: error.message, ipv4: error.ipv4 });
-      }
-      throw error;
-    }
-  }
-
-  @HttpCode(HttpStatus.OK)
   @Get()
   async getAll() {
     try {
