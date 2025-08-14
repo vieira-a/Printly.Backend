@@ -1,5 +1,6 @@
 import { CountingJobStatus } from '../enums/counting-job-status.enum';
 import { EntityBase } from './entity-base';
+import type { Printer } from './printer';
 import { IPV4 } from './value-objects/ipv4';
 
 export type CreateCountingJobProps = {
@@ -9,6 +10,7 @@ export type CreateCountingJobProps = {
   attempt: number;
   lastAttempt: Date;
   maxAttempts: number;
+  printer?: Printer;
   countingId?: string;
   id?: string;
   createdAt?: Date;
@@ -23,6 +25,7 @@ export class CountingJob extends EntityBase {
   private _attempt: number;
   private _lastAttempt: Date;
   private _maxAttempts: number;
+  private _printer?: Printer;
   private _countingId?: string;
   private _errorMessage?: string;
 
@@ -34,6 +37,7 @@ export class CountingJob extends EntityBase {
     this._attempt = props.attempt;
     this._lastAttempt = props.lastAttempt;
     this._maxAttempts = props.maxAttempts;
+    this._printer = props.printer;
     this._countingId = props.countingId;
     this._errorMessage = props.errorMessage;
   }
@@ -70,10 +74,15 @@ export class CountingJob extends EntityBase {
     return this._countingId;
   }
 
+  get printer(): Printer | undefined {
+    return this._printer;
+  }
+
   public static create(
     printerId: string,
     ipv4: IPV4,
     status: CountingJobStatus,
+    printer?: Printer,
     countingId?: string,
     errorMessage?: string,
   ): CountingJob {
@@ -81,6 +90,7 @@ export class CountingJob extends EntityBase {
       printerId,
       ipv4,
       status,
+      printer,
       attempt: 1,
       lastAttempt: new Date(),
       maxAttempts: 5,
@@ -89,24 +99,57 @@ export class CountingJob extends EntityBase {
     });
   }
 
+  public static restore(
+    id: string,
+    printerId: string,
+    ipv4: IPV4,
+    status: CountingJobStatus,
+    attempt: number,
+    lastAttempt: Date,
+    maxAttempts: number,
+    printer?: Printer,
+    countingId?: string,
+    errorMessage?: string,
+    createdAt?: Date,
+    updatedAt?: Date,
+  ): CountingJob {
+    return new CountingJob({
+      id,
+      printerId,
+      ipv4,
+      status,
+      attempt,
+      lastAttempt,
+      maxAttempts,
+      printer,
+      countingId,
+      errorMessage,
+      createdAt,
+      updatedAt,
+    });
+  }
+
   public canRetry(): boolean {
-    return this._status !== CountingJobStatus.SUCCESS && this._attempt < this._maxAttempts;
+    const reachedLimit = this._attempt >= this._maxAttempts;
+    return this._status !== CountingJobStatus.SUCCESS && !reachedLimit;
   }
 
   public registerAttempt(): void {
-    this._attempt += 1;
+    this._attempt++;
     this._lastAttempt = new Date();
 
-    if (this._attempt >= this._maxAttempts && this._status !== CountingJobStatus.SUCCESS) {
+    if (this._status === CountingJobStatus.SUCCESS) return;
+
+    if (this._attempt >= this._maxAttempts) {
       this._status = CountingJobStatus.FAILED;
     } else {
-      if (this._status !== CountingJobStatus.SUCCESS) {
-        this._status = CountingJobStatus.PENDING;
-      }
+      this._status = CountingJobStatus.PENDING;
     }
   }
 
-  public markSuccess(): void {
+  public markSuccess(countingId: string): void {
     this._status = CountingJobStatus.SUCCESS;
+    this._countingId = countingId;
+    this._errorMessage = '';
   }
 }

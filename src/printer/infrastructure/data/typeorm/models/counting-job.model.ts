@@ -11,10 +11,10 @@ type CreateCountingJobProps = {
   attempt: number;
   lastAttempt: Date;
   maxAttempts: number;
-  countingId?: string;
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  countingId?: string;
   errorMessage?: string;
 };
 
@@ -27,13 +27,6 @@ export class CountingJobModel extends BaseModel {
   @JoinColumn({ name: 'printer_id' })
   printer: PrinterModel;
 
-  @Column({ name: 'counting_id', nullable: true })
-  countingId?: string;
-
-  @OneToOne(() => CountingModel)
-  @JoinColumn({ name: 'counting_id' })
-  counting?: CountingModel;
-
   @Column({ name: 'ipv4' })
   ipv4: string;
 
@@ -43,11 +36,18 @@ export class CountingJobModel extends BaseModel {
   @Column({ name: 'attempt' })
   attempt: number;
 
-  @Column({ name: 'last_attempt', nullable: true })
-  lastAttempt?: Date;
+  @Column({ name: 'last_attempt' })
+  lastAttempt: Date;
 
   @Column({ name: 'max_attempts' })
   maxAttempts: number;
+
+  @Column({ name: 'counting_id', nullable: true })
+  countingId?: string;
+
+  @OneToOne(() => CountingModel)
+  @JoinColumn({ name: 'counting_id' })
+  counting?: CountingModel;
 
   @Column({ name: 'error_message', nullable: true })
   errorMessage?: string;
@@ -77,6 +77,30 @@ export class CountingJobModel extends BaseModel {
     errorMessage?: string,
   ): CountingJobModel {
     return new CountingJobModel({
+      printerId,
+      ipv4,
+      status,
+      attempt,
+      lastAttempt: new Date(),
+      maxAttempts,
+      countingId,
+      errorMessage,
+    });
+  }
+
+  public static restore(
+    id: string,
+    printerId: string,
+    ipv4: string,
+    status: CountingJobStatus,
+    attempt: number,
+    lastAttempt: Date,
+    maxAttempts: number,
+    countingId?: string,
+    errorMessage?: string,
+  ): CountingJobModel {
+    return new CountingJobModel({
+      id,
       printerId,
       ipv4,
       status,

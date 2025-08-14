@@ -92,6 +92,7 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
         input.printerId,
         IPV4.create(input.ipv4),
         input.status,
+        undefined,
         input.countingId,
         input.errorMessage,
       );

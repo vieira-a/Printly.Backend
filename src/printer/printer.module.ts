@@ -29,7 +29,8 @@ import { RegisterCountingService } from './application/use-cases/counting/manual
 import { CreateAutoCountingService } from './application/use-cases/counting/auto-counting/create/create-auto-counting.service';
 import { SnmpAutoCountingService } from './infrastructure/snmp/snmp-auto-counting.service';
 import { FindPrinterService } from './application/use-cases/printer/find/find-printer.service';
-import { ProcessAutoCountingService } from './application/use-cases/counting/auto-counting/process/process-auto-counting.service';
+import { ProcessAutoCountingService } from './application/use-cases/counting/auto-counting/create/process-auto-counting.service';
+import { ProcessPendingJobService } from './application/use-cases/counting/auto-counting/create/process-pending-job.service';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { ProcessAutoCountingService } from './application/use-cases/counting/aut
     UpdatePrinterService,
     FindPrinterService,
     ProcessAutoCountingService,
+    ProcessPendingJobService,
     {
       provide: 'IPrinterRepository',
       useClass: PrinterRepository,
