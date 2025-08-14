@@ -8,4 +8,16 @@ describe('Counting Entity', () => {
       CountingDomainValidationException,
     );
   });
+
+  it('should throw CountingDomainValidationException if collect data is not provided', () => {
+    expect(() =>
+      Counting.create(
+        'ebfc2322-a124-47e0-8c44-32f2ecddb9d4',
+        1000,
+        1000,
+        null as any,
+        CountingType.AUTO,
+      ),
+    ).toThrow(CountingDomainValidationException);
+  });
 });
