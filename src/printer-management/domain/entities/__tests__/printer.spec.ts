@@ -83,4 +83,20 @@ describe('Printer Entity', () => {
   it('should throw a PrinterDomainValidationException if serialNumber is not provided on update', () => {
     expect(() => validPrinter.updateSerialNumber('')).toThrow(PrinterDomainValidationException);
   });
+
+  it('should throw a PrinterDomainValidationException if model id is not provided on update', () => {
+    expect(() => validPrinter.updateModel('')).toThrow(PrinterDomainValidationException);
+  });
+
+  it('should throw a PrinterDomainValidationException if installation location id is not provided on update', () => {
+    expect(() => validPrinter.updateInstallationLocation('', new Date())).toThrow(
+      PrinterDomainValidationException,
+    );
+  });
+
+  it('should throw a PrinterDomainValidationException if installation date is not provided on update', () => {
+    expect(() =>
+      validPrinter.updateInstallationLocation('fake-installation-location-id', null as any),
+    ).toThrow(PrinterDomainValidationException);
+  });
 });

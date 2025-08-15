@@ -75,19 +75,35 @@ export class Printer extends EntityBase {
   }
 
   updateSerialNumber(newSerialNumber: string): void {
+    if (!newSerialNumber)
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, [
+        MissingModelExceptionMessage,
+      ]);
     this._serialNumber = newSerialNumber;
-    this.validate();
   }
 
-  updateIpv4Address(newIpv4: IPV4): void {
-    this._ipv4Address = newIpv4;
+  updateIpv4Address(newIpv4: string): void {
+    this._ipv4Address = IPV4.create(newIpv4);
   }
 
   updateModel(newModelId: string): void {
+    if (!newModelId)
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, [
+        MissingModelExceptionMessage,
+      ]);
     this._modelId = newModelId;
   }
 
   updateInstallationLocation(newInstalationLocationid: string, installedAt: Date) {
+    if (!newInstalationLocationid)
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, [
+        MissingInstallationLocationExceptionMessage,
+      ]);
+
+    if (!installedAt)
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, [
+        MissingInstallationDateExceptionMessage,
+      ]);
     this._installationLocationId = newInstalationLocationid;
     this._installedAt = installedAt;
   }
