@@ -76,6 +76,7 @@ export class Printer extends EntityBase {
 
   updateSerialNumber(newSerialNumber: string): void {
     this._serialNumber = newSerialNumber;
+    this.validate();
   }
 
   updateIpv4Address(newIpv4: IPV4): void {

@@ -62,7 +62,7 @@ describe('Printer Entity', () => {
   it('should create a new Printer with correct params', () => {
     expect(validPrinter).toBeInstanceOf(Printer);
     expect(validPrinter.serialNumber).toBe('XYZ12345');
-    expect(validPrinter.ipv4Address).toBe('192.168.0.200');
+    expect(validPrinter.ipv4Address.toString()).toBe('192.168.0.200');
     expect(validPrinter.modelId).toBe('fake-model-id');
     expect(validPrinter.installationLocationId).toBe('fake-location-id');
   });
@@ -78,5 +78,9 @@ describe('Printer Entity', () => {
     expect(validPrinter.countings).toContain(newCounting);
     expect(validPrinter.totalPrint).toBe(9999);
     expect(validPrinter.totalCopy).toBe(9999);
+  });
+
+  it('should throw a PrinterDomainValidationException if serialNumber is not provided on update', () => {
+    expect(() => validPrinter.updateSerialNumber('')).toThrow(PrinterDomainValidationException);
   });
 });
