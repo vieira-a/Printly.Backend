@@ -1,19 +1,28 @@
+import { PhoneDomainValidationException } from '@printer/domain/exceptions/phone-domain-validation.exception';
+import { PhoneProps } from '@printer/domain/types/phone.props';
+
 const InvalidDDDExceptionMessage = 'DDD deve conter dois dígitos entre 11 e 99.';
 const InvalidPhoneExceptionMessage = 'Número de telefone deve conter 8 ou 9 digitos.';
 const InvalidCellPhoneExceptionMessage = 'Número de celular com 9 dígitos deve começar com 9.';
 const InvalidFixedPhoneExceptionMessage = 'Número fixo com 8 dígitos não deve começar com 9.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Phone {
-  private constructor(
-    private readonly _areaCode: number,
-    private readonly _phoneNumber: number,
-  ) {}
+  private _areaCode: number;
+  private _phoneNumber: number;
 
-  public static create(areaCode: number | string, phoneNumber: number | string): Phone {
-    const normalizedAreaCode = typeof areaCode === 'string' ? parseInt(areaCode, 10) : areaCode;
+  private constructor(props: PhoneProps) {
+    this._areaCode = props.areaCode;
+    this._phoneNumber = props.phoneNumber;
+    this.validate();
+  }
+
+  public static create(props: PhoneProps): Phone {
+    const normalizedAreaCode =
+      typeof props.areaCode === 'string' ? parseInt(props.areaCode, 10) : props.areaCode;
     const normalizedPhoneNumber =
-      typeof phoneNumber === 'string' ? parseInt(phoneNumber, 10) : phoneNumber;
-    return new Phone(normalizedAreaCode, normalizedPhoneNumber);
+      typeof props.phoneNumber === 'string' ? parseInt(props.phoneNumber, 10) : props.phoneNumber;
+    return new Phone({ areaCode: normalizedAreaCode, phoneNumber: normalizedPhoneNumber });
   }
 
   get areaCode(): number {
@@ -28,7 +37,7 @@ export class Phone {
     return `${this._areaCode}${this._phoneNumber}`;
   }
 
-  validate(): string[] {
+  private validate(): void {
     const errors: string[] = [];
 
     if (!Number.isInteger(this._areaCode) || this._areaCode < 11 || this._areaCode > 99)
@@ -45,6 +54,7 @@ export class Phone {
       errors.push(InvalidFixedPhoneExceptionMessage);
     }
 
-    return errors;
+    if (errors.length > 0)
+      throw new PhoneDomainValidationException(ValidationExceptionMessage, errors);
   }
 }
