@@ -1,15 +1,17 @@
 import { CountingType } from '../enums/counting-type.enum';
 import { PrinterDomainValidationException } from '../exceptions/printer-domain-validation.exception';
-import { CreatePrinterProps, UpdatePrinterProps } from '../types/printer.props';
+import { CreatePrinterProps, PrinterProps } from '../types/printer.props';
 import { Counting } from './counting';
 import { EntityBase } from './entity-base';
-import { Location } from './location';
-import { Model } from './model';
 import { IPV4 } from './value-objects/ipv4';
 
 const MissingModelExceptionMessage = 'Modelo não informado.';
-const MissingSerialExceptionMessage = 'Serial não informado.';
-const InvalidSerialExceptionMessage = 'Serial deve ter no mínimo 6 caracteres.';
+const MissingSerialNumberExceptionMessage = 'Serial não informado.';
+const InvalidSeriaNumberlExceptionMessage = 'Serial deve ter no mínimo 6 caracteres.';
+const MissingIPv4AddressExceptionMessage = 'Endereço IP não informado.';
+const MissingInstallationLocationExceptionMessage = 'Local de instalação não informado.';
+const MissingInstallationDateExceptionMessage = 'Data de instalação não informada.';
+
 const InvalidTotalPrintExceptionMessage =
   'O total de impressões deve ser igual ou maior que a quantidade atual.';
 const InvalidCopyPrintExceptionMessage =
@@ -18,40 +20,41 @@ const InvalidCopyPrintExceptionMessage =
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Printer extends EntityBase {
-  private _model: Model;
-  private _serial: string;
-  private _ipv4: IPV4;
-  private _location: Location;
+  private _serialNumber: string;
+  private _ipv4Address: IPV4;
+  private _modelId: string;
+  private _installationLocationId: string;
   private _installedAt: Date;
   private _totalPrint: number;
   private _totalCopy: number;
+  private _countings: Counting[];
 
-  private constructor(props: CreatePrinterProps) {
+  private constructor(props: PrinterProps) {
     super(props.id, props.createdAt, props.updatedAt);
-    this._model = props.model;
-    this._serial = props.serial;
-    this._ipv4 = props.ipv4;
-    this._location = props.location;
+    this._serialNumber = props.serialNumber;
+    this._ipv4Address = props.ipv4Address;
+    this._modelId = props.modelId;
+    this._installationLocationId = props.installationLocationId;
     this._installedAt = props.installedAt;
     this._totalPrint = props.totalPrint;
     this._totalCopy = props.totalCopy;
     this.validate();
   }
 
-  get model(): Model {
-    return this._model;
+  get modelId(): string {
+    return this._modelId;
   }
 
-  get serial(): string {
-    return this._serial;
+  get serialNumber(): string {
+    return this._serialNumber;
   }
 
-  get ipv4(): IPV4 {
-    return this._ipv4;
+  get ipv4Address(): IPV4 {
+    return this._ipv4Address;
   }
 
-  get location(): Location {
-    return this._location;
+  get installationLocationId(): string {
+    return this._installationLocationId;
   }
 
   get installedAt(): Date {
@@ -66,37 +69,61 @@ export class Printer extends EntityBase {
     return this._totalCopy;
   }
 
-  updateModel(model: Model) {
-    this._model = model;
+  get countings(): Counting[] {
+    return this._countings;
   }
 
-  updateIpv4(ipv4: IPV4) {
-    this._ipv4 = ipv4;
+  updateSerialNumber(newSerialNumber: string): void {
+    this._serialNumber = newSerialNumber;
   }
 
-  updateLocation(location: Location, installedAt: Date) {
-    this._location = location;
+  updateIpv4Address(newIpv4: IPV4): void {
+    this._ipv4Address = newIpv4;
+  }
+
+  updateModel(newModelId: string): void {
+    this._modelId = newModelId;
+  }
+
+  updateInstallationLocation(newInstalationLocationid: string, installedAt: Date) {
+    this._installationLocationId = newInstalationLocationid;
     this._installedAt = installedAt;
   }
 
-  public static create(
-    model: Model,
-    serial: string,
-    ipv4: IPV4,
-    location: Location,
-    installedAt: Date,
+  addCounting(
     totalPrint: number,
     totalCopy: number,
-  ): Printer {
-    return new Printer({ model, serial, ipv4, location, installedAt, totalPrint, totalCopy });
+    collectedAt: Date,
+    type: CountingType,
+  ): Counting {
+    const errors: string[] = [];
+
+    if (totalPrint < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
+    if (totalCopy < this._totalCopy) errors.push(InvalidCopyPrintExceptionMessage);
+
+    if (errors.length > 0) {
+      throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);
+    }
+
+    const newCounting = Counting.create(this.id, totalPrint, totalCopy, collectedAt, type);
+
+    this._countings.push(newCounting);
+    this._totalPrint = totalPrint;
+    this._totalCopy = totalCopy;
+
+    return newCounting;
+  }
+
+  public static create(props: CreatePrinterProps): Printer {
+    return new Printer({ ...props });
   }
 
   public static restore(
     id: string,
-    serial: string,
-    model: Model,
-    ipv4: IPV4,
-    location: Location,
+    serialNumber: string,
+    ipv4Address: IPV4,
+    modelId: string,
+    installationLocationId: string,
     installedAt: Date,
     totalPrint: number,
     totalCopy: number,
@@ -105,10 +132,10 @@ export class Printer extends EntityBase {
   ) {
     return new Printer({
       id,
-      serial,
-      model,
-      ipv4,
-      location,
+      serialNumber,
+      ipv4Address,
+      modelId,
+      installationLocationId,
       installedAt,
       totalPrint,
       totalCopy,
@@ -117,49 +144,21 @@ export class Printer extends EntityBase {
     });
   }
 
-  public update(props: UpdatePrinterProps) {
-    return new Printer({
-      id: this.id,
-      model: this._model,
-      serial: props.serial ?? this._serial,
-      ipv4: IPV4.create(props.ipv4!) ?? this._ipv4,
-      location: this._location,
-      totalPrint: this._totalPrint,
-      totalCopy: this._totalCopy,
-      installedAt: this._installedAt,
-      updatedAt: new Date(),
-    });
-  }
-
-  public registerCounting(
-    totalPrint: number,
-    totalCopy: number,
-    collectedAt: Date,
-    type: CountingType,
-  ) {
-    const errors: string[] = [];
-
-    if (totalPrint < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
-    if (totalCopy < this._totalCopy) errors.push(InvalidCopyPrintExceptionMessage);
-
-    if (errors.length > 0)
-      throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);
-
-    const counting = Counting.create(this.id, totalPrint, totalCopy, collectedAt, type);
-    this._totalPrint = totalPrint;
-    this._totalCopy = totalCopy;
-
-    return counting;
-  }
-
   private validate(): void {
     const errors: string[] = [];
 
-    if (!this._model) errors.push(MissingModelExceptionMessage);
+    if (!this._serialNumber) {
+      errors.push(MissingSerialNumberExceptionMessage);
+    } else if (this._serialNumber.trim().length < 6)
+      errors.push(InvalidSeriaNumberlExceptionMessage);
 
-    if (!this._serial) {
-      errors.push(MissingSerialExceptionMessage);
-    } else if (this._serial.trim().length < 6) errors.push(InvalidSerialExceptionMessage);
+    if (!this._modelId) errors.push(MissingModelExceptionMessage);
+
+    if (!this._ipv4Address) errors.push(MissingIPv4AddressExceptionMessage);
+
+    if (!this._installationLocationId) errors.push(MissingInstallationLocationExceptionMessage);
+
+    if (!this._installedAt) errors.push(MissingInstallationDateExceptionMessage);
 
     if (errors.length > 0)
       throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);

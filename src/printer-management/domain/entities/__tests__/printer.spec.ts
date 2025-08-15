@@ -1,166 +1,70 @@
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
-import { Location } from '../location';
-import { Model } from '../model';
 import { Printer } from '../printer';
-import { Address } from '../value-objects/address';
-import { CEP } from '../value-objects/cep';
 import { IPV4 } from '../value-objects/ipv4';
-import { Phone } from '../value-objects/phone';
 import { Counting } from '../counting';
 import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { CountingType } from '@printer/domain/enums/counting-type.enum';
+import { CreatePrinterProps } from '@printer/domain/types/printer.props';
 
-const newModel = Model.create(
-  'Kyocera',
-  'KM2040DN',
-  '1.2.1.2.3.5.6.7.41.10',
-  '1.2.1.2.3.5.6.7.41.11',
-);
+const validPrinterProps: CreatePrinterProps = {
+  serialNumber: 'XYZ12345',
+  ipv4Address: IPV4.create('192.168.0.200'),
+  modelId: 'fake-model-id',
+  installationLocationId: 'fake-location-id',
+  installedAt: new Date(),
+  totalPrint: 1000,
+  totalCopy: 1000,
+};
 
-const newAddress = Address.create(
-  'Rua A',
-  'Bairro Tal',
-  'Cidade A',
-  'BA',
-  CEP.create('40000000'),
-  'Referência da Rua A',
-);
-
-const newCellPhone = Phone.create(71, 999999999);
-const newLocation = Location.create(newAddress, newCellPhone, 'Contact Location');
-
-const newValidPrinter = Printer.create(
-  newModel,
-  'XYZ12345',
-  IPV4.create('192.168.0.200'),
-  newLocation,
-  new Date(),
-  1000,
-  1000,
-);
+const validPrinter = Printer.create({ ...validPrinterProps });
 
 describe('Printer Entity', () => {
   it('should create a new Printer with correct params', () => {
-    const newPrinter = Printer.create(
-      newModel,
-      'XYZ12345',
-      IPV4.create('192.168.0.200'),
-      newLocation,
-      new Date(),
-      1000,
-      1000,
+    expect(validPrinter).toBeInstanceOf(Printer);
+    expect(validPrinter.serialNumber).toBe('XYZ12345');
+  });
+
+  it('should throw a PrinterDomainValidationException if serialNumber is not provided', () => {
+    expect(() => Printer.create({ ...validPrinterProps, serialNumber: '' })).toThrow(
+      PrinterDomainValidationException,
     );
-
-    expect(newPrinter).toBeInstanceOf(Printer);
   });
 
-  it('should throw a PrinterDomainValidationException if model is not provided', () => {
-    expect(() =>
-      Printer.create(
-        null as any,
-        'XYZ12345',
-        IPV4.create('192.168.0.200'),
-        newLocation,
-        new Date(),
-        1000,
-        1000,
-      ),
-    ).toThrow(PrinterDomainValidationException);
+  it('should throw a PrinterDomainValidationException if serialNumber has less than 6 characters', () => {
+    expect(() => Printer.create({ ...validPrinterProps, serialNumber: 'XYZ' })).toThrow(
+      PrinterDomainValidationException,
+    );
   });
 
-  it('should throw a PrinterDomainValidationException if serial is not provided', () => {
-    expect(() =>
-      Printer.create(
-        newModel,
-        null as any,
-        IPV4.create('192.168.0.200'),
-        newLocation,
-        new Date(),
-        1000,
-        1000,
-      ),
-    ).toThrow(PrinterDomainValidationException);
-  });
-
-  it('should throw a PrinterDomainValidationException if serial is empty', () => {
-    expect(() =>
-      Printer.create(
-        newModel,
-        '',
-        IPV4.create('192.168.0.200'),
-        newLocation,
-        new Date(),
-        1000,
-        1000,
-      ),
-    ).toThrow(PrinterDomainValidationException);
-  });
-
-  it('should throw a PrinterDomainValidationException if serial has less than 6 characters', () => {
-    expect(() =>
-      Printer.create(
-        newModel,
-        'XYZ99',
-        IPV4.create('192.168.0.200'),
-        newLocation,
-        new Date(),
-        1000,
-        1000,
-      ),
-    ).toThrow(PrinterDomainValidationException);
+  it('should throw a PrinterDomainValidationException if modelId is not provided', () => {
+    expect(() => Printer.create({ ...validPrinterProps, modelId: '' })).toThrow(
+      PrinterDomainValidationException,
+    );
   });
 
   it('should throw a PrinterDomainValidationException if new total print is not provided', () => {
+    const validPrinter = Printer.create({ ...validPrinterProps });
+
     expect(() =>
-      newValidPrinter.registerCounting(null as any, 9999, new Date(), CountingType.MANUAL),
+      validPrinter.addCounting(null as any, 9999, new Date(), CountingType.MANUAL),
     ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total copy is not provided', () => {
     expect(() =>
-      newValidPrinter.registerCounting(9999, null as any, new Date(), CountingType.MANUAL),
+      validPrinter.addCounting(9999, null as any, new Date(), CountingType.MANUAL),
     ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total print is less than current total print', () => {
-    expect(() =>
-      newValidPrinter.registerCounting(999, 9999, new Date(), CountingType.MANUAL),
-    ).toThrow(PrinterDomainValidationException);
+    expect(() => validPrinter.addCounting(999, 9999, new Date(), CountingType.MANUAL)).toThrow(
+      PrinterDomainValidationException,
+    );
   });
 
   it('should throw a PrinterDomainValidationException if new total copy is less than current total copy', () => {
-    expect(() =>
-      newValidPrinter.registerCounting(9999, 999, new Date(), CountingType.MANUAL),
-    ).toThrow(PrinterDomainValidationException);
-  });
-
-  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
-    const totalPrint = 9999;
-    const totalCopy = 9999;
-    const countingDate = new Date();
-    const countingType = CountingType.MANUAL;
-
-    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate, countingType);
-    expect(() =>
-      Counting.create(null as any, totalPrint, totalCopy, countingDate, countingType),
-    ).toThrow(CountingDomainValidationException);
-  });
-
-  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
-    const totalPrint = 9999;
-    const totalCopy = 9999;
-    const countingDate = new Date();
-    const countingType = CountingType.MANUAL;
-
-    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate, countingType);
-    expect(() =>
-      Counting.create(
-        '0b8565bb-f5c7-4510-9f43-f6067a9d9924',
-        totalPrint,
-        totalCopy,
-        null as any,
-        countingType,
-      ),
-    ).toThrow(CountingDomainValidationException);
+    expect(() => validPrinter.addCounting(9999, 999, new Date(), CountingType.MANUAL)).toThrow(
+      PrinterDomainValidationException,
+    );
   });
 });

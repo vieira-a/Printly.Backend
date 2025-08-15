@@ -1,20 +1,29 @@
-import { Location, Model } from '../entities';
 import { IPV4 } from '../entities/value-objects/ipv4';
 
-export type CreatePrinterProps = {
+export type PrinterProps = {
   id?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  model: Model;
-  serial: string;
-  ipv4: IPV4;
-  location: Location;
+  serialNumber: string;
+  ipv4Address: IPV4;
+  modelId: string;
+  installationLocationId: string;
+  installedAt: Date;
+  totalPrint: number;
+  totalCopy: number;
+};
+
+export type CreatePrinterProps = {
+  serialNumber: string;
+  ipv4Address: IPV4;
+  modelId: string;
+  installationLocationId: string;
   installedAt: Date;
   totalPrint: number;
   totalCopy: number;
 };
 
 export type UpdatePrinterProps = {
-  serial?: string;
-  ipv4?: string;
+  serialNumber?: string;
+  ipv4Address?: string;
 };
