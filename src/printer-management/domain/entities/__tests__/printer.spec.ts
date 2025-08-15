@@ -1,8 +1,6 @@
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
 import { Printer } from '../printer';
 import { IPV4 } from '../value-objects/ipv4';
-import { Counting } from '../counting';
-import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { CountingType } from '@printer/domain/enums/counting-type.enum';
 import { CreatePrinterProps } from '@printer/domain/types/printer.props';
 
@@ -19,11 +17,6 @@ const validPrinterProps: CreatePrinterProps = {
 const validPrinter = Printer.create({ ...validPrinterProps });
 
 describe('Printer Entity', () => {
-  it('should create a new Printer with correct params', () => {
-    expect(validPrinter).toBeInstanceOf(Printer);
-    expect(validPrinter.serialNumber).toBe('XYZ12345');
-  });
-
   it('should throw a PrinterDomainValidationException if serialNumber is not provided', () => {
     expect(() => Printer.create({ ...validPrinterProps, serialNumber: '' })).toThrow(
       PrinterDomainValidationException,
@@ -54,29 +47,33 @@ describe('Printer Entity', () => {
     );
   });
 
-  it('should throw a PrinterDomainValidationException if new total print is not provided', () => {
-    const validPrinter = Printer.create({ ...validPrinterProps });
-
-    expect(() =>
-      validPrinter.addCounting(null as any, 9999, new Date(), CountingType.MANUAL),
-    ).toThrow(PrinterDomainValidationException);
-  });
-
-  it('should throw a PrinterDomainValidationException if new total copy is not provided', () => {
-    expect(() =>
-      validPrinter.addCounting(9999, null as any, new Date(), CountingType.MANUAL),
-    ).toThrow(PrinterDomainValidationException);
-  });
-
   it('should throw a PrinterDomainValidationException if new total print is less than current total print', () => {
-    expect(() => validPrinter.addCounting(999, 9999, new Date(), CountingType.MANUAL)).toThrow(
-      PrinterDomainValidationException,
-    );
+    expect(() =>
+      validPrinter.addCounting('fake-counting-job-id', CountingType.MANUAL, 999, 9999, new Date()),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total copy is less than current total copy', () => {
-    expect(() => validPrinter.addCounting(9999, 999, new Date(), CountingType.MANUAL)).toThrow(
-      PrinterDomainValidationException,
+    expect(() =>
+      validPrinter.addCounting('fake-counting-job-id', CountingType.MANUAL, 9999, 999, new Date()),
+    ).toThrow(PrinterDomainValidationException);
+  });
+
+  it('should create a new Printer with correct params', () => {
+    expect(validPrinter).toBeInstanceOf(Printer);
+    expect(validPrinter.serialNumber).toBe('XYZ12345');
+  });
+
+  it('should addCounting with correct params', () => {
+    const newCounting = validPrinter.addCounting(
+      'fake-counting-job-id',
+      CountingType.MANUAL,
+      9999,
+      9999,
+      new Date(),
     );
+    expect(validPrinter.countings).toContain(newCounting);
+    expect(validPrinter.totalPrint).toBe(9999);
+    expect(validPrinter.totalCopy).toBe(9999);
   });
 });

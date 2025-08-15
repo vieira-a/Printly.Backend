@@ -38,6 +38,7 @@ export class Printer extends EntityBase {
     this._installedAt = props.installedAt;
     this._totalPrint = props.totalPrint;
     this._totalCopy = props.totalCopy;
+    this._countings = [];
     this.validate();
   }
 
@@ -91,25 +92,33 @@ export class Printer extends EntityBase {
   }
 
   addCounting(
-    totalPrint: number,
-    totalCopy: number,
-    collectedAt: Date,
+    countingJobId: string,
     type: CountingType,
+    prints: number,
+    copies: number,
+    collectedAt: Date,
   ): Counting {
     const errors: string[] = [];
 
-    if (totalPrint < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
-    if (totalCopy < this._totalCopy) errors.push(InvalidCopyPrintExceptionMessage);
+    if (prints < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);
+    if (copies < this._totalCopy) errors.push(InvalidCopyPrintExceptionMessage);
 
     if (errors.length > 0) {
       throw new PrinterDomainValidationException(ValidationExceptionMessage, errors);
     }
 
-    const newCounting = Counting.create(this.id, totalPrint, totalCopy, collectedAt, type);
+    const newCounting = Counting.create({
+      countingJobId,
+      printerId: this.id,
+      type,
+      prints,
+      copies,
+      collectedAt,
+    });
 
     this._countings.push(newCounting);
-    this._totalPrint = totalPrint;
-    this._totalCopy = totalCopy;
+    this._totalPrint = prints;
+    this._totalCopy = copies;
 
     return newCounting;
   }
