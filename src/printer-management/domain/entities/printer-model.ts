@@ -1,5 +1,9 @@
 import { ModelDomainValidationException } from '../exceptions';
-import { CreateModelProps, UpdateModelProps } from '../types/model.props';
+import {
+  CreatePrinterModelProps,
+  PrinterModelProps,
+  UpdatePrinterModelProps,
+} from '../types/printer-model.props';
 import { EntityBase } from './entity-base';
 
 const InvalidManufacturerExceptionMessage =
@@ -12,13 +16,13 @@ const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 ca
 const MissingOidExceptionMessage = 'OID de contador não informado.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
-export class Model extends EntityBase {
+export class PrinterModel extends EntityBase {
   private _manufacturer: string;
   private _description: string;
   private _printOid: string;
   private _copyOid: string;
 
-  private constructor(props: CreateModelProps) {
+  private constructor(props: PrinterModelProps) {
     super(props.id, props.createdAt, props.updatedAt);
     this._manufacturer = props.manufacturer;
     this._description = props.description;
@@ -43,13 +47,8 @@ export class Model extends EntityBase {
     return this._copyOid;
   }
 
-  public static create(
-    manufacturer: string,
-    description: string,
-    printOid: string,
-    copyOid: string,
-  ): Model {
-    return new Model({ manufacturer, description, printOid, copyOid });
+  public static create(props: CreatePrinterModelProps): PrinterModel {
+    return new PrinterModel({ ...props });
   }
 
   public static restore(
@@ -60,32 +59,45 @@ export class Model extends EntityBase {
     copyOid: string,
     createdAt: Date,
     updatedAt: Date,
-  ): Model {
-    return new Model({ id, manufacturer, description, printOid, copyOid, createdAt, updatedAt });
-  }
-
-  public update(props: UpdateModelProps): void {
-    const updatedManufacturer = props.manufacturer ?? this._manufacturer;
-    const updatedDescription = props.description ?? this._description;
-    const updatedPrintOid = props.printOid ?? this._printOid;
-    const updatedCopyOid = props.copyOid ?? this._copyOid;
-
-    new Model({
-      id: this.id,
-      manufacturer: updatedManufacturer,
-      description: updatedDescription,
-      printOid: updatedPrintOid,
-      copyOid: updatedCopyOid,
-      createdAt: this.createdAt,
-      updatedAt: new Date(),
+  ): PrinterModel {
+    return new PrinterModel({
+      id,
+      manufacturer,
+      description,
+      printOid,
+      copyOid,
+      createdAt,
+      updatedAt,
     });
-
-    this._manufacturer = updatedManufacturer;
-    this._description = updatedDescription;
-    this._printOid = updatedPrintOid;
-    this._copyOid = updatedCopyOid;
-    this.setUpdatedAt(new Date());
   }
+
+  public updateManufacturer(newManufacturer: string): void {
+    this._manufacturer = newManufacturer;
+    this.validate();
+  }
+
+  // public update(props: UpdatePrinterModelProps): void {
+  //   const updatedManufacturer = props.manufacturer ?? this._manufacturer;
+  //   const updatedDescription = props.description ?? this._description;
+  //   const updatedPrintOid = props.printOid ?? this._printOid;
+  //   const updatedCopyOid = props.copyOid ?? this._copyOid;
+
+  //   new PrinterModel({
+  //     id: this.id,
+  //     manufacturer: updatedManufacturer,
+  //     description: updatedDescription,
+  //     printOid: updatedPrintOid,
+  //     copyOid: updatedCopyOid,
+  //     createdAt: this.createdAt,
+  //     updatedAt: new Date(),
+  //   });
+
+  //   this._manufacturer = updatedManufacturer;
+  //   this._description = updatedDescription;
+  //   this._printOid = updatedPrintOid;
+  //   this._copyOid = updatedCopyOid;
+  //   this.setUpdatedAt(new Date());
+  // }
 
   private validate(): void {
     const errors: string[] = [];

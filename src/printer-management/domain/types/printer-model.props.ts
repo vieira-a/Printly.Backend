@@ -1,4 +1,4 @@
-export type CreateModelProps = {
+export type PrinterModelProps = {
   manufacturer: string;
   description: string;
   printOid: string;
@@ -8,7 +8,14 @@ export type CreateModelProps = {
   updatedAt?: Date;
 };
 
-export type UpdateModelProps = {
+export type CreatePrinterModelProps = {
+  manufacturer: string;
+  description: string;
+  printOid: string;
+  copyOid: string;
+};
+
+export type UpdatePrinterModelProps = {
   manufacturer?: string;
   description?: string;
   printOid?: string;

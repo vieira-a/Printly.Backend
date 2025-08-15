@@ -1,3 +1,3 @@
-export * from './model';
+export * from './printer-model';
 export * from './printer';
 export * from './location';
