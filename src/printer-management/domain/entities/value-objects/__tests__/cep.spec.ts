@@ -1,21 +1,22 @@
+import { CepDomainValidationException } from '@printer/domain/exceptions';
 import { CEP } from '../cep';
 
 describe('CEP Value Object', () => {
   it('should return error if CEP is null or empty', () => {
-    const cep = CEP.create('');
-    const errors = cep.validate();
-    expect(errors).toContain('CEP não informado.');
+    expect(() => CEP.create('')).toThrow(CepDomainValidationException);
   });
 
   it('should return error if CEP does not have 8 numeric characters', () => {
-    const cep = CEP.create('4000000');
-    const errors = cep.validate();
-    expect(errors).toContain('CEP deve conter 8 digitos.');
+    expect(() => CEP.create('4000000')).toThrow(CepDomainValidationException);
   });
 
-  it('should return no errors for valid CEP', () => {
-    const cep = CEP.create('12345678');
-    const errors = cep.validate();
-    expect(errors.length).toBe(0);
+  it('should create a CEP with corret params', () => {
+    const newCep = CEP.create('12345678');
+    expect(newCep.value).toBe('12345678');
+  });
+
+  it('should get a formatted CEP with mask xxxxx-xxx', () => {
+    const newCep = CEP.create('12345678');
+    expect(newCep.getFormatted()).toBe('12345-678');
   });
 });
