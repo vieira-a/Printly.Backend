@@ -1,4 +1,4 @@
-export abstract class CreateLocationOutput {
+export abstract class CreateInstallationLocationOutput {
   address: CreateAddressOutput;
   phone: string;
   contact: string;

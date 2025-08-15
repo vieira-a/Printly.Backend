@@ -1,4 +1,4 @@
-export abstract class UpdateLocationInput {
+export abstract class UpdateInstallationLocationInput {
   address?: UpdateAddressInput;
   phone?: UpdatePhoneInput;
   contact?: string;

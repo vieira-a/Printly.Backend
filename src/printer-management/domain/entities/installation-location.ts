@@ -1,8 +1,5 @@
 import { InstallationLocationDomainValidationException } from '../exceptions';
-import {
-  CreateInstallationLocationProps,
-  InstallationLocationProps,
-} from '../types/installation-location.props';
+import { CreateInstallationLocationProps, InstallationLocationProps } from '../types/installation-location.props';
 import { EntityBase } from './entity-base';
 import { Address } from './value-objects/address';
 import { Phone } from './value-objects/phone';
@@ -69,7 +66,6 @@ export class InstallationLocation extends EntityBase {
       errors.push(MissingContactExceptionMessage);
     } else if (this._contact.trim().length < 3) errors.push(InvalidContactExceptionMessage);
 
-    if (errors.length > 0)
-      throw new InstallationLocationDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new InstallationLocationDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

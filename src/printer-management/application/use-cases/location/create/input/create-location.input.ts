@@ -1,4 +1,4 @@
-export abstract class CreateLocationInput {
+export abstract class CreateInstallationLocationInput {
   address: CreateAddressInput;
   phone: CreatePhoneInput;
   contact: string;
