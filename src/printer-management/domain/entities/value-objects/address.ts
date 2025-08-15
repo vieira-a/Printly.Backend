@@ -1,4 +1,6 @@
+import { AddressDomainValidationException } from '@printer/domain/exceptions/address-domain-validation.exception';
 import { CEP } from './cep';
+import { AddressProps } from '@printer/domain/types/address.props';
 
 const MissingStreetExceptionMessage = 'Nome da rua não informado.';
 const InvalidStreetExceptionMessage = 'Nome da rua deve conter no mínimo 3 caracteres.';
@@ -8,16 +10,24 @@ const MissingCityExceptionMessage = 'Cidade não informada.';
 const InvalidCityExceptionMessage = 'Cidade deve conter no mínimo 3 caracteres.';
 const MissingStateExceptionMessage = 'Estado não informado.';
 const InvalidStateExceptionMessage = 'Estado deve conter 2 caracteres.';
+const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class Address {
-  private constructor(
-    private readonly _street: string,
-    private readonly _district: string,
-    private readonly _city: string,
-    private readonly _state: string,
-    private readonly _cep: CEP,
-    private readonly _reference?: string,
-  ) {}
+  private _street: string;
+  private _district: string;
+  private _city: string;
+  private _state: string;
+  private _cep: CEP;
+  private _reference?: string;
+
+  private constructor(props: AddressProps) {
+    this._street = props.street;
+    this._district = props.district;
+    this._city = props.city;
+    this._state = props.state;
+    this._cep = props.cep;
+    this._reference = props.reference;
+  }
 
   get street(): string {
     return this._street;
@@ -43,18 +53,11 @@ export class Address {
     return this._reference;
   }
 
-  public static create(
-    street: string,
-    district: string,
-    city: string,
-    state: string,
-    cep: CEP,
-    reference?: string,
-  ): Address {
-    return new Address(street, district, city, state, cep, reference);
+  public static create(props: AddressProps): Address {
+    return new Address({ ...props });
   }
 
-  validate(): string[] {
+  private validate(): void {
     const errors: string[] = [];
 
     if (!this._street) {
@@ -73,8 +76,7 @@ export class Address {
       errors.push(MissingStateExceptionMessage);
     } else if (!/^[A-Z]{2}$/.test(this.state)) errors.push(InvalidStateExceptionMessage);
 
-    errors.push(...this._cep?.validate());
-
-    return errors;
+    if (errors.length > 0)
+      throw new AddressDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

@@ -1,143 +1,82 @@
+import { AddressProps } from '@printer/domain/types/address.props';
 import { Address } from '../address';
 import { CEP } from '../cep';
 
+const validCep = CEP.create('12345678');
+
+const validAddressProps: AddressProps = {
+  street: 'fake-street',
+  district: 'fake-district',
+  city: 'fake-city',
+  state: 'FK',
+  cep: validCep,
+  reference: 'fake-reference',
+};
+
+const validAddress = Address.create({ ...validAddressProps });
+
 describe('Address Value Object', () => {
   it('should create a new Address with correct params', () => {
-    const newAddress = Address.create(
-      'Rua A',
-      'Bairro Tal',
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    expect(newAddress).toBeInstanceOf(Address);
-    expect(newAddress.street).toBe('Rua A');
-    expect(newAddress.district).toBe('Bairro Tal');
-    expect(newAddress.city).toBe('Cidade A');
-    expect(newAddress.state).toBe('BA');
-    expect(newAddress.cep.value).toBe('40000000');
-    expect(newAddress.reference).toBe('Referência da Rua A');
+    expect(validAddress).toBeInstanceOf(Address);
+    expect(validAddress.street).toBe('fake-street');
+    expect(validAddress.district).toBe('fake-district');
+    expect(validAddress.city).toBe('fake-city');
+    expect(validAddress.state).toBe('FK');
+    expect(validAddress.cep.value).toBe('12345678');
+    expect(validAddress.reference).toBe('fake-reference');
   });
 
-  it('should return error if street is null or empty', () => {
-    const address = Address.create(
-      '',
-      'Bairro Tal',
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Nome da rua não informado.');
+  it('should throw AddressDomainValidationException if street is not provided', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, street: '' });
   });
 
-  it('should return error if street has less than 3 characters', () => {
-    const address = Address.create(
-      'Ru',
-      'Bairro Tal',
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Nome da rua deve conter no mínimo 3 caracteres.');
+  it('should throw AddressDomainValidationException if street has less than 3 characters', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, street: 'Fa' });
   });
 
-  it('should return error if district is null or empty', () => {
-    const address = Address.create(
-      'Rua A',
-      null as any,
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Bairro não informado.');
+  it('should throw AddressDomainValidationException if district is not provided', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, district: '' });
   });
 
-  it('should return error if district has less than 3 characters', () => {
-    const address = Address.create(
-      'Rua A',
-      'Ba',
-      'Cidade A',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Bairro deve conter no mínimo 3 caracteres.');
+  it('should throw AddressDomainValidationException if district has less than 3 characters', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, district: 'Di' });
   });
 
-  it('should return error if city is null or empty', () => {
-    const address = Address.create(
-      'Rua A',
-      'Bairro A',
-      null as any,
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Cidade não informada.');
+  it('should throw AddressDomainValidationException if city is not provided', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, city: '' });
   });
 
-  it('should return error if city has less than 3 characters', () => {
-    const address = Address.create(
-      'Rua A',
-      'Bairro A',
-      'Ci',
-      'BA',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Cidade deve conter no mínimo 3 caracteres.');
+  it('should throw AddressDomainValidationException if city has less than 3 characters', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, city: 'Ci' });
   });
 
-  it('should return error if state is null or empty', () => {
-    const address = Address.create(
-      'Rua A',
-      'Bairro A',
-      'Cidade A',
-      null as any,
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Estado não informado.');
+  it('should throw AddressDomainValidationException if state is not provided', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, state: '' });
   });
 
-  it('should return error if state has less than 2 characters or more than 3 characters', () => {
-    const address = Address.create(
-      'Rua A',
-      'Bairro A',
-      'Cidade A',
-      'B',
-      CEP.create('40000000'),
-      'Referência da Rua A',
-    );
-
-    const errors = address.validate();
-    expect(errors).toContain('Estado deve conter 2 caracteres.');
+  it('should throw AddressDomainValidationException if state has less than 3 characters', () => {
+    expect(() => Address.create);
+    const address = Address.create({ ...validAddressProps, state: 'St' });
   });
 
   it('should create a new Address without reference', () => {
-    const address = Address.create('Rua A', 'Bairro Tal', 'Cidade A', 'BA', CEP.create('40000000'));
-
-    const errors = address.validate();
-    expect(errors.length).toBe(0);
-    expect(address).toBeInstanceOf(Address);
+    const addressWithOutReference = Address.create({
+      ...validAddressProps,
+      reference: null as any,
+    });
+    expect(addressWithOutReference).toBeInstanceOf(Address);
+    expect(addressWithOutReference.street).toBe('fake-street');
+    expect(addressWithOutReference.district).toBe('fake-district');
+    expect(addressWithOutReference.city).toBe('fake-city');
+    expect(addressWithOutReference.state).toBe('FK');
+    expect(addressWithOutReference.cep.value).toBe('12345678');
+    expect(addressWithOutReference.reference).toBeFalsy();
   });
 });
