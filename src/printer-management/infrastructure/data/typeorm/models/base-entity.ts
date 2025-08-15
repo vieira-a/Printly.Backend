@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export abstract class BaseModel {
-  @PrimaryGeneratedColumn('uuid', { name: 'id' })
+export abstract class BaseEntity {
+  @Column('uuid', { name: 'id' })
   public id: string;
 
   @CreateDateColumn({ name: 'created_at' })

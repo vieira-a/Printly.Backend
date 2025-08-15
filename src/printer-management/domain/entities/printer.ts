@@ -144,30 +144,8 @@ export class Printer extends EntityBase {
     return new Printer({ ...props });
   }
 
-  public static restore(
-    id: string,
-    serialNumber: string,
-    ipv4Address: IPV4,
-    modelId: string,
-    installationLocationId: string,
-    installedAt: Date,
-    totalPrint: number,
-    totalCopy: number,
-    createdAt: Date,
-    updatedAt: Date,
-  ) {
-    return new Printer({
-      id,
-      serialNumber,
-      ipv4Address,
-      modelId,
-      installationLocationId,
-      installedAt,
-      totalPrint,
-      totalCopy,
-      createdAt,
-      updatedAt,
-    });
+  public static restore(props: PrinterProps) {
+    return new Printer({ ...props });
   }
 
   private validate(): void {

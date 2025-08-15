@@ -23,6 +23,29 @@ export type CreatePrinterProps = {
   totalCopy: number;
 };
 
+export type PrinterEntityProps = {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  serialNumber: string;
+  ipv4Address: string;
+  modelId: string;
+  installationLocationId: string;
+  installedAt: Date;
+  totalPrint: number;
+  totalCopy: number;
+};
+
+export type CreatePrinterEntityProps = {
+  serialNumber: string;
+  ipv4Address: string;
+  modelId: string;
+  installationLocationId: string;
+  installedAt: Date;
+  totalPrint: number;
+  totalCopy: number;
+};
+
 export type UpdatePrinterProps = {
   serialNumber?: string;
   ipv4Address?: string;

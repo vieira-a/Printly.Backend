@@ -51,24 +51,8 @@ export class PrinterModel extends EntityBase {
     return new PrinterModel({ ...props });
   }
 
-  public static restore(
-    id: string,
-    manufacturer: string,
-    description: string,
-    printOid: string,
-    copyOid: string,
-    createdAt: Date,
-    updatedAt: Date,
-  ): PrinterModel {
-    return new PrinterModel({
-      id,
-      manufacturer,
-      description,
-      printOid,
-      copyOid,
-      createdAt,
-      updatedAt,
-    });
+  public static restore(props: PrinterModelProps): PrinterModel {
+    return new PrinterModel({ ...props });
   }
 
   public updateManufacturer(newManufacturer: string): void {
