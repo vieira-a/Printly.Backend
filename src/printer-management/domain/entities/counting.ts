@@ -54,7 +54,11 @@ export class Counting extends EntityBase {
     return this._collectedAt;
   }
 
-  public static create(props: CreateCountingProps) {
+  public static create(props: CreateCountingProps): Counting {
+    return new Counting({ ...props });
+  }
+
+  public static restore(props: CountingProps): Counting {
     return new Counting({ ...props });
   }
 
