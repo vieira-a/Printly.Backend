@@ -1,6 +1,6 @@
 import { DomainException } from '@shared/exceptions/domain.exception';
 
-export class LocationDomainValidationException extends DomainException {
+export class InstallationLocationDomainValidationException extends DomainException {
   public errors: string[];
 
   constructor(message: string, errors: string[]) {
