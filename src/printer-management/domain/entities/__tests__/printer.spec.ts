@@ -62,6 +62,9 @@ describe('Printer Entity', () => {
   it('should create a new Printer with correct params', () => {
     expect(validPrinter).toBeInstanceOf(Printer);
     expect(validPrinter.serialNumber).toBe('XYZ12345');
+    expect(validPrinter.ipv4Address).toBe('192.168.0.200');
+    expect(validPrinter.modelId).toBe('fake-model-id');
+    expect(validPrinter.installationLocationId).toBe('fake-location-id');
   });
 
   it('should addCounting with correct params', () => {
