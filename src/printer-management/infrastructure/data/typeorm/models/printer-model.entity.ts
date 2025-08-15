@@ -1,9 +1,6 @@
 import { Column, Entity, Unique } from 'typeorm';
 import { BaseEntity } from './base-entity';
-import {
-  CreatePrinterModelProps,
-  PrinterModelProps,
-} from '@printer/domain/types/printer-model.props';
+import { CreatePrinterModelProps, PrinterModelProps } from '@printer/domain/types/printer-model.props';
 
 @Entity({ name: 'printer_models' })
 @Unique(['manufacturer', 'description'])

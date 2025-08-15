@@ -3,21 +3,21 @@ import { UpdatePrinterOutput } from '../use-cases/printer/update/output/update-p
 import { FindPrinterOutput } from '../use-cases/printer/find/output/find-printer.output';
 
 export abstract class PrinterMapper {
-  public static toOutput(entity: Printer): UpdatePrinterOutput {
+  public static toOutput(domain: Printer): UpdatePrinterOutput {
     return {
-      id: entity.id,
-      manufacturer: entity.model.manufacturer,
-      description: entity.model.description,
-      serial: entity.serial,
-      ipv4: entity.ipv4.toString(),
-      city: entity.location.address.city,
-      state: entity.location.address.state,
-      contact: entity.location.contact,
-      phone: entity.location.phone.toString(),
-      printOid: entity.model.printOid,
-      copyOid: entity.model.copyOid,
-      totalPrint: entity.totalPrint,
-      totalCopy: entity.totalCopy,
+      id: domain.id,
+      manufacturer: domain.model?.manufacturer,
+      description: domain.model?.description,
+      serialNumber: domain.serialNumber,
+      ipv4Address: domain.ipv4Address.toString(),
+      city: domain.installationLocation?.address.city,
+      state: domain.installationLocation?.address.state,
+      contact: domain.installationLocation?.contact,
+      phone: domain.installationLocation?.phone.toString(),
+      printOid: domain.model?.printOid,
+      copyOid: domain.model?.copyOid,
+      totalPrint: domain.totalPrint,
+      totalCopy: domain.totalCopy,
     };
   }
 

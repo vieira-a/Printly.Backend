@@ -1,15 +1,9 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { IPrinterRepository } from '@printer/domain/data/repositories/printer-repository.interface';
 import { ICreatePrinterUseCase } from './create-printer.interface';
 import { CreatePrinterInput } from './input/create-printer.input';
-import { Model, Printer } from '@printer/domain/entities';
-import { ILocationRepository, IModelRepository } from '@printer/domain/data/repositories';
+import { IInstallationLocationRepository, IPrinterModelRepository } from '@printer/domain/data/repositories';
+import { Printer } from '@printer/domain/entities';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import {
   ModelNotFoundException,
@@ -27,49 +21,34 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
     @Inject('IPrinterRepository')
     private readonly printerRepository: IPrinterRepository,
     @Inject('IModelRepository')
-    private readonly modelRepository: IModelRepository,
-    @Inject('ILocationRepository')
-    private readonly locationRepository: ILocationRepository,
+    private readonly printerModelRepository: IPrinterModelRepository,
+    @Inject('IInstallationLocationRepository')
+    private readonly installationLocationRepository: IInstallationLocationRepository,
   ) {}
   async execute(input: CreatePrinterInput): Promise<any> {
-    const { serialNumber, ipv4, modelId, locationId, installedAt, totalPrint, totalCopy } = input;
-
     try {
-      const printerExists = await this.printerRepository.existsBySerialNumber(serialNumber);
+      const printerExists = await this.printerRepository.existsBySerialNumber(input.serialNumber);
+      if (printerExists) throw new PrinterConflictException(input.serialNumber);
 
-      if (printerExists) throw new PrinterConflictException(serialNumber);
+      const printerModel = await this.printerModelRepository.existsById(input.modelId);
+      if (!printerModel) throw new ModelNotFoundException(input.modelId);
 
-      const model = await this.modelRepository.findById(modelId);
+      const installationLocation = await this.installationLocationRepository.existsById(input.installationLocationId);
+      if (!installationLocation) throw new LocationNotFoundException(input.installationLocationId);
 
-      if (!model) throw new ModelNotFoundException(modelId);
-
-      const domainModel = Model.restore(
-        model.id,
-        model.manufacturer,
-        model.description,
-        model.printOid,
-        model.copyOid,
-        model.createdAt,
-        model.updatedAt,
-      );
-
-      const location = await this.locationRepository.findById(locationId);
-
-      if (!location) throw new LocationNotFoundException(locationId);
-
-      const newPrinter = Printer.create(
-        domainModel,
-        serialNumber,
-        IPV4.create(ipv4),
-        location,
-        installedAt,
-        totalPrint,
-        totalCopy,
-      );
+      const newPrinter = Printer.create({
+        serialNumber: input.serialNumber,
+        ipv4Address: IPV4.create(input.ipv4Address),
+        modelId: input.modelId,
+        installationLocationId: input.installationLocationId,
+        installedAt: input.installedAt,
+        totalPrint: input.totalPrint,
+        totalCopy: input.totalCopy,
+      });
 
       return await this.printerRepository.create(newPrinter);
-    } catch (error) {
-      this.logger.log(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) this.logger.log(error.message);
       if (error instanceof PrinterDomainValidationException) {
         throw new UnprocessableEntityException({
           message: error.message,

@@ -1,9 +1,9 @@
 export class CreatePrinterOutput {
   id: string;
-  sn: string;
-  ipv4: string;
+  serialNumber: string;
+  ipv4Address: string;
   modelId: string;
-  locationId: string;
+  installationLocationId: string;
   installedAt: Date;
   createdAt: string;
   updatedAt: string;

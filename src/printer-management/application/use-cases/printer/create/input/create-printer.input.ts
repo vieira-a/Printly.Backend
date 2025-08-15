@@ -1,8 +1,8 @@
 export class CreatePrinterInput {
   serialNumber: string;
-  ipv4: string;
+  ipv4Address: string;
   modelId: string;
-  locationId: string;
+  installationLocationId: string;
   installedAt: Date;
   totalPrint: number;
   totalCopy: number;

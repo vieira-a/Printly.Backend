@@ -3,7 +3,7 @@ import { IFindPrinterUseCase } from './find-printer.interface';
 import { IPrinterRepository } from '@printer/domain/data/repositories';
 import { DatabaseModelException } from '@printer/application/exceptions';
 import { PrinterMapper } from '@printer/application/mappers/printer.mapper';
-import type { FindPrinterOutput } from './output/find-printer.output';
+import { FindPrinterOutput } from './output/find-printer.output';
 
 @Injectable()
 export class FindPrinterService implements IFindPrinterUseCase {
@@ -17,8 +17,8 @@ export class FindPrinterService implements IFindPrinterUseCase {
     try {
       const printers = await this.printerRepository.findAll();
       return printers ? PrinterMapper.toOutputArray(printers) : null;
-    } catch (error) {
-      this.logger.log(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) this.logger.log(error.message);
       if (error instanceof DatabaseModelException) {
         throw new InternalServerErrorException(error.message);
       }

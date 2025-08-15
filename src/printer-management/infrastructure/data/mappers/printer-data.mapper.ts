@@ -1,9 +1,9 @@
 import { Printer } from '@printer/domain/entities';
 import { PrinterEntity } from '../typeorm/models';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
+import { PrinterModelDataMapper } from './printer-model-data.mapper';
 
 export class PrinterDataMapper {
-  //printer_models', 'installation_location
   public static toDomain(entity: PrinterEntity): Printer {
     return Printer.restore({
       id: entity.id,
@@ -38,6 +38,7 @@ export class PrinterDataMapper {
         serialNumber: entity.serialNumber,
         ipv4Address: IPV4.create(entity.ipv4Address),
         modelId: entity.modelId,
+        model: PrinterModelDataMapper.toDomain(entity.model),
         installationLocationId: entity.installationLocationId,
         installedAt: entity.installedAt,
         totalPrint: entity.totalPrint,

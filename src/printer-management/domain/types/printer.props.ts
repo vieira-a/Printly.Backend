@@ -1,3 +1,4 @@
+import { InstallationLocation, PrinterModel } from '../entities';
 import { IPV4 } from '../entities/value-objects/ipv4';
 
 export type PrinterProps = {
@@ -7,7 +8,9 @@ export type PrinterProps = {
   serialNumber: string;
   ipv4Address: IPV4;
   modelId: string;
+  model?: PrinterModel;
   installationLocationId: string;
+  instalationLocation?: InstallationLocation;
   installedAt: Date;
   totalPrint: number;
   totalCopy: number;
