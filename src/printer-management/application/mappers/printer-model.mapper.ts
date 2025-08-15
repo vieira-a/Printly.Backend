@@ -1,8 +1,8 @@
-import type { Model } from '@printer/domain/entities';
-import type { CreateModelOutput } from '../use-cases/model/create/output/create-model.output';
+import { PrinterModel } from '@printer/domain/entities';
+import { CreateModelOutput } from '../use-cases/model/create/output/create-model.output';
 
-export abstract class ModelMapper {
-  public static toOutput(entity: Model): CreateModelOutput {
+export abstract class PrinterModelMapper {
+  public static toOutput(entity: PrinterModel): CreateModelOutput {
     return {
       id: entity.id,
       manufacturer: entity.manufacturer,
