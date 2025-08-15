@@ -1,4 +1,4 @@
-import type { CountingType } from '../enums/counting-type.enum';
+import { CountingType } from '../enums/counting-type.enum';
 import { CountingDomainValidationException } from '../exceptions';
 import { CreateCountingProps } from '../types/counting.props';
 import { EntityBase } from './entity-base';
