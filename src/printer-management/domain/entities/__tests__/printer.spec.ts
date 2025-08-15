@@ -42,6 +42,12 @@ describe('Printer Entity', () => {
     );
   });
 
+  it('should throw a PrinterDomainValidationException if installationLocationId is not provided', () => {
+    expect(() => Printer.create({ ...validPrinterProps, installedAt: null as any })).toThrow(
+      PrinterDomainValidationException,
+    );
+  });
+
   it('should throw a PrinterDomainValidationException if modelId is not provided', () => {
     expect(() => Printer.create({ ...validPrinterProps, modelId: '' })).toThrow(
       PrinterDomainValidationException,
