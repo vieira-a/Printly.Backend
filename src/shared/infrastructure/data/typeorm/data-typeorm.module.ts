@@ -6,6 +6,7 @@ import {
   LocationModel,
   PrinterModel,
   CountingModel,
+  CountingJobModel,
 } from '@printer/infrastructure/data/typeorm/models';
 
 const nodeEnv = process.env.NODE_ENV;
@@ -22,7 +23,7 @@ const nodeEnv = process.env.NODE_ENV;
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [ModelPrinter, LocationModel, PrinterModel, CountingModel],
+        entities: [ModelPrinter, LocationModel, PrinterModel, CountingModel, CountingJobModel],
         synchronize: nodeEnv === 'development' ? true : false,
       }),
     }),

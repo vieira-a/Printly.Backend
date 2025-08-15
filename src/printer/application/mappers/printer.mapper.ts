@@ -1,5 +1,6 @@
 import { Printer } from '@printer/domain/entities';
 import { UpdatePrinterOutput } from '../use-cases/printer/update/output/update-printer.output';
+import { FindPrinterOutput } from '../use-cases/printer/find/output/find-printer.output';
 
 export abstract class PrinterMapper {
   public static toOutput(entity: Printer): UpdatePrinterOutput {
@@ -13,8 +14,14 @@ export abstract class PrinterMapper {
       state: entity.location.address.state,
       contact: entity.location.contact,
       phone: entity.location.phone.toString(),
+      printOid: entity.model.printOid,
+      copyOid: entity.model.copyOid,
       totalPrint: entity.totalPrint,
       totalCopy: entity.totalCopy,
     };
+  }
+
+  public static toOutputArray(entities: Printer[]): FindPrinterOutput[] {
+    return entities.map((item) => this.toOutput(item));
   }
 }

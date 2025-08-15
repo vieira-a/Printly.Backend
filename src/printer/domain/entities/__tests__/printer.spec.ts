@@ -8,6 +8,7 @@ import { IPV4 } from '../value-objects/ipv4';
 import { Phone } from '../value-objects/phone';
 import { Counting } from '../counting';
 import { CountingDomainValidationException } from '@printer/domain/exceptions';
+import { CountingType } from '@printer/domain/enums/counting-type.enum';
 
 const newModel = Model.create(
   'Kyocera',
@@ -110,48 +111,56 @@ describe('Printer Entity', () => {
   });
 
   it('should throw a PrinterDomainValidationException if new total print is not provided', () => {
-    expect(() => newValidPrinter.registerCounting(null as any, 9999, new Date())).toThrow(
-      PrinterDomainValidationException,
-    );
+    expect(() =>
+      newValidPrinter.registerCounting(null as any, 9999, new Date(), CountingType.MANUAL),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total copy is not provided', () => {
-    expect(() => newValidPrinter.registerCounting(9999, null as any, new Date())).toThrow(
-      PrinterDomainValidationException,
-    );
+    expect(() =>
+      newValidPrinter.registerCounting(9999, null as any, new Date(), CountingType.MANUAL),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total print is less than current total print', () => {
-    expect(() => newValidPrinter.registerCounting(999, 9999, new Date())).toThrow(
-      PrinterDomainValidationException,
-    );
+    expect(() =>
+      newValidPrinter.registerCounting(999, 9999, new Date(), CountingType.MANUAL),
+    ).toThrow(PrinterDomainValidationException);
   });
 
   it('should throw a PrinterDomainValidationException if new total copy is less than current total copy', () => {
-    expect(() => newValidPrinter.registerCounting(9999, 999, new Date())).toThrow(
-      PrinterDomainValidationException,
-    );
-  });
-
-  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
-    const totalPrint = 9999;
-    const totalCopy = 9999;
-    const countingDate = new Date();
-
-    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate);
-    expect(() => Counting.create(null as any, totalPrint, totalCopy, countingDate)).toThrow(
-      CountingDomainValidationException,
-    );
-  });
-
-  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
-    const totalPrint = 9999;
-    const totalCopy = 9999;
-    const countingDate = new Date();
-
-    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate);
     expect(() =>
-      Counting.create('0b8565bb-f5c7-4510-9f43-f6067a9d9924', totalPrint, totalCopy, null as any),
+      newValidPrinter.registerCounting(9999, 999, new Date(), CountingType.MANUAL),
+    ).toThrow(PrinterDomainValidationException);
+  });
+
+  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
+    const totalPrint = 9999;
+    const totalCopy = 9999;
+    const countingDate = new Date();
+    const countingType = CountingType.MANUAL;
+
+    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate, countingType);
+    expect(() =>
+      Counting.create(null as any, totalPrint, totalCopy, countingDate, countingType),
+    ).toThrow(CountingDomainValidationException);
+  });
+
+  it('should throw a CountingDomainValidationException if printerId is not provider', () => {
+    const totalPrint = 9999;
+    const totalCopy = 9999;
+    const countingDate = new Date();
+    const countingType = CountingType.MANUAL;
+
+    newValidPrinter.registerCounting(totalPrint, totalCopy, countingDate, countingType);
+    expect(() =>
+      Counting.create(
+        '0b8565bb-f5c7-4510-9f43-f6067a9d9924',
+        totalPrint,
+        totalCopy,
+        null as any,
+        countingType,
+      ),
     ).toThrow(CountingDomainValidationException);
   });
 });

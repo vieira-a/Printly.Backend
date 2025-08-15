@@ -6,4 +6,5 @@ export interface IPrinterRepository {
   findById(id: string): Promise<Printer | null>;
   update(input: Printer): Promise<Printer>;
   updateCounting(input: Printer): Promise<Printer>;
+  findAll(): Promise<Printer[] | null>;
 }

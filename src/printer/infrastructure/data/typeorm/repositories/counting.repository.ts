@@ -25,6 +25,7 @@ export class CountingRepository implements ICountingRepository {
         counting.totalPrint,
         counting.totalCopy,
         counting.collectedAt,
+        counting.type,
       );
       return await this.repository.save(countingModel);
     } catch (error) {
@@ -32,8 +33,6 @@ export class CountingRepository implements ICountingRepository {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
       } else {
-        console.log(error);
-        this.logger.log(error.message);
         throw new InfrastructureException(InfrastructureExceptionMessage);
       }
     }

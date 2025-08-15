@@ -1,4 +1,4 @@
-export abstract class UpdatePrinterOutput {
+export abstract class FindPrinterOutput {
   id: string;
   manufacturer: string;
   description: string;

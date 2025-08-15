@@ -120,6 +120,20 @@ export class PrinterRepository implements IPrinterRepository {
       return PrinterDataMapper.toDomain(updatedPrinter!);
     } catch (error) {
       if (error instanceof TypeORMError) {
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        this.logger.log(error.message);
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
+
+  async findAll(): Promise<Printer[] | null> {
+    try {
+      const printers = await this.repository.find({ relations: ['model', 'location'] });
+      return printers ? PrinterDataMapper.toDomainArray(printers) : null;
+    } catch (error) {
+      if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
       } else {

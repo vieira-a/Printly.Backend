@@ -56,4 +56,8 @@ export class PrinterDataMapper {
       entity.installedAt,
     );
   }
+
+  public static toDomainArray(models: PrinterModel[]): Printer[] {
+    return models.map((item) => this.toDomain(item));
+  }
 }

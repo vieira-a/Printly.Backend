@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   NotFoundException,
@@ -23,6 +24,7 @@ import { RegisterCountingService } from '@printer/application/use-cases/counting
 import { UpdatePrinterService } from '@printer/application/use-cases/printer/update/update-printer.service';
 import { CreateAutoCountingService } from '@printer/application/use-cases/counting/auto-counting/create/create-auto-counting.service';
 import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
+import { FindPrinterService } from '@printer/application/use-cases/printer/find/find-printer.service';
 
 @Controller('printers')
 export class PrinterController {
@@ -31,6 +33,7 @@ export class PrinterController {
     private readonly updatePrinterService: UpdatePrinterService,
     private readonly registerCountingService: RegisterCountingService,
     private readonly createAutoCountingService: CreateAutoCountingService,
+    private readonly findPrinterService: FindPrinterService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -77,16 +80,11 @@ export class PrinterController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Put(':id/counting/auto')
-  async autoCounting(@Param('id') id: string) {
+  @Get()
+  async getAll() {
     try {
-      return await this.createAutoCountingService.execute(id);
+      return await this.findPrinterService.execute();
     } catch (error) {
-      if (error instanceof PrinterNotFoundException) {
-        throw new NotFoundException(error.message);
-      } else if (error instanceof RequestPrinterTimeoutException) {
-        throw new RequestTimeoutException({ message: error.message, ipv4: error.ipv4 });
-      }
       throw error;
     }
   }
