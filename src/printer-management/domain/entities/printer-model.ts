@@ -76,28 +76,20 @@ export class PrinterModel extends EntityBase {
     this.validate();
   }
 
-  // public update(props: UpdatePrinterModelProps): void {
-  //   const updatedManufacturer = props.manufacturer ?? this._manufacturer;
-  //   const updatedDescription = props.description ?? this._description;
-  //   const updatedPrintOid = props.printOid ?? this._printOid;
-  //   const updatedCopyOid = props.copyOid ?? this._copyOid;
+  public updateDescription(newDescription: string): void {
+    this._description = newDescription;
+    this.validate();
+  }
 
-  //   new PrinterModel({
-  //     id: this.id,
-  //     manufacturer: updatedManufacturer,
-  //     description: updatedDescription,
-  //     printOid: updatedPrintOid,
-  //     copyOid: updatedCopyOid,
-  //     createdAt: this.createdAt,
-  //     updatedAt: new Date(),
-  //   });
+  public updatePrintOid(newPrintOid: string): void {
+    this._printOid = newPrintOid;
+    this.validate();
+  }
 
-  //   this._manufacturer = updatedManufacturer;
-  //   this._description = updatedDescription;
-  //   this._printOid = updatedPrintOid;
-  //   this._copyOid = updatedCopyOid;
-  //   this.setUpdatedAt(new Date());
-  // }
+  public updateCopyOid(newCopyOid: string): void {
+    this._copyOid = newCopyOid;
+    this.validate();
+  }
 
   private validate(): void {
     const errors: string[] = [];
