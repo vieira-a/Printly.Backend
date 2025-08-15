@@ -27,7 +27,7 @@ export class Printer extends EntityBase {
   private _installedAt: Date;
   private _totalPrint: number;
   private _totalCopy: number;
-  private _countings: Counting[];
+  private readonly _countings: Counting[];
 
   private constructor(props: PrinterProps) {
     super(props.id, props.createdAt, props.updatedAt);
@@ -70,8 +70,8 @@ export class Printer extends EntityBase {
     return this._totalCopy;
   }
 
-  get countings(): Counting[] {
-    return this._countings;
+  get countings(): readonly Counting[] {
+    return Object.freeze([...this._countings]);
   }
 
   updateSerialNumber(newSerialNumber: string): void {
