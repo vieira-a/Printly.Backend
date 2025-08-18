@@ -38,11 +38,6 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
-
-      // ESLint regra de tamanho de linha
-      'max-len': ['warn', { code: 120 }],
-
-      // Prettier integrado ao ESLint
       'prettier/prettier': [
         'error',
         {
