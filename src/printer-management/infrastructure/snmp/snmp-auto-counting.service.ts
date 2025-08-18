@@ -33,10 +33,12 @@ export class SnmpAutoCountingService implements IAutoCounting {
             session?.close();
           }
         });
-      } catch (error) {
-        this.logger.log(error?.message);
-        session?.close();
-        return resolve({ success: false, error: error?.message, count: undefined });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          this.logger.log(error?.message);
+          session?.close();
+          return resolve({ success: false, error: error.message, count: undefined });
+        }
       }
     });
   }

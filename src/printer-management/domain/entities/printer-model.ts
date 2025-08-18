@@ -1,5 +1,5 @@
 import { ModelDomainValidationException } from '../exceptions';
-import { CreatePrinterModelProps, PrinterModelProps, UpdatePrinterModelProps } from '../types/printer-model.props';
+import { CreatePrinterModelProps, PrinterModelProps } from '../types/printer-model.props';
 import { EntityBase } from './entity-base';
 
 const InvalidManufacturerExceptionMessage = 'Nome do fabricante deve conter no mínimo 3 caracteres.';
