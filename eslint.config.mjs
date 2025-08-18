@@ -1,11 +1,11 @@
-// @ts-check
+// eslint.config.mjs
 import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended, { files, languageOptions } from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default tseslint.config(
- {
+  {
     files: ['**/*.ts'],
     languageOptions: {
       parserOptions: {
@@ -18,14 +18,14 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
+  prettierRecommended,
   {
     languageOptions: {
       globals: {
         ...globals.node,
         ...globals.jest,
       },
-      ecmaVersion: 5,
+      ecmaVersion: 2023,
       sourceType: 'module',
       parserOptions: {
         projectService: true,
@@ -38,7 +38,11 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
+
+      // ESLint regra de tamanho de linha
       'max-len': ['warn', { code: 120 }],
+
+      // Prettier integrado ao ESLint
       'prettier/prettier': [
         'error',
         {
