@@ -25,7 +25,7 @@ export class PrinterModelRepository implements IPrinterModelRepository {
 
       const result = await this.repository.save(newPrinterModel);
       return PrinterModelDataMapper.toDomain(result);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
@@ -59,7 +59,7 @@ export class PrinterModelRepository implements IPrinterModelRepository {
       const printerModel = await this.repository.findOneBy({ id });
 
       return printerModel ? true : false;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
@@ -75,7 +75,7 @@ export class PrinterModelRepository implements IPrinterModelRepository {
     try {
       const printerModel = await this.repository.findOneBy({ id });
       return printerModel ? PrinterModelDataMapper.toDomain(printerModel) : null;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
@@ -94,7 +94,7 @@ export class PrinterModelRepository implements IPrinterModelRepository {
 
       const updatedModel = await this.findById(modelToUpdate.id);
       return updatedModel ? PrinterModelDataMapper.toDomain(updatedModel) : null;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);

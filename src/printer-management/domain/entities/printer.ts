@@ -1,4 +1,4 @@
-import { CountingType } from '../enums/counting-type.enum';
+import { CountingJobType } from '../enums/counting-job-type.enum';
 import { PrinterDomainValidationException } from '../exceptions/printer-domain-validation.exception';
 import { CreatePrinterProps, PrinterProps } from '../types/printer.props';
 import { Counting } from './counting';
@@ -114,7 +114,13 @@ export class Printer extends EntityBase {
     this._installedAt = installedAt;
   }
 
-  addCounting(countingJobId: string, type: CountingType, prints: number, copies: number, collectedAt: Date): Counting {
+  addCounting(
+    countingJobId: string,
+    type: CountingJobType,
+    prints: number,
+    copies: number,
+    collectedAt: Date,
+  ): Counting {
     const errors: string[] = [];
 
     if (prints < this._totalPrint) errors.push(InvalidTotalPrintExceptionMessage);

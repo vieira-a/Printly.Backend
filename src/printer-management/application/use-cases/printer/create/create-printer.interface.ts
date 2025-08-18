@@ -1,6 +1,6 @@
 import { CreatePrinterInput } from './input/create-printer.input';
-import { CreatePrinterOutput } from './output/create-printer.output';
+import { PrinterOutput } from './output/printer.output';
 
 export interface ICreatePrinterUseCase {
-  execute(input: CreatePrinterInput): Promise<CreatePrinterOutput>;
+  execute(input: CreatePrinterInput): Promise<PrinterOutput>;
 }

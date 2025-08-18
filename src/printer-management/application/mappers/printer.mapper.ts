@@ -1,9 +1,9 @@
 import { Printer } from '@printer/domain/entities';
-import { UpdatePrinterOutput } from '../use-cases/printer/update/output/update-printer.output';
 import { FindPrinterOutput } from '../use-cases/printer/find/output/find-printer.output';
+import { PrinterOutput } from '../use-cases/printer/create/output/printer.output';
 
 export abstract class PrinterMapper {
-  public static toOutput(domain: Printer): UpdatePrinterOutput {
+  public static toOutput(domain: Printer): PrinterOutput {
     return {
       id: domain.id,
       manufacturer: domain.model?.manufacturer,

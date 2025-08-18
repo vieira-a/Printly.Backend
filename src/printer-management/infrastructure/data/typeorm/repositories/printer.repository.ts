@@ -42,10 +42,11 @@ export class PrinterRepository implements IPrinterRepository {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
-      } else if (error instanceof Error) {
-        this.logger.log(error.message);
-        throw new InfrastructureException(InfrastructureExceptionMessage);
       }
+      if (error instanceof Error) {
+        this.logger.log(error.message);
+      }
+      throw new InfrastructureException(InfrastructureExceptionMessage);
     }
   }
 

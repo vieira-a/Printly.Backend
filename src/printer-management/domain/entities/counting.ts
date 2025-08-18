@@ -1,4 +1,4 @@
-import { CountingType } from '../enums/counting-type.enum';
+import { CountingJobType } from '../enums/counting-job-type.enum';
 import { CountingDomainValidationException } from '../exceptions';
 import { CountingProps, CreateCountingProps } from '../types/counting.props';
 import { EntityBase } from './entity-base';
@@ -17,7 +17,7 @@ export class Counting extends EntityBase {
   private _prints: number;
   private _copies: number;
   private _collectedAt: Date;
-  private _type: CountingType;
+  private _type: CountingJobType;
 
   private constructor(props: CountingProps) {
     super(props.id, props.createdAt, props.updatedAt);
@@ -38,7 +38,7 @@ export class Counting extends EntityBase {
     return this._printerId;
   }
 
-  get type(): CountingType {
+  get type(): CountingJobType {
     return this._type;
   }
 
@@ -72,7 +72,6 @@ export class Counting extends EntityBase {
     if (!this._prints) errors.push(MissingPrintsExceptionMessage);
     if (!this._copies) errors.push(MissingCopiesExceptionMessage);
 
-    if (errors.length > 0)
-      throw new CountingDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new CountingDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

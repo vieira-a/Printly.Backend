@@ -1,11 +1,5 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
@@ -13,26 +7,27 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
+    const response: Response = ctx.getResponse();
+    const request: Request = ctx.getRequest();
 
-    const isDevEnvironment = process.env.NODE_ENV;
+    const isDevEnvironment = process.env.NODE_ENV === 'development';
 
-    let status =
-      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let error: string | object =
+    const error: string | object =
       exception instanceof HttpException ? exception.getResponse() : 'Erro interno do servidor.';
 
-    isDevEnvironment
-      ? this.logger.debug(
-          `HTTP Status: ${status} | Path: ${request.url} | Message: ${JSON.stringify(error)}`,
-          exception instanceof Error ? exception.stack : '',
-        )
-      : this.logger.error(
-          `HTTP Status: ${status} | Path: ${request.url} | Message: ${JSON.stringify(error)}`,
-          exception instanceof Error ? exception : '',
-        );
+    if (isDevEnvironment) {
+      this.logger.debug(
+        `HTTP Status: ${status} | Path: ${request.url} | Message: ${JSON.stringify(error)}`,
+        exception instanceof Error ? exception.stack : '',
+      );
+    } else {
+      this.logger.error(
+        `HTTP Status: ${status} | Path: ${request.url} | Message: ${JSON.stringify(error)}`,
+        exception instanceof Error ? exception : '',
+      );
+    }
 
     response.status(status).json({
       statusCode: status,

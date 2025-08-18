@@ -27,6 +27,7 @@ export class Address {
     this._state = props.state;
     this._cep = props.cep;
     this._reference = props.reference;
+    this.validate();
   }
 
   get street(): string {
@@ -76,7 +77,6 @@ export class Address {
       errors.push(MissingStateExceptionMessage);
     } else if (!/^[A-Z]{2}$/.test(this.state)) errors.push(InvalidStateExceptionMessage);
 
-    if (errors.length > 0)
-      throw new AddressDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new AddressDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

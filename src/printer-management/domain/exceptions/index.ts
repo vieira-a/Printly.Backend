@@ -8,3 +8,4 @@ export * from './phone-domain-validation.exception';
 export * from './printer-domain-validation.exception';
 export * from './missing.param.exception';
 export * from './invalid.param.exception';
+export * from './counting-job-domain-validation.exception';

@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base-entity';
 import { PrinterEntity } from './printer.entity';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
-import { CountingJobProps, CreateCountingJobProps } from '@printer/domain/entities/counting-job';
+import { CountingJobProps, CreateCountingJobProps } from '@printer/domain/types/counting-job.props';
 
 @Entity({ name: 'counting_jobs' })
 export class CountingJobEntity extends BaseEntity {
@@ -37,7 +37,7 @@ export class CountingJobEntity extends BaseEntity {
   }
 
   public static create(props: CreateCountingJobProps): CountingJobEntity {
-    return new CountingJobEntity({ ...props });
+    return new CountingJobEntity({ ...props, attempt: 0, lastAttempt: new Date(), executionDate: new Date() });
   }
 
   public static restore(props: CountingJobProps): CountingJobEntity {

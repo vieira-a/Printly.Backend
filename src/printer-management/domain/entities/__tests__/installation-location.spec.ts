@@ -39,25 +39,25 @@ describe('Location Entity', () => {
 
   it('should throw InstallationLocationDomainValidationException if address is not provided', () => {
     expect(() =>
-      InstallationLocation.create({ ...validInstallationLocationProps, address: null as any }),
+      InstallationLocation.create({ ...validInstallationLocationProps, address: null as unknown as Address }),
     ).toThrow(InstallationLocationDomainValidationException);
   });
 
   it('should throw InstallationLocationDomainValidationException if phone is not provided', () => {
     expect(() =>
-      InstallationLocation.create({ ...validInstallationLocationProps, phone: null as any }),
+      InstallationLocation.create({ ...validInstallationLocationProps, phone: null as unknown as Phone }),
     ).toThrow(InstallationLocationDomainValidationException);
   });
 
   it('should throw InstallationLocationDomainValidationException if contact is not provided', () => {
-    expect(() =>
-      InstallationLocation.create({ ...validInstallationLocationProps, contact: '' }),
-    ).toThrow(InstallationLocationDomainValidationException);
+    expect(() => InstallationLocation.create({ ...validInstallationLocationProps, contact: '' })).toThrow(
+      InstallationLocationDomainValidationException,
+    );
   });
 
   it('should throw InstallationLocationDomainValidationException if contact has less than 3 characters', () => {
-    expect(() =>
-      InstallationLocation.create({ ...validInstallationLocationProps, contact: 'Co' }),
-    ).toThrow(InstallationLocationDomainValidationException);
+    expect(() => InstallationLocation.create({ ...validInstallationLocationProps, contact: 'Co' })).toThrow(
+      InstallationLocationDomainValidationException,
+    );
   });
 });

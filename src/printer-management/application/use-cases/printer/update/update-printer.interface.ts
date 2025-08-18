@@ -1,6 +1,6 @@
 import { UpdatePrinterInput } from './input/update-printer.input';
-import { UpdatePrinterOutput } from './output/update-printer.output';
+import { PrinterOutput } from '../create/output/printer.output';
 
 export interface IUpdatePrinterUseCase {
-  execute(id: string, input: UpdatePrinterInput): Promise<UpdatePrinterOutput>;
+  execute(id: string, input: UpdatePrinterInput): Promise<PrinterOutput>;
 }

@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base-entity';
 import { PrinterEntity } from './printer.entity';
-import { CountingType } from '@printer/domain/enums/counting-type.enum';
+import { CountingJobType } from '@printer/domain/enums/counting-job-type.enum';
 import { CountingProps, CreateCountingProps } from '@printer/domain/types/counting.props';
 import { CountingJobEntity } from './counting-job.entity';
 
@@ -10,8 +10,8 @@ export class CountingEntity extends BaseEntity {
   @Column({ name: 'counting_job_id' })
   countingJobId: string;
 
-  @ManyToOne(() => PrinterEntity, { eager: false })
-  @JoinColumn({ name: 'printer_id' })
+  @ManyToOne(() => CountingJobEntity, { eager: false })
+  @JoinColumn({ name: 'counting_job_id' })
   countingJob: CountingJobEntity;
 
   @Column({ name: 'printer_id' })
@@ -31,7 +31,7 @@ export class CountingEntity extends BaseEntity {
   collectedAt: Date;
 
   @Column({ name: 'type' })
-  type: CountingType;
+  type: CountingJobType;
 
   private constructor(props: CountingProps) {
     super(props?.id, props?.createdAt, props?.updatedAt);

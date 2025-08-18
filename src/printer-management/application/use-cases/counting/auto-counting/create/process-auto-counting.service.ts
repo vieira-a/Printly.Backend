@@ -22,10 +22,11 @@ export class ProcessAutoCountingService implements IProcessAutoCountingUseCase {
     for (const printer of printers) {
       try {
         await this.createAutoCountingService.execute(printer);
-      } catch (error) {
-        this.logger.log(
-          `Erro ao processar contagem da impressora: [${printer.model.manufacturer} ${printer.model.description}] - [${printer.ipv4.toString()}] - Erro: [${error.message}]`,
-        );
+      } catch (error: unknown) {
+        if (error instanceof Error)
+          this.logger.log(
+            `Erro ao processar contagem da impressora: [${printer.model?.manufacturer} ${printer.model?.description}] - [${printer.ipv4Address.toString()}] - Erro: [${error.message}]`,
+          );
         throw error;
       }
     }

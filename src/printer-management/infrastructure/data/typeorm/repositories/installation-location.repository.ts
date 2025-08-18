@@ -28,7 +28,7 @@ export class InstallationLocationRepository implements IInstallationLocationRepo
       return InstallationLocationDataMapper.toDomain(result);
     } catch (error: unknown) {
       if (error instanceof TypeORMError) {
-        this.logger.log(error.message);
+        this.logger.error(`${error.name}: ${error.message}`);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
       }
       if (error instanceof Error) {

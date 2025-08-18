@@ -1,4 +1,4 @@
-export abstract class UpdatePrinterOutput {
+export abstract class PrinterOutput {
   id: string;
   manufacturer: string | undefined;
   description: string | undefined;

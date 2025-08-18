@@ -1,6 +1,7 @@
 import { CountingJob } from '@printer/domain/entities/counting-job';
 import { CountingJobEntity } from '../typeorm/models';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
+import { PrinterDataMapper } from './printer-data.mapper';
 
 export abstract class CountingJobDataMapper {
   public static toDomain(entity: CountingJobEntity): CountingJob {
@@ -9,7 +10,7 @@ export abstract class CountingJobDataMapper {
       printerId: entity.printerId,
       attempt: entity.attempt,
       lastAttempt: entity.lastAttempt,
-      status: entity.status as CountingJobStatus,
+      status: entity.status,
       executionDate: entity.executionDate,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -19,14 +20,23 @@ export abstract class CountingJobDataMapper {
   public static toEntity(domain: CountingJob): CountingJobEntity {
     return CountingJobEntity.create({
       printerId: domain.printerId,
-      attempt: domain.attempt,
-      lastAttempt: domain.lastAttempt,
       status: domain.status as CountingJobStatus,
-      executionDate: domain.executionDate,
     });
   }
 
   public static toDomainArray(entities: CountingJobEntity[]): CountingJob[] {
-    return entities.map((entity) => this.toDomain(entity));
+    return entities.map((entity) =>
+      CountingJob.restore({
+        id: entity.id,
+        printerId: entity.printerId,
+        printer: PrinterDataMapper.toDomain(entity.printer),
+        attempt: entity.attempt,
+        lastAttempt: entity.lastAttempt,
+        status: entity.status,
+        executionDate: entity.executionDate,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+      }),
+    );
   }
 }

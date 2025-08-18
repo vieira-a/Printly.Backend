@@ -1,4 +1,4 @@
-import { CountingType } from '../enums/counting-type.enum';
+import { CountingJobType } from '../enums/counting-job-type.enum';
 
 export type CountingProps = {
   id?: string;
@@ -6,7 +6,7 @@ export type CountingProps = {
   updatedAt?: Date;
   countingJobId: string;
   printerId: string;
-  type: CountingType;
+  type: CountingJobType;
   prints: number;
   copies: number;
   collectedAt: Date;
@@ -15,7 +15,7 @@ export type CountingProps = {
 export type CreateCountingProps = {
   countingJobId: string;
   printerId: string;
-  type: CountingType;
+  type: CountingJobType;
   prints: number;
   copies: number;
   collectedAt: Date;

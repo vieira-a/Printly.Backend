@@ -1,4 +1,4 @@
-export enum CountingType {
+export enum CountingJobType {
   AUTO = 'auto',
   MANUAL = 'manual',
 }

@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  ModelPrinter,
-  LocationModel,
-  PrinterModel,
-  CountingModel,
-  CountingJobModel,
+  PrinterEntity,
+  PrinterModelEntity,
+  InstallationLocationEntity,
+  CountingEntity,
+  CountingJobEntity,
 } from '@printer/infrastructure/data/typeorm/models';
 
 const nodeEnv = process.env.NODE_ENV;
@@ -23,7 +23,7 @@ const nodeEnv = process.env.NODE_ENV;
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [ModelPrinter, LocationModel, PrinterModel, CountingModel, CountingJobModel],
+        entities: [PrinterEntity, PrinterModelEntity, InstallationLocationEntity, CountingEntity, CountingJobEntity],
         synchronize: nodeEnv === 'development' ? true : false,
       }),
     }),

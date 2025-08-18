@@ -44,7 +44,6 @@ export class IPV4 {
 
     if (!IPV4.isValidIPv4(this._value)) errors.push(InvalidIPv4ExceptionMessage);
 
-    if (errors.length > 0)
-      throw new IPv4DomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new IPv4DomainValidationException(ValidationExceptionMessage, errors);
   }
 }

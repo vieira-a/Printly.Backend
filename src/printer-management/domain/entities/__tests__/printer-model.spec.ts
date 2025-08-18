@@ -34,9 +34,9 @@ describe('PrinterModel Entity', () => {
       });
 
       it('should throw ModelDomainValidationException if manufacturer has less than 3 characters', () => {
-        expect(() =>
-          PrinterModel.create({ ...validPrinterModelProps, manufacturer: 'Ky' }),
-        ).toThrow(ModelDomainValidationException);
+        expect(() => PrinterModel.create({ ...validPrinterModelProps, manufacturer: 'Ky' })).toThrow(
+          ModelDomainValidationException,
+        );
       });
 
       it('should throw ModelDomainValidationException if description is not provided', () => {
@@ -58,9 +58,9 @@ describe('PrinterModel Entity', () => {
       });
 
       it('should throw ModelDomainValidationException if printOid is less than 10 characters', () => {
-        expect(() =>
-          PrinterModel.create({ ...validPrinterModelProps, printOid: '1.2.3.4.5' }),
-        ).toThrow(ModelDomainValidationException);
+        expect(() => PrinterModel.create({ ...validPrinterModelProps, printOid: '1.2.3.4.5' })).toThrow(
+          ModelDomainValidationException,
+        );
       });
 
       it('should throw ModelDomainValidationException if copyOid is not provided', () => {
@@ -70,23 +70,19 @@ describe('PrinterModel Entity', () => {
       });
 
       it('should throw ModelDomainValidationException if CopyOid is less than 10 characters', () => {
-        expect(() =>
-          PrinterModel.create({ ...validPrinterModelProps, copyOid: '1.2.3.4.5' }),
-        ).toThrow(ModelDomainValidationException);
+        expect(() => PrinterModel.create({ ...validPrinterModelProps, copyOid: '1.2.3.4.5' })).toThrow(
+          ModelDomainValidationException,
+        );
       });
     });
 
     describe('Update', () => {
       it('should throw ModelDomainValidationException if manufacturer is not provided on update', () => {
-        expect(() => validPrinterModel.updateManufacturer('')).toThrow(
-          ModelDomainValidationException,
-        );
+        expect(() => validPrinterModel.updateManufacturer('')).toThrow(ModelDomainValidationException);
       });
 
       it('should throw ModelDomainValidationException if description is not provided on update', () => {
-        expect(() => validPrinterModel.updateDescription('')).toThrow(
-          ModelDomainValidationException,
-        );
+        expect(() => validPrinterModel.updateDescription('')).toThrow(ModelDomainValidationException);
       });
 
       it('should throw ModelDomainValidationException if printOid is not provided on update', () => {

@@ -1,7 +1,7 @@
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
 import { Printer } from '../printer';
 import { IPV4 } from '../value-objects/ipv4';
-import { CountingType } from '@printer/domain/enums/counting-type.enum';
+import { CountingJobType } from '@printer/domain/enums/counting-job-type.enum';
 import { CreatePrinterProps } from '@printer/domain/types/printer.props';
 
 const validPrinterProps: CreatePrinterProps = {
@@ -38,38 +38,24 @@ describe('Printer Entity', () => {
       });
 
       it('should throw a PrinterDomainValidationException if installationLocationId is not provided', () => {
-        expect(() => Printer.create({ ...validPrinterProps, installedAt: null as any })).toThrow(
+        expect(() => Printer.create({ ...validPrinterProps, installedAt: null as unknown as Date })).toThrow(
           PrinterDomainValidationException,
         );
       });
 
       it('should throw a PrinterDomainValidationException if modelId is not provided', () => {
-        expect(() => Printer.create({ ...validPrinterProps, modelId: '' })).toThrow(
-          PrinterDomainValidationException,
-        );
+        expect(() => Printer.create({ ...validPrinterProps, modelId: '' })).toThrow(PrinterDomainValidationException);
       });
 
       it('should throw a PrinterDomainValidationException if new total print is less than current total print', () => {
         expect(() =>
-          validPrinter.addCounting(
-            'fake-counting-job-id',
-            CountingType.MANUAL,
-            999,
-            9999,
-            new Date(),
-          ),
+          validPrinter.addCounting('fake-counting-job-id', CountingJobType.MANUAL, 999, 9999, new Date()),
         ).toThrow(PrinterDomainValidationException);
       });
 
       it('should throw a PrinterDomainValidationException if new total copy is less than current total copy', () => {
         expect(() =>
-          validPrinter.addCounting(
-            'fake-counting-job-id',
-            CountingType.MANUAL,
-            9999,
-            999,
-            new Date(),
-          ),
+          validPrinter.addCounting('fake-counting-job-id', CountingJobType.MANUAL, 9999, 999, new Date()),
         ).toThrow(PrinterDomainValidationException);
       });
 
@@ -92,14 +78,12 @@ describe('Printer Entity', () => {
       });
 
       it('should throw a PrinterDomainValidationException if installation location id is not provided on update', () => {
-        expect(() => validPrinter.updateInstallationLocation('', new Date())).toThrow(
-          PrinterDomainValidationException,
-        );
+        expect(() => validPrinter.updateInstallationLocation('', new Date())).toThrow(PrinterDomainValidationException);
       });
 
       it('should throw a PrinterDomainValidationException if installation date is not provided on update', () => {
         expect(() =>
-          validPrinter.updateInstallationLocation('fake-installation-location-id', null as any),
+          validPrinter.updateInstallationLocation('fake-installation-location-id', null as unknown as Date),
         ).toThrow(PrinterDomainValidationException);
       });
     });
@@ -109,7 +93,7 @@ describe('Printer Entity', () => {
     it('should addCounting with correct params', () => {
       const newCounting = validPrinter.addCounting(
         'fake-counting-job-id',
-        CountingType.MANUAL,
+        CountingJobType.MANUAL,
         9999,
         9999,
         new Date(),
@@ -122,7 +106,7 @@ describe('Printer Entity', () => {
     it('should retrieve counting successfully', () => {
       const newCounting1 = validPrinter.addCounting(
         'fake-counting-job-id-1',
-        CountingType.MANUAL,
+        CountingJobType.MANUAL,
         9999,
         9999,
         new Date(),
@@ -130,7 +114,7 @@ describe('Printer Entity', () => {
 
       const newCounting2 = validPrinter.addCounting(
         'fake-counting-job-id-2',
-        CountingType.AUTO,
+        CountingJobType.AUTO,
         99991,
         99991,
         new Date(),

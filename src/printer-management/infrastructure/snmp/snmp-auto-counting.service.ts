@@ -6,10 +6,7 @@ import { IAutoCounting } from '@printer/domain/interfaces/auto-counting.interfac
 export class SnmpAutoCountingService implements IAutoCounting {
   private readonly logger = new Logger(SnmpAutoCountingService.name);
 
-  async collect(
-    ipv4: string,
-    oid: string,
-  ): Promise<{ success: boolean; error?: string; count: string | undefined }> {
+  async collect(ipv4: string, oid: string): Promise<{ success: boolean; error?: string; count: string | undefined }> {
     return new Promise((resolve) => {
       let session: snmp.Session | undefined;
 

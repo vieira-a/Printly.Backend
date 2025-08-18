@@ -1,6 +1,11 @@
 import { Inject, Injectable, InternalServerErrorException, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { IInstallationLocationRepository } from '@printer/domain/data/repositories';
-import { InstallationLocationDomainValidationException } from '@printer/domain/exceptions';
+import {
+  AddressDomainValidationException,
+  CepDomainValidationException,
+  InstallationLocationDomainValidationException,
+  PhoneDomainValidationException,
+} from '@printer/domain/exceptions';
 import { InstallationLocation } from '@printer/domain/entities';
 import { Address } from '@printer/domain/entities/value-objects/address';
 import { CEP } from '@printer/domain/entities/value-objects/cep';
@@ -35,7 +40,12 @@ export class CreateInstallationLocationService implements ICreateInstallationLoc
       return InstallationLocationMapper.toOutput(result);
     } catch (error: unknown) {
       if (error instanceof Error) this.logger.log(error.message);
-      if (error instanceof InstallationLocationDomainValidationException) {
+      if (
+        error instanceof InstallationLocationDomainValidationException ||
+        error instanceof AddressDomainValidationException ||
+        error instanceof CepDomainValidationException ||
+        error instanceof PhoneDomainValidationException
+      ) {
         throw new UnprocessableEntityException({
           message: error.message,
           errors: error.errors,

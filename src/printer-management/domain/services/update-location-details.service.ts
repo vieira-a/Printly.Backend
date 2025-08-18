@@ -1,3 +1,4 @@
+/**
 import { Injectable } from '@nestjs/common';
 import { Location } from '../entities';
 import { Address } from '../entities/value-objects/address';
@@ -43,13 +44,7 @@ export class UpdateLocationDetails {
 
     const newContact = data.contact ?? location.contact;
 
-    return Location.restore(
-      location.id,
-      newAddress,
-      newPhone,
-      newContact,
-      location.createdAt,
-      new Date(),
-    );
+    return Location.restore(location.id, newAddress, newPhone, newContact, location.createdAt, new Date());
   }
 }
+ */

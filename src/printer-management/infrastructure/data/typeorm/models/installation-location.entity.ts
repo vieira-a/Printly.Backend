@@ -7,10 +7,10 @@ import {
 
 @Entity({ name: 'installation_locations' })
 export class InstallationLocationEntity extends BaseEntity {
-  @Column({ name: 'street' })
+  @Column({ name: 'street', type: 'varchar', length: 255 })
   street: string;
 
-  @Column({ name: 'district', type: 'varchar', length: 30 })
+  @Column({ name: 'district', type: 'varchar', length: 100 })
   district: string;
 
   @Column({ name: 'city', type: 'varchar', length: 30 })
@@ -37,7 +37,7 @@ export class InstallationLocationEntity extends BaseEntity {
   constructor(props?: InstallationLocationEntityProps) {
     super(props?.id, props?.createdAt, props?.updatedAt);
     if (props) {
-      this.street = props?.street;
+      this.street = props.street;
       this.district = props.district;
       this.city = props.city;
       this.state = props.state;

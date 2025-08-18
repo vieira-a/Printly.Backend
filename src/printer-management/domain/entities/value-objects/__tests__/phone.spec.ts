@@ -25,9 +25,7 @@ describe('Phone Value Object', () => {
   });
 
   it('should throw PhoneDomainValidationException if DDD is not a number between 11 and 99', () => {
-    expect(() => Phone.create({ ...validCellPhoneProps, areaCode: 10 })).toThrow(
-      PhoneDomainValidationException,
-    );
+    expect(() => Phone.create({ ...validCellPhoneProps, areaCode: 10 })).toThrow(PhoneDomainValidationException);
   });
 
   it('should throw PhoneDomainValidationException if phone number has less than 8 digits', () => {

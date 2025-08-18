@@ -1,10 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { ICreateAutoCountingUseCase } from './create-auto-counting.interface';
 import { IAutoCounting } from '@printer/domain/interfaces/auto-counting.interface';
 import { ICountingRepository, IPrinterRepository } from '@printer/domain/data/repositories';
@@ -14,12 +8,10 @@ import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
 import { RequestTimedOutError } from '@shared/exceptions/request-timeout.exception';
 import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
-import { CreateCountingJobInput } from '@printer/application/use-cases/counting/auto-counting/create/input/create-counting-job.input';
 import { CountingJob } from '@printer/domain/entities/counting-job';
-import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { Printer } from '@printer/domain/entities';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
-import { CountingType } from '@printer/domain/enums/counting-type.enum';
+import { CountingJobType } from '@printer/domain/enums/counting-job-type.enum';
 
 @Injectable()
 export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
@@ -37,69 +29,38 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
   ) {}
   async execute(printer: Printer): Promise<void> {
     try {
-      const ipv4 = printer.ipv4.toString();
-      const printOid = printer.model.printOid;
-      const copyOid = printer.model.copyOid;
+      const ipv4Address = printer.ipv4Address.toString();
+      const printOid = printer.model?.printOid;
+      const copyOid = printer.model?.copyOid;
 
-      const totalPrintResult = await this.autoCounting.collect(ipv4, printOid);
-      const totalCopyResult = await this.autoCounting.collect(ipv4, copyOid);
+      const totalPrintResult = await this.autoCounting.collect(ipv4Address, printOid!);
+      const totalCopyResult = await this.autoCounting.collect(ipv4Address, copyOid!);
 
       if (totalPrintResult.success && totalPrintResult.success) {
-        const counting = printer.registerCounting(
+        const newCountingJob = CountingJob.create({ printerId: printer.id, status: CountingJobStatus.SUCCESS });
+        const savedCountingJob = await this.countingJobRepository.create(newCountingJob);
+
+        const counting = printer.addCounting(
+          savedCountingJob.id,
+          CountingJobType.AUTO,
           Number(totalPrintResult.count),
           Number(totalCopyResult.count),
           new Date(),
-          CountingType.AUTO,
         );
 
-        const savedCounting = await this.countingRepository.create(counting);
-
+        await this.countingRepository.create(counting);
         await this.printerRepository.updateCounting(printer);
-
-        await this.createCountingJob({
-          printerId: printer.id,
-          ipv4: printer.ipv4.toString(),
-          status: CountingJobStatus.SUCCESS,
-          countingId: savedCounting.id,
-        });
       } else {
-        await this.createCountingJob({
-          printerId: printer.id,
-          ipv4: printer.ipv4.toString(),
-          status: CountingJobStatus.FAILED,
-          errorMessage: totalPrintResult.error,
-        });
+        const newCountingJob = CountingJob.create({ printerId: printer.id, status: CountingJobStatus.FAILED });
+        await this.countingJobRepository.create(newCountingJob);
       }
-    } catch (error) {
-      this.logger.log(error.message);
-      if (
-        error instanceof PrinterDomainValidationException ||
-        error instanceof CountingDomainValidationException
-      ) {
+    } catch (error: unknown) {
+      if (error instanceof Error) this.logger.log(error.message);
+      if (error instanceof PrinterDomainValidationException || error instanceof CountingDomainValidationException) {
         throw new UnprocessableEntityException({ message: error.message, errors: error.errors });
       } else if (error instanceof RequestTimedOutError) {
         throw new RequestPrinterTimeoutException(error.message, error.ipv4);
       } else if (error instanceof DatabaseModelException) {
-        throw new InternalServerErrorException(error.message);
-      }
-      throw error;
-    }
-  }
-
-  private async createCountingJob(input: CreateCountingJobInput): Promise<void> {
-    try {
-      const countingJob = CountingJob.create(
-        input.printerId,
-        IPV4.create(input.ipv4),
-        input.status,
-        undefined,
-        input.countingId,
-        input.errorMessage,
-      );
-      await this.countingJobRepository.create(countingJob);
-    } catch (error) {
-      this.logger.log(error.message);
-      if (error instanceof DatabaseModelException) {
         throw new InternalServerErrorException(error.message);
       }
       throw error;

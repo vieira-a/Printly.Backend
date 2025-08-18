@@ -18,8 +18,7 @@ export class Phone {
   }
 
   public static create(props: PhoneProps): Phone {
-    const normalizedAreaCode =
-      typeof props.areaCode === 'string' ? parseInt(props.areaCode, 10) : props.areaCode;
+    const normalizedAreaCode = typeof props.areaCode === 'string' ? parseInt(props.areaCode, 10) : props.areaCode;
     const normalizedPhoneNumber =
       typeof props.phoneNumber === 'string' ? parseInt(props.phoneNumber, 10) : props.phoneNumber;
     return new Phone({ areaCode: normalizedAreaCode, phoneNumber: normalizedPhoneNumber });
@@ -47,14 +46,12 @@ export class Phone {
 
     if (!/^\d{8,9}$/.test(phoneString)) errors.push(InvalidPhoneExceptionMessage);
 
-    if (phoneString.length === 9 && !phoneString.startsWith('9'))
-      errors.push(InvalidCellPhoneExceptionMessage);
+    if (phoneString.length === 9 && !phoneString.startsWith('9')) errors.push(InvalidCellPhoneExceptionMessage);
 
     if (phoneString.length === 8 && phoneString.startsWith('9')) {
       errors.push(InvalidFixedPhoneExceptionMessage);
     }
 
-    if (errors.length > 0)
-      throw new PhoneDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new PhoneDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

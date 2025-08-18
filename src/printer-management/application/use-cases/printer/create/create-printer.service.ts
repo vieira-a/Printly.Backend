@@ -7,11 +7,13 @@ import { Printer } from '@printer/domain/entities';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import {
   ModelNotFoundException,
-  LocationNotFoundException,
+  InstallationLocationNotFoundException,
   DatabaseModelException,
   PrinterConflictException,
 } from '@printer/application/exceptions';
 import { PrinterDomainValidationException } from '@printer/domain/exceptions/printer-domain-validation.exception';
+import { PrinterOutput } from './output/printer.output';
+import { PrinterMapper } from '@printer/application/mappers/printer.mapper';
 
 @Injectable()
 export class CreatePrinterService implements ICreatePrinterUseCase {
@@ -20,12 +22,13 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
   constructor(
     @Inject('IPrinterRepository')
     private readonly printerRepository: IPrinterRepository,
-    @Inject('IModelRepository')
+    @Inject('IPrinterModelRepository')
     private readonly printerModelRepository: IPrinterModelRepository,
     @Inject('IInstallationLocationRepository')
     private readonly installationLocationRepository: IInstallationLocationRepository,
   ) {}
-  async execute(input: CreatePrinterInput): Promise<any> {
+  async execute(input: CreatePrinterInput): Promise<PrinterOutput> {
+    const { serialNumber, ipv4Address, modelId, installationLocationId, installedAt, totalPrint, totalCopy } = input;
     try {
       const printerExists = await this.printerRepository.existsBySerialNumber(input.serialNumber);
       if (printerExists) throw new PrinterConflictException(input.serialNumber);
@@ -34,19 +37,20 @@ export class CreatePrinterService implements ICreatePrinterUseCase {
       if (!printerModel) throw new ModelNotFoundException(input.modelId);
 
       const installationLocation = await this.installationLocationRepository.existsById(input.installationLocationId);
-      if (!installationLocation) throw new LocationNotFoundException(input.installationLocationId);
+      if (!installationLocation) throw new InstallationLocationNotFoundException(input.installationLocationId);
 
       const newPrinter = Printer.create({
-        serialNumber: input.serialNumber,
-        ipv4Address: IPV4.create(input.ipv4Address),
-        modelId: input.modelId,
-        installationLocationId: input.installationLocationId,
-        installedAt: input.installedAt,
-        totalPrint: input.totalPrint,
-        totalCopy: input.totalCopy,
+        serialNumber,
+        ipv4Address: IPV4.create(ipv4Address),
+        modelId,
+        installationLocationId,
+        installedAt,
+        totalPrint,
+        totalCopy,
       });
 
-      return await this.printerRepository.create(newPrinter);
+      const createdPrinter = await this.printerRepository.create(newPrinter);
+      return PrinterMapper.toOutput(createdPrinter);
     } catch (error: unknown) {
       if (error instanceof Error) this.logger.log(error.message);
       if (error instanceof PrinterDomainValidationException) {

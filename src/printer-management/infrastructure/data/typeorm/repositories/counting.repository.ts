@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CountingModel } from '../models';
+import { CountingEntity } from '../models';
 import { Repository, TypeORMError } from 'typeorm';
 import { ICountingRepository } from '@printer/domain/data/repositories';
 import { Counting } from '@printer/domain/entities/counting';
@@ -15,18 +15,19 @@ export class CountingRepository implements ICountingRepository {
   private readonly logger = new Logger(CountingRepository.name);
 
   constructor(
-    @InjectRepository(CountingModel)
-    private readonly repository: Repository<CountingModel>,
+    @InjectRepository(CountingEntity)
+    private readonly repository: Repository<CountingEntity>,
   ) {}
   async create(counting: Counting): Promise<any> {
     try {
-      const countingModel = CountingModel.create(
-        counting.printerId,
-        counting.totalPrint,
-        counting.totalCopy,
-        counting.collectedAt,
-        counting.type,
-      );
+      const countingModel = CountingEntity.create({
+        countingJobId: counting.countingJobId,
+        printerId: counting.printerId,
+        prints: counting.prints,
+        copies: counting.copies,
+        collectedAt: counting.collectedAt,
+        type: counting.type,
+      });
       return await this.repository.save(countingModel);
     } catch (error) {
       if (error instanceof TypeORMError) {

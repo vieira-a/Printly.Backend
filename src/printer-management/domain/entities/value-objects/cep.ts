@@ -29,7 +29,6 @@ export class CEP {
     const cleaned = this._value?.replace(/\D/g, '');
     if (!/^\d{8}$/.test(cleaned)) errors.push(InvalidCEPExceptionMessage);
 
-    if (errors.length > 0)
-      throw new CepDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new CepDomainValidationException(ValidationExceptionMessage, errors);
   }
 }

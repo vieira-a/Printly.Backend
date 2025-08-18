@@ -1,16 +1,10 @@
 import { ModelDomainValidationException } from '../exceptions';
-import {
-  CreatePrinterModelProps,
-  PrinterModelProps,
-  UpdatePrinterModelProps,
-} from '../types/printer-model.props';
+import { CreatePrinterModelProps, PrinterModelProps, UpdatePrinterModelProps } from '../types/printer-model.props';
 import { EntityBase } from './entity-base';
 
-const InvalidManufacturerExceptionMessage =
-  'Nome do fabricante deve conter no mínimo 3 caracteres.';
+const InvalidManufacturerExceptionMessage = 'Nome do fabricante deve conter no mínimo 3 caracteres.';
 const MissingManufacturerExceptionMessage = 'Nome do fabricante não informado.';
-const InvalidDescriptionExceptionMessage =
-  'Descrição do modelo deve conter no mínimo 3 caracteres.';
+const InvalidDescriptionExceptionMessage = 'Descrição do modelo deve conter no mínimo 3 caracteres.';
 const MissingDescriptionExceptionMessage = 'Descrição do modelo não informado.';
 const InvalidOidExceptionMessage = 'OID de contador deve conter no mínimo 10 caracteres.';
 const MissingOidExceptionMessage = 'OID de contador não informado.';
@@ -102,7 +96,6 @@ export class PrinterModel extends EntityBase {
       errors.push(InvalidOidExceptionMessage);
     }
 
-    if (errors.length > 0)
-      throw new ModelDomainValidationException(ValidationExceptionMessage, errors);
+    if (errors.length > 0) throw new ModelDomainValidationException(ValidationExceptionMessage, errors);
   }
 }
