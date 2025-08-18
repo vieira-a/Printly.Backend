@@ -3,7 +3,7 @@
 ## Impressoras
 
 - **RF01**: Cadastrar impressoras com marca, modelo, IP, localização, responsável e observações.
-  - Uma impressora não deve ser cadastrada sem um modelo, número de série, IP, localização e responsáveis
+  - Uma impressora não deve ser cadastrada sem um modelo, número de série, IP, localização, responsável e quantidade inicial de cópia e impressão
   - O modelo de impressora deve conter o nome do frabricante e seu modelo específico, além de OIDs de impressão e cópia
   - Uma localização deve possuir um endereço completo contendo Rua, Bairro, Cidade, Estado, CEP e Ponto de referência
 
@@ -27,14 +27,17 @@
 - **RF08**: Relatório gerencial com contagem atual por impressora e filtros por localização, responsável, marca, modelo e período.
 - **RF09**: Relatório comparativo entre períodos com variação percentual de consumo.
 
+## Retentativa de coleta em casos de falha
+
+- **RF10**: Sistema deve realizar tentativas de coleta caso a coleta automática falhe
+
 ---
 
 # Requisitos Não Funcionais (RNF)
 
-- **RNF01**: Sistema containerizado com Docker.
-- **RNF02**: Coleta via SNMP assíncrona e resiliente.
-- **RNF03**: Backend e frontend desacoplados e escaláveis.
-- **RNF04**: Registro de logs para auditoria.
+- **RNF01**: Coleta via SNMP assíncrona e resiliente.
+- **RNF02**: Backend e frontend desacoplados e escaláveis.
+- **RNF03**: Registro de logs para auditoria.
 
 ---
 
@@ -58,9 +61,17 @@
 ## Métricas de Validação
 
 - Impressoras cadastradas corretamente
-- Coletas SNMP com sucesso em ≥ 80% das tentativas
+- Coletas agendadas via SNMP com sucesso
+- Retentativas agendadas realizadas com sucesso
 - Inserções manuais visíveis em relatórios
 - Filtros no relatório entregando valor ao usuário
-- Sistema operando via `docker-compose up`
+
+---
+
+## Change log
+
+| Data       | Versão | Responsável     |
+| ---------- | ------ | --------------- |
+| 18-08-2025 | 02     | Anderson Vieira |
 
 ---

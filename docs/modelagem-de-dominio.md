@@ -2,32 +2,36 @@
 
 ## Bounded Contexts
 
-1. Impressoras
+1. Printer Management
 
 Responsável por registrar e manter os dados de impressoras, seus modelos e suas localizações.
-Entidades principais: Impressora, Modelo, Localizacao.
+Entidades principais: Printer, PrinterModel, InstallationLocation.
 
-2. Contagem
+2. Counting
 
 Responsável por registrar os dados coletados periodicamente das impressoras.
-Entidades principais: Contagem.
+Entidades principais: Counting, CountingJob.
 
 3. Relatórios
 
 Responsável por gerar análises, gráficos, alertas etc. Não deve ter Aggregate Root próprio — é mais um contexto de consulta/projeção (read-model).
 
-## Aggregate Root
+## Diagramas
 
-**Impressoras**
+### **Contextos**
 
-- Entidade independente
-- Controla o ciclo de vida das contagens
-- É referênciada diretamente por outras entidades
-- Agrupa dados relevantes ao seu estado: modelo, localização, histórico de contagens
+<img src="./images/bounded-contexts.png">
 
-### Estrutura do agregado
+### **Modelos de domínio**
 
-Impressora (Aggregate Root)
-├── Modelo (referência ou valor embutido, dependendo da modelagem)
-├── Localizacao (referência ou valor embutido)
-└── Contagens (lista de entidades filhas)
+<img src="./images/modelagem-de-dominio.png">
+
+---
+
+## Change log
+
+| Data       | Versão | Responsável     |
+| ---------- | ------ | --------------- |
+| 18-08-2025 | 02     | Anderson Vieira |
+
+---
