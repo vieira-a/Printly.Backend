@@ -1,4 +1,4 @@
-export class UpdateModelOutput {
+export class CreatePrinterModelOutput {
   id: string;
   manufacturer: string;
   description: string;

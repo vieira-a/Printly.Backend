@@ -4,21 +4,21 @@ import { ModelDomainValidationException } from '@printer/domain/exceptions';
 import { PrinterModelMapper } from '@printer/application/mappers/printer-model.mapper';
 import { DatabaseModelException } from '@printer/application/exceptions';
 import { ModelNotFoundException } from '@printer/application/exceptions/model-not-found.exception';
-import { IUpdateModelUseCase } from './update-model.interface';
-import { UpdateModelInput } from './input/update-model.input';
-import { UpdateModelOutput } from './output/update-model.output';
+import { IUpdatePrinterModelUseCase } from './update-printer-model.interface';
+import { UpdatePrinterModelInput } from './input/update-printer-model.input';
+import { UpdatePrinterModelOutput } from './output/update-printer-model.output';
 
 @Injectable()
-export class UpdateModelService implements IUpdateModelUseCase {
-  private readonly logger = new Logger(UpdateModelService.name);
+export class UpdatePrinterModelService implements IUpdatePrinterModelUseCase {
+  private readonly logger = new Logger(UpdatePrinterModelService.name);
 
   constructor(
     @Inject('IPrinterModelRepository')
-    private readonly printerMmodelRepository: IPrinterModelRepository,
+    private readonly printerModelRepository: IPrinterModelRepository,
   ) {}
-  async execute(id: string, input: UpdateModelInput): Promise<UpdateModelOutput | null> {
+  async execute(id: string, input: UpdatePrinterModelInput): Promise<UpdatePrinterModelOutput | null> {
     try {
-      const printerModel = await this.printerMmodelRepository.findById(id);
+      const printerModel = await this.printerModelRepository.findById(id);
 
       if (!printerModel) throw new ModelNotFoundException(id);
 
@@ -27,7 +27,7 @@ export class UpdateModelService implements IUpdateModelUseCase {
       if (input.printOid) printerModel.updatePrintOid(input.printOid);
       if (input.copyOid) printerModel.updateCopyOid(input.copyOid);
 
-      const updatedModel = await this.printerMmodelRepository.update(printerModel);
+      const updatedModel = await this.printerModelRepository.update(printerModel);
 
       return updatedModel ? PrinterModelMapper.toOutput(updatedModel) : null;
     } catch (error: unknown) {

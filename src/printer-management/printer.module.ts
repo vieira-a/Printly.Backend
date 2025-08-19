@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ModelController } from './api/rest/controllers/model/model.controller';
-import { CreateModelService } from './application/use-cases/model/create/create-model.service';
+import { PrinterModelController } from './api/rest/controllers/model/printer-model.controller';
+import { CreatePrinterModelService } from './application/use-cases/model/create/create-printer-model.service';
 import {
   PrinterEntity,
   PrinterModelEntity,
@@ -10,7 +10,7 @@ import {
   CountingEntity,
   CountingJobEntity,
 } from './infrastructure/data/typeorm/models';
-import { UpdateModelService } from './application/use-cases/model/update/update-model.service';
+import { UpdatePrinterModelService } from './application/use-cases/model/update/update-printer-model.service';
 import { LocationController } from './api/rest/controllers/location/location.controller';
 import { CreateInstallationLocationService } from './application/use-cases/location/create/create-installation-location.service';
 import {
@@ -49,8 +49,8 @@ import { ProcessPendingJobService } from './application/use-cases/counting/auto-
     CreatePrinterService,
     UpdatePrinterService,
     FindPrinterService,
-    CreateModelService,
-    UpdateModelService,
+    CreatePrinterModelService,
+    UpdatePrinterModelService,
     CreateInstallationLocationService,
     UpdateInstallationLocationService,
     ProcessAutoCountingService,
@@ -64,6 +64,6 @@ import { ProcessPendingJobService } from './application/use-cases/counting/auto-
     { provide: 'IPrinterModelRepository', useClass: PrinterModelRepository },
     { provide: 'IAutoCounting', useClass: SnmpAutoCountingService },
   ],
-  controllers: [ModelController, LocationController, PrinterController],
+  controllers: [PrinterModelController, LocationController, PrinterController],
 })
 export class PrinterModule {}

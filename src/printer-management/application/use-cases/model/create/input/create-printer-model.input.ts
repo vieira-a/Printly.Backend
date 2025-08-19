@@ -1,4 +1,4 @@
-export class CreateModelInput {
+export class CreatePrinterModelInput {
   manufacturer: string;
   description: string;
   printOid: string;

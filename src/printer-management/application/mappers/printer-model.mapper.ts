@@ -1,9 +1,9 @@
 import { PrinterModel } from '@printer/domain/entities';
-import { CreateModelOutput } from '../use-cases/model/create/output/create-model.output';
+import { CreatePrinterModelOutput } from '../use-cases/model/create/output/create-printer-model.output';
 
 export abstract class PrinterModelMapper {
-  public static toOutput(entity: PrinterModel): CreateModelOutput {
-    return {
+  public static toOutput(entity: PrinterModel): CreatePrinterModelOutput {
+    return PrinterModel.restore({
       id: entity.id,
       manufacturer: entity.manufacturer,
       description: entity.description,
@@ -11,6 +11,6 @@ export abstract class PrinterModelMapper {
       copyOid: entity.copyOid,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-    };
+    });
   }
 }
