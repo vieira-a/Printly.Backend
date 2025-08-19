@@ -1,6 +1,7 @@
 export abstract class CreateInstallationLocationOutput {
   address: CreateAddressOutput;
   phone: string;
+  departament: string;
   contact: string;
   createdAt: Date;
   updatedAt: Date;

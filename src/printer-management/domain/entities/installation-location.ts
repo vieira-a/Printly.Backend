@@ -7,18 +7,21 @@ import { Phone } from './value-objects/phone';
 const MissingAddressExceptionMessage = 'Endereço não informado.';
 const MissingPhoneExceptionMessage = 'Telefone não informado.';
 const MissingContactExceptionMessage = 'Contato não informado.';
+const InvalidDepartamentExceptionMessage = 'Departamento deve ter no mínimo 2 caracteres.';
 const InvalidContactExceptionMessage = 'Contato deve ter no mínimo 3 caracteres.';
 const ValidationExceptionMessage = 'Ocorreram um ou mais erros de validação.';
 
 export class InstallationLocation extends EntityBase {
   private _address: Address;
   private _phone: Phone;
+  private _departament: string;
   private _contact: string;
 
   private constructor(props: InstallationLocationProps) {
     super(props.id, props.createdAt, props.updatedAt);
     this._address = props.address;
     this._phone = props.phone;
+    this._departament = props.departament;
     this._contact = props.contact;
     this.validate();
   }
@@ -29,6 +32,10 @@ export class InstallationLocation extends EntityBase {
 
   get phone(): Phone {
     return this._phone;
+  }
+
+  get departament(): string {
+    return this._departament;
   }
 
   get contact(): string {
@@ -61,6 +68,10 @@ export class InstallationLocation extends EntityBase {
     if (!this._address) errors.push(MissingAddressExceptionMessage);
 
     if (!this._phone) errors.push(MissingPhoneExceptionMessage);
+
+    if (!this._departament) {
+      errors.push(MissingContactExceptionMessage);
+    } else if (this._departament.trim().length < 2) errors.push(InvalidDepartamentExceptionMessage);
 
     if (!this._contact) {
       errors.push(MissingContactExceptionMessage);

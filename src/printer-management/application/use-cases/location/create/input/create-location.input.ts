@@ -1,6 +1,7 @@
 export abstract class CreateInstallationLocationInput {
   address: CreateAddressInput;
   phone: CreatePhoneInput;
+  departament: string;
   contact: string;
 }
 

@@ -19,6 +19,7 @@ const validAddress = Address.create({
 const validInstallationLocationProps: CreateInstallationLocationProps = {
   address: validAddress,
   phone: validPhone,
+  departament: 'fake-departament',
   contact: 'fake-contact',
 };
 
@@ -47,6 +48,18 @@ describe('Location Entity', () => {
     expect(() =>
       InstallationLocation.create({ ...validInstallationLocationProps, phone: null as unknown as Phone }),
     ).toThrow(InstallationLocationDomainValidationException);
+  });
+
+  it('should throw InstallationLocationDomainValidationException if departament is not provided', () => {
+    expect(() => InstallationLocation.create({ ...validInstallationLocationProps, departament: '' })).toThrow(
+      InstallationLocationDomainValidationException,
+    );
+  });
+
+  it('should throw InstallationLocationDomainValidationException if departament has less than 2 characters', () => {
+    expect(() => InstallationLocation.create({ ...validInstallationLocationProps, departament: 'D' })).toThrow(
+      InstallationLocationDomainValidationException,
+    );
   });
 
   it('should throw InstallationLocationDomainValidationException if contact is not provided', () => {

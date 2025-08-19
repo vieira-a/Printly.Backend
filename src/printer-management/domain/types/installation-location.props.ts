@@ -7,6 +7,7 @@ export type InstallationLocationProps = {
   updatedAt?: Date;
   address: Address;
   phone: Phone;
+  departament: string;
   contact: string;
 };
 
@@ -19,6 +20,7 @@ export type InstallationLocationEntityProps = {
   reference?: string;
   areaCode: number;
   phoneNumber: number;
+  departament: string;
   contact: string;
   id?: string;
   createdAt?: Date;
@@ -34,12 +36,14 @@ export type CreateInstallationLocationEntityProps = {
   reference?: string;
   areaCode: number;
   phoneNumber: number;
+  departament: string;
   contact: string;
 };
 
 export type CreateInstallationLocationProps = {
   address: Address;
   phone: Phone;
+  departament: string;
   contact: string;
 };
 
