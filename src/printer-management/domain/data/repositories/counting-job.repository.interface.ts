@@ -2,6 +2,7 @@ import { CountingJob } from '@printer/domain/entities/counting-job';
 
 export interface ICountingJobRepository {
   create(input: CountingJob): Promise<CountingJob>;
-  findFailedOrPending(): Promise<CountingJob[] | null>;
+  findPending(): Promise<CountingJob[] | null>;
   updateStatus(input: CountingJob): Promise<void>;
+  findFailedOrPendingByPrinterId(printerId: string): Promise<CountingJob | null>;
 }

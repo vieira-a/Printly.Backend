@@ -16,13 +16,13 @@ export class CountingJobEntity extends BaseEntity {
   @Column({ name: 'attempt' })
   attempt: number;
 
-  @Column({ name: 'last_attempt' })
+  @Column({ name: 'last_attempt', type: 'timestamptz' })
   lastAttempt: Date;
 
   @Column({ name: 'status', enum: CountingJobStatus })
   status: CountingJobStatus;
 
-  @Column({ name: 'execution_date' })
+  @Column({ name: 'execution_date', type: 'timestamptz' })
   executionDate: Date;
 
   private constructor(props: CountingJobProps) {

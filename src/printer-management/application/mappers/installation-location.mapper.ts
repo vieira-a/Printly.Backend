@@ -10,12 +10,12 @@ export abstract class InstallationLocationMapper {
   public static toOutput(domain: InstallationLocation): CreateInstallationLocationOutput {
     const { street, district, city, state, cep, reference } = domain.address;
     const { areaCode, phoneNumber } = domain.phone;
-    const { contact, createdAt, updatedAt } = domain;
+    const { departament, contact, createdAt, updatedAt } = domain;
 
     const outputCep = CEP.create(cep.value);
     const outputAddress: CreateAddressOutput = { street, district, city, state, cep: outputCep.value, reference };
     const outputPhone = Phone.create({ areaCode, phoneNumber });
 
-    return { address: outputAddress, phone: outputPhone.toString(), contact, createdAt, updatedAt };
+    return { address: outputAddress, phone: outputPhone.toString(), departament, contact, createdAt, updatedAt };
   }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable, InternalServerErrorException, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { IProcessPendingJobUseCase } from './pocess-pending-job.interface';
 import { ICountingJobRepository } from '@printer/domain/data/repositories/counting-job.repository.interface';
-import { ICountingRepository, IPrinterRepository } from '@printer/domain/data/repositories';
+import { ICountingRepository, IPrinterModelRepository, IPrinterRepository } from '@printer/domain/data/repositories';
 import { CountingJobType } from '@printer/domain/enums/counting-job-type.enum';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IAutoCounting } from '@printer/domain/interfaces/auto-counting.interface';
@@ -11,8 +11,6 @@ import { PrinterDomainValidationException } from '@printer/domain/exceptions/pri
 import { CountingDomainValidationException } from '@printer/domain/exceptions';
 import { RequestTimedOutError } from '@shared/exceptions/request-timeout.exception';
 import { RequestPrinterTimeoutException } from '@shared/exceptions/request-printer-timeout.exception';
-import { CountingJob } from '@printer/domain/entities/counting-job';
-import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
 @Injectable()
 export class ProcessPendingJobService implements IProcessPendingJobUseCase {
@@ -23,43 +21,47 @@ export class ProcessPendingJobService implements IProcessPendingJobUseCase {
     private readonly countingJobRepository: ICountingJobRepository,
     @Inject('IPrinterRepository')
     private readonly printerRepository: IPrinterRepository,
+    @Inject('IPrinterModelRepository')
+    private readonly printerModelRepository: IPrinterModelRepository,
     @Inject('ICountingRepository')
     private readonly countingRepository: ICountingRepository,
     @Inject('IAutoCounting')
     private readonly autoCounting: IAutoCounting,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async execute(): Promise<void> {
     try {
-      const pendingJobs = await this.countingJobRepository.findFailedOrPending();
-
+      const pendingJobs = await this.countingJobRepository.findPending();
       if (!pendingJobs) {
         return;
       }
 
       for (const job of pendingJobs) {
-        if (!job.canRetry()) continue;
+        const printer = await this.printerRepository.findById(job.printerId);
 
-        job.registerAttempt();
-        await this.countingJobRepository.updateStatus(job);
+        if (printer) {
+          const printerModel = await this.printerModelRepository.findById(printer?.modelId);
 
-        if (job.printer) {
-          const ipv4Address = job.printer.ipv4Address.toString();
-          const printOid = job.printer.model?.printOid;
-          const copyOid = job.printer.model?.copyOid;
+          const ipv4Address = printer.ipv4Address.toString();
+          const printOid = printerModel?.printOid;
+          const copyOid = printerModel?.copyOid;
 
           const totalPrintResult = await this.autoCounting.collect(ipv4Address, printOid!);
           const totalCopyResult = await this.autoCounting.collect(ipv4Address, copyOid!);
 
           if (totalPrintResult.success && totalCopyResult.success) {
             await this.registerPrinterCounting(
-              job.printer,
+              job.id,
+              printer,
               Number(totalPrintResult.count),
               Number(totalCopyResult.count),
             );
-
+            job.registerAttempt();
             job.markSuccess();
+            await this.countingJobRepository.updateStatus(job);
+          } else {
+            job.registerAttempt();
             await this.countingJobRepository.updateStatus(job);
           }
         }
@@ -70,13 +72,16 @@ export class ProcessPendingJobService implements IProcessPendingJobUseCase {
     }
   }
 
-  private async registerPrinterCounting(printer: Printer, prints: number, copies: number): Promise<void> {
+  private async registerPrinterCounting(
+    countingJobId: string,
+    printer: Printer,
+    prints: number,
+    copies: number,
+  ): Promise<void> {
     try {
-      const newCountingJob = CountingJob.create({ printerId: printer.id, status: CountingJobStatus.PENDING });
-      const counting = printer.addCounting(newCountingJob.id, CountingJobType.AUTO, prints, copies, new Date());
+      const counting = printer.addCounting(countingJobId, CountingJobType.AUTO, prints, copies, new Date());
 
       await this.countingRepository.create(counting);
-
       await this.printerRepository.updateCounting(printer);
     } catch (error: unknown) {
       if (error instanceof Error) this.logger.log(error.message);

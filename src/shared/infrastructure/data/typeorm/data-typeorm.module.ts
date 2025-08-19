@@ -24,6 +24,9 @@ const nodeEnv = process.env.NODE_ENV;
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [PrinterEntity, PrinterModelEntity, InstallationLocationEntity, CountingEntity, CountingJobEntity],
+        extra: {
+          options: '-c timezone=America/Sao_Paulo',
+        },
         synchronize: nodeEnv === 'development' ? true : false,
       }),
     }),

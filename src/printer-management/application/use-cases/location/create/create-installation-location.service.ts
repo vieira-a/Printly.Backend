@@ -27,15 +27,14 @@ export class CreateInstallationLocationService implements ICreateInstallationLoc
   async execute(input: CreateInstallationLocationInput): Promise<CreateInstallationLocationOutput> {
     const { street, district, city, state, cep, reference } = input.address;
     const { areaCode, phoneNumber } = input.phone;
-    const { contact } = input;
+    const { departament, contact } = input;
 
     try {
       const newCep = CEP.create(cep);
       const newPhone = Phone.create({ areaCode, phoneNumber });
       const newAddress = Address.create({ street, district, city, state, cep: newCep, reference });
 
-      const newLocation = InstallationLocation.create({ address: newAddress, phone: newPhone, contact });
-
+      const newLocation = InstallationLocation.create({ address: newAddress, phone: newPhone, departament, contact });
       const result = await this.locationRepository.create(newLocation);
       return InstallationLocationMapper.toOutput(result);
     } catch (error: unknown) {

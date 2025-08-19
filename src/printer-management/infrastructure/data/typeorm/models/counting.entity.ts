@@ -27,7 +27,7 @@ export class CountingEntity extends BaseEntity {
   @Column({ name: 'copies' })
   copies: number;
 
-  @Column({ name: 'collected_at', type: 'timestamp' })
+  @Column({ name: 'collected_at', type: 'timestamptz' })
   collectedAt: Date;
 
   @Column({ name: 'type' })

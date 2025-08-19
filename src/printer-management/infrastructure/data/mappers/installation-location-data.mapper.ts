@@ -21,6 +21,7 @@ export abstract class InstallationLocationDataMapper {
       id: entity.id,
       address,
       phone,
+      departament: entity.departament,
       contact: entity.contact,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -37,6 +38,7 @@ export abstract class InstallationLocationDataMapper {
       reference: domain.address.reference,
       areaCode: domain.phone.areaCode,
       phoneNumber: domain.phone.phoneNumber,
+      departament: domain.departament,
       contact: domain.contact,
     });
   }

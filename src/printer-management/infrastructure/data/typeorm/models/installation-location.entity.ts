@@ -31,6 +31,9 @@ export class InstallationLocationEntity extends BaseEntity {
   @Column({ name: 'phoneNumber', type: 'char', length: 9 })
   phoneNumber: number;
 
+  @Column({ name: 'departament', type: 'varchar' })
+  departament: string;
+
   @Column({ name: 'contact', type: 'varchar' })
   contact: string;
 
@@ -45,6 +48,7 @@ export class InstallationLocationEntity extends BaseEntity {
       this.reference = props.reference;
       this.areaCode = props.areaCode;
       this.phoneNumber = props.phoneNumber;
+      this.departament = props.departament;
       this.contact = props.contact;
     }
   }
