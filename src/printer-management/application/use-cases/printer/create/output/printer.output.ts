@@ -6,6 +6,7 @@ export abstract class PrinterOutput {
   ipv4Address: string;
   city: string | undefined;
   state: string | undefined;
+  departament: string | undefined;
   contact: string | undefined;
   phone: string | undefined;
   printOid: string | undefined;

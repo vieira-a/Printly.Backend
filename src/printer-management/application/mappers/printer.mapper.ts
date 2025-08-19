@@ -12,6 +12,7 @@ export abstract class PrinterMapper {
       ipv4Address: domain.ipv4Address.toString(),
       city: domain.installationLocation?.address.city,
       state: domain.installationLocation?.address.state,
+      departament: domain.installationLocation?.departament,
       contact: domain.installationLocation?.contact,
       phone: domain.installationLocation?.phone.toString(),
       printOid: domain.model?.printOid,

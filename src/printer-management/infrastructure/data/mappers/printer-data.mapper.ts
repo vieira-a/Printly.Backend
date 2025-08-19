@@ -2,6 +2,7 @@ import { Printer } from '@printer/domain/entities';
 import { PrinterEntity } from '../typeorm/models';
 import { IPV4 } from '@printer/domain/entities/value-objects/ipv4';
 import { PrinterModelDataMapper } from './printer-model-data.mapper';
+import { InstallationLocationDataMapper } from './installation-location-data.mapper';
 
 export class PrinterDataMapper {
   public static toDomain(entity: PrinterEntity): Printer {
@@ -32,6 +33,7 @@ export class PrinterDataMapper {
   }
 
   public static toDomainArray(entities: PrinterEntity[]): Printer[] {
+    console.log(entities);
     return entities.map((entity) =>
       Printer.restore({
         id: entity.id,
@@ -40,6 +42,7 @@ export class PrinterDataMapper {
         modelId: entity.modelId,
         model: PrinterModelDataMapper.toDomain(entity.model),
         installationLocationId: entity.installationLocationId,
+        instalationLocation: InstallationLocationDataMapper.toDomain(entity.installationLocation),
         installedAt: entity.installedAt,
         totalPrint: entity.totalPrint,
         totalCopy: entity.totalCopy,
