@@ -26,7 +26,7 @@ export class PrinterEntity extends BaseEntity {
   @JoinColumn({ name: 'installation_location_id' })
   installationLocation: InstallationLocationEntity;
 
-  @Column({ name: 'installed_at' })
+  @Column({ name: 'installed_at', type: 'timestamptz' })
   installedAt: Date;
 
   @Column({ name: 'total_print', default: 0 })
