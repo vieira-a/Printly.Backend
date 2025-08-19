@@ -51,8 +51,16 @@ export class CreateAutoCountingService implements ICreateAutoCountingUseCase {
         await this.countingRepository.create(counting);
         await this.printerRepository.updateCounting(printer);
       } else {
-        const newCountingJob = CountingJob.create({ printerId: printer.id, status: CountingJobStatus.FAILED });
-        await this.countingJobRepository.create(newCountingJob);
+        const countingJobAlreadyExists = await this.countingJobRepository.findFailedOrPendingByPrinterId(printer.id);
+
+        if (countingJobAlreadyExists) {
+          countingJobAlreadyExists.registerAttempt();
+          await this.countingJobRepository.updateStatus(countingJobAlreadyExists);
+        } else {
+          const newCountingJob = CountingJob.create({ printerId: printer.id, status: CountingJobStatus.PENDING });
+          newCountingJob.registerAttempt();
+          await this.countingJobRepository.create(newCountingJob);
+        }
       }
     } catch (error: unknown) {
       if (error instanceof Error) this.logger.log(error.message);

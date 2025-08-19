@@ -52,37 +52,29 @@ export class CountingJob extends EntityBase {
   }
 
   public static create(props: CreateCountingJobProps): CountingJob {
-    const newCountingJob = new CountingJob({
+    return new CountingJob({
       ...props,
-      attempt: 1,
+      attempt: 0,
       lastAttempt: new Date(),
       executionDate: new Date(),
     });
-    newCountingJob.registerAttempt();
-    return newCountingJob;
   }
 
   public static restore(props: CountingJobProps): CountingJob {
     return new CountingJob({ ...props });
   }
 
-  public canRetry(): boolean {
-    const reachedLimit = this._attempt >= 5;
-    return this._status !== CountingJobStatus.SUCCESS && !reachedLimit;
-  }
-
-  public registerAttempt(): number {
+  public registerAttempt(): void {
     this._attempt++;
     this._lastAttempt = new Date();
 
-    if (this._status === CountingJobStatus.SUCCESS) return 1;
+    if (this._status === CountingJobStatus.SUCCESS) return;
 
     if (this._attempt >= 5) {
       this._status = CountingJobStatus.FAILED;
     } else {
       this._status = CountingJobStatus.PENDING;
     }
-    return this._attempt;
   }
 
   public markSuccess(): void {

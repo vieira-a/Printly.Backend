@@ -9,7 +9,7 @@ import { DatabaseModelException } from '@printer/application/exceptions';
 import { InfrastructureException } from '@shared/exceptions';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
 
-const DatabaseModelExceptionMessage = 'Houve um erro no banco de dados relacionado à localização.';
+const DatabaseModelExceptionMessage = 'Houve um erro no banco de dados relacionado ao histórico de coletas.';
 const InfrastructureExceptionMessage = 'Houve um erro interno. Tente novamente mais tarde.';
 
 @Injectable()
@@ -37,20 +37,32 @@ export class CountingJobRepository implements ICountingJobRepository {
     }
   }
 
-  async findFailedOrPending(): Promise<CountingJob[] | null> {
+  async findPending(): Promise<CountingJob[] | null> {
     try {
-      const jobs = await this.repository
-        .createQueryBuilder('job')
-        .leftJoinAndSelect('job.printer', 'printer')
-        .leftJoinAndSelect('printer.model', 'model')
-        .leftJoinAndSelect('printer.location', 'location')
-        .where('job.status IN (:...statuses)', {
-          statuses: [CountingJobStatus.FAILED, CountingJobStatus.PENDING],
-        })
-        .getMany();
+      const jobs = await this.repository.find({
+        where: { status: CountingJobStatus.PENDING },
+      });
 
       return jobs.length ? CountingJobDataMapper.toDomainArray(jobs) : null;
-    } catch (error) {
+    } catch (error: unknown) {
+      this.logger.log(error);
+      if (error instanceof TypeORMError) {
+        this.logger.log(error);
+        throw new DatabaseModelException(DatabaseModelExceptionMessage);
+      } else {
+        throw new InfrastructureException(InfrastructureExceptionMessage);
+      }
+    }
+  }
+
+  async findFailedOrPendingByPrinterId(printerId: string): Promise<CountingJob | null> {
+    try {
+      const countingJob = await this.repository.findOneBy({
+        printerId: printerId,
+        status: CountingJobStatus.FAILED || CountingJobStatus.PENDING,
+      });
+      return countingJob ? CountingJobDataMapper.toDomain(countingJob) : null;
+    } catch (error: unknown) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);
         throw new DatabaseModelException(DatabaseModelExceptionMessage);
@@ -62,9 +74,13 @@ export class CountingJobRepository implements ICountingJobRepository {
 
   async updateStatus(input: CountingJob): Promise<void> {
     try {
-      const job = CountingJobDataMapper.toEntity(input);
-
-      await this.repository.update(job.id, { status: job.status });
+      const { id, attempt, status, lastAttempt, executionDate } = input;
+      await this.repository.update(id, {
+        attempt,
+        status: status as CountingJobStatus,
+        lastAttempt,
+        executionDate,
+      });
     } catch (error) {
       if (error instanceof TypeORMError) {
         this.logger.log(error.message);

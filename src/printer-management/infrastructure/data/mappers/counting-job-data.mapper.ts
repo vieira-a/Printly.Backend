@@ -1,7 +1,6 @@
 import { CountingJob } from '@printer/domain/entities/counting-job';
 import { CountingJobEntity } from '../typeorm/models';
 import { CountingJobStatus } from '@printer/domain/enums/counting-job-status.enum';
-import { PrinterDataMapper } from './printer-data.mapper';
 
 export abstract class CountingJobDataMapper {
   public static toDomain(entity: CountingJobEntity): CountingJob {
@@ -29,7 +28,6 @@ export abstract class CountingJobDataMapper {
       CountingJob.restore({
         id: entity.id,
         printerId: entity.printerId,
-        printer: PrinterDataMapper.toDomain(entity.printer),
         attempt: entity.attempt,
         lastAttempt: entity.lastAttempt,
         status: entity.status,
