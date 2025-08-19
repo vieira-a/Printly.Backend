@@ -70,7 +70,7 @@ export class CountingJob extends EntityBase {
 
     if (this._status === CountingJobStatus.SUCCESS) return;
 
-    if (this._attempt >= 5) {
+    if (this._attempt >= 10) {
       this._status = CountingJobStatus.FAILED;
     } else {
       this._status = CountingJobStatus.PENDING;

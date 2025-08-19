@@ -29,7 +29,7 @@ export class ProcessPendingJobService implements IProcessPendingJobUseCase {
     private readonly autoCounting: IAutoCounting,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async execute(): Promise<void> {
     try {
       const pendingJobs = await this.countingJobRepository.findPending();

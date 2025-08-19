@@ -14,7 +14,7 @@ export class ProcessAutoCountingService implements IProcessAutoCountingUseCase {
     private readonly createAutoCountingService: CreateAutoCountingService,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_5PM, { timeZone: 'America/Sao_Paulo' })
+  @Cron(CronExpression.EVERY_DAY_AT_11AM, { timeZone: 'America/Sao_Paulo' })
   async execute(): Promise<void> {
     const printers = await this.printerRepository.findAll();
 
